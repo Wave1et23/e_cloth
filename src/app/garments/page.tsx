@@ -1,0 +1,112 @@
+import Link from "next/link";
+import { redirect } from "next/navigation";
+import { SiteHeader } from "@/components/site-header";
+import { getCurrentUser } from "@/lib/auth/user";
+import { formatCny, computeCpw } from "@/lib/cost";
+import { prisma } from "@/lib/db";
+import { normalizeStatus, statusLabel } from "@/lib/status";
+
+export const instant = false;
+
+function badgeClass(status: string): string {
+  const value = normalizeStatus(status);
+  if (value === "WORN") return "badge badge-worn";
+  if (value === "TO_WASH") return "badge badge-wash";
+  if (value === "RETIRED") return "badge badge-retired";
+  return "badge";
+}
+
+export default async function GarmentsPage() {
+  const user = await getCurrentUser();
+  if (!user) redirect("/login");
+
+  const garments = await prisma.garment.findMany({
+    where: { userId: user.id },
+    orderBy: { createdAt: "desc" },
+    take: 200,
+    select: {
+      id: true,
+      name: true,
+      category: true,
+      status: true,
+      priceCents: true,
+      events: {
+        where: { type: "WORN" },
+        select: { id: true },
+      },
+    },
+  });
+
+  return (
+    <>
+      <SiteHeader showLogout />
+      <main className="page">
+        <div
+          style={{
+            display: "flex",
+            alignItems: "baseline",
+            justifyContent: "space-between",
+            gap: 16,
+            marginBottom: 22,
+          }}
+        >
+          <div>
+            <h1 style={{ fontSize: 28 }}>我的衣柜</h1>
+            <p className="muted" style={{ fontSize: 14, marginTop: 4 }}>
+              共 {garments.length} 件
+            </p>
+          </div>
+          <span className="muted" style={{ fontSize: 13 }}>
+            拍照建档即将开放
+          </span>
+        </div>
+
+        {garments.length === 0 ? (
+          <section className="card empty">
+            <h2>衣柜还是空的</h2>
+            <p className="muted" style={{ fontSize: 15 }}>
+              拍下第一件衣服，AI 会帮你填好属性，你只需要确认。
+            </p>
+            <div
+              style={{
+                display: "flex",
+                gap: 12,
+                justifyContent: "center",
+                marginTop: 20,
+              }}
+            >
+              <button type="button" className="btn btn-primary" disabled>
+                拍照建档（下一步开放）
+              </button>
+            </div>
+          </section>
+        ) : (
+          <div className="grid-garments">
+            {garments.map((garment) => {
+              const wornCount = garment.events.length;
+              const cpw = computeCpw(garment.priceCents, wornCount);
+              return (
+                <Link
+                  key={garment.id}
+                  href={`/garments/${garment.id}`}
+                  className="card garment-card"
+                >
+                  <div className="garment-thumb">还没有照片路由</div>
+                  <div className="garment-body">
+                    <strong style={{ fontSize: 15 }}>{garment.name}</strong>
+                    <span className={badgeClass(garment.status)}>
+                      {statusLabel(garment.status)}
+                    </span>
+                    <span className="muted" style={{ fontSize: 13 }}>
+                      单次 {formatCny(cpw)}
+                    </span>
+                  </div>
+                </Link>
+              );
+            })}
+          </div>
+        )}
+      </main>
+    </>
+  );
+}

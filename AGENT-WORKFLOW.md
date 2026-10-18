@@ -360,6 +360,8 @@
 - [x] 仓库确定：`https://github.com/Wave1et23/e_cloth`
 - [x] 早期讨论文档与废弃方案已归档至 `archive/`
 - [x] **Stage 0 完成**：Next.js 脚手架已生成在仓库根目录，依赖已装，`npm run build` 通过（exit 0，4 个静态页）
+- [x] **Stage 1 完成**：`docs/DESIGN.md`（8 页路由、跳转图、三态与文案、写入点、权限矩阵）；G1 十项已确认
+- [x] **Stage 2 完成**：Prisma 四表迁移 + demo seed；注册/登录/退出/`/api/garments`/`/api/health`；状态映射、CPW、token、session、密码单测 15 项通过；`npm run build` exit 0；游客访问 `/garments` 307 到 `/login`，登录后空列表可见
 
 ### 环境事实（新窗口不要重复踩）
 
@@ -371,6 +373,11 @@
 | create-next-app | **v16 拒绝在非空目录生成**。若需重建：先生成到临时子目录再移回根目录，且子目录名**不能以下划线开头** |
 | 框架文档 | Next 16 自带版本匹配文档在 `node_modules/next/dist/docs/`；**写代码前必须先读对应章节**（见根目录 `AGENTS.md`） |
 | 默认能力 | `Cache Components` 与 `Partial Prefetching` 默认开启 → 页面里读 cookie / 数据库需按新规则处理（写页面前先读 docs 的 caching / data-fetching 章节） |
+| Prisma | **6.19.3**（`prisma` + `@prisma/client` 同版本）；SQLite 文件在 `prisma/dev.db`（Git 忽略） |
+| Prisma 引擎下载 | `binaries.prisma.sh` 本机不可达；用 `PRISMA_ENGINES_MIRROR=https://registry.npmmirror.com/-/binary/prisma` 后再跑 postinstall / migrate |
+| 单测 | Node 24 原生跑 TS：`npm test` → `node --test tests/unit/*.test.ts`，不引入 Vitest |
+| 会话 | 签名 cookie（HMAC-SHA256，`SESSION_SECRET`），不建 Session 表；密码用 Node 内置 scrypt |
+| 本地环境 | `.env` 已生成（Git 忽略）；demo 账号 `demo@example.com` / `demo1234`，仅本地 seed |
 
 ### 未决
 

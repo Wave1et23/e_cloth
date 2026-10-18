@@ -1,0 +1,64 @@
+// 衣橱镜像 · 数据模型
+// 四张表：User / Garment / GarmentEvent / Label
+// 约定：状态与事件用 String 存（SQLite 不支持 Prisma enum），取值由 src/lib/status.ts 约束。
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id           String    @id @default(cuid())
+  email        String    @unique
+  passwordHash String
+  createdAt    DateTime  @default(now())
+  garments     Garment[]
+}
+
+model Garment {
+  id           String         @id @default(cuid())
+  userId       String
+  user         User           @relation(fields: [userId], references: [id], onDelete: Cascade)
+  name         String
+  category     String
+  primaryColor String?
+  pattern      String?
+  fit          String?
+  season       String?
+  style        String?
+  material     String?
+  brand        String?        @default("uncertain")
+  priceCents   Int?
+  purchaseDate DateTime?
+  notes        String?
+  photoPath    String
+  status       String         @default("IN_CLOSET")
+  createdAt    DateTime       @default(now())
+  updatedAt    DateTime       @updatedAt
+  events       GarmentEvent[]
+  label        Label?
+
+  @@index([userId, createdAt])
+}
+
+model GarmentEvent {
+  id        String   @id @default(cuid())
+  garmentId String
+  garment   Garment  @relation(fields: [garmentId], references: [id], onDelete: Cascade)
+  type      String
+  createdAt DateTime @default(now())
+
+  @@index([garmentId, createdAt])
+}
+
+model Label {
+  id        String   @id @default(cuid())
+  garmentId String   @unique
+  garment   Garment  @relation(fields: [garmentId], references: [id], onDelete: Cascade)
+  token     String   @unique
+  createdAt DateTime @default(now())
+}
