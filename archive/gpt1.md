@@ -1,0 +1,729 @@
+# 线上衣柜
+
+可以，而且我会把目标压得很明确：**第 6–9 周不是“先学完 AI 再开发”，而是用这个线上衣柜项目作为练习场，把你缺的 AI 工程能力边做边补；第 9 周结束时必须有一个可部署、可演示、可测试的完整 MVP。**第 10–11 周基本冻结核心功能，交给文档/PPT同学整理，你只处理 bug、提供开发过程材料和配合演示。
+
+这也符合赛题本身的要求：赛题一重点是明确需求、设计产品、使用 AI 编码完成核心闭环，并记录关键 Prompt、修改和测试过程，而不是要求你一定做复杂 Agent。
+
+而且我想先纠正一个可能让你焦虑的点：**以你现在的基础，你并不是“AI 开发基础不够”，而是缺少一套工程化使用 AI 的方法。**你已经会 API、Codex、Claude Code、原型设计、基本 Web 开发、Docker 和服务器部署，四周完全够用。不要在这四周里去学 LangChain、Dify、多 Agent 框架、RAG 等一大堆东西。
+
+你现在应该学习的是：
+
+**多模态 API + Coding Agent 工程化使用 + Skill + Workflow + Eval/测试**
+
+这五件事。
+
+# 一、先确定你这四周真正要学什么
+- 我建议把知识分成三个等级。
+- **A级：项目必须掌握**
+  - 多模态模型 / Vision API
+  - Structured Output
+  - 图片上传与存储
+  - QR Code 生成
+  - 手机扫码跳转
+  - PDF / A4 标签生成
+  - 数据库基本设计
+  - AI 输出人工确认机制
+- **B级：为了比赛过程展示而掌握**
+- AGENTS.md / CLAUDE.md
+- Skill
+- Agent 分工
+- Workflow
+- AI Code Review
+- AI Test / Eval
+- Prompt 版本管理
+- **C级：这次坚决不学**
+- LangChain
+- LangGraph
+- 向量数据库
+- RAG
+- MCP Server 开发
+- 多 Agent 框架
+- 模型微调
+- 自己训练 CV 模型
+- Kubernetes
+- 至少比赛前不碰。
+- 你现在最容易犯的错误就是：
+- “既然比赛和 AI 有关，我是不是应该学更多 AI 技术？”
+- **不。**
+- 四周时间里，学得越杂，项目越容易死。
+
+# 二、而且 Agent / Skill / Workflow 其实没有你想象得那么玄学
+- 这是你首先应该消除的心理负担。
+- ## Agent
+  - 你现在使用的 Codex / Claude Code，本身已经是 Coding Agent。
+  - Agent 和普通聊天最大的区别，可以粗略理解成：
+  - 模型不仅回答你，还能够**读取环境 → 判断下一步 → 使用工具 → 看结果 → 再判断 → 继续行动**。
+  - 现在 OpenAI 对 Agents 的定义也是围绕模型、工具、运行环境、持久 Session 等能力展开的；Codex harness 本身负责获取上下文、调用工具、操作文件、推进任务。([OpenAI Developers][1])
+  - 所以你**不需要为了证明会 Agent，自己写一个 Agent 框架。**
+- ## Skill
+  - Skill 甚至更简单。
+  - 本质可以先理解成：
+  - **把一套反复使用的专业工作方法写下来，让 Agent 在需要的时候按照它工作。**
+  - 现在 OpenAI 的 Skills 也是以 `SKILL.md` 为核心，里面放 reusable instructions，还可以附带模板、参考资料、脚本等。([OpenAI Developers][2])
+  - 例如你的项目完全可以自己写：
+  - text
+  - .closet-agent/
+  - ├── skills/
+  - │   ├── frontend-design/
+  - │   │   └── SKILL.md
+  - │   ├── garment-ai/
+  - │   │   └── SKILL.md
+  - │   ├── code-review/
+  - │   │   └── SKILL.md
+  - │   └── testing/
+  - │       └── SKILL.md
+  - 例如 garment-ai skill 告诉 Agent：
+  - 修改衣物识别功能前，先阅读 schema；
+  - AI 不允许猜测无法从图片可靠判断的属性；
+  - 颜色可以自动判断；
+  - 材质只能给建议；
+  - 品牌不能凭外观猜测；
+  - 所有 AI 结果必须允许用户确认；
+  - 修改 API 后必须跑测试。
+  - 这就已经是一个真正有意义的 Skill 了。
+
+# 三、你四周真正应该建立的是这条链
+- 我建议把整个开发过程设计成：
+- text
+- 人
+- ↓
+- Product Spec
+- ↓
+- Coding Agent
+- ↓
+- Skill
+- ↓
+- 代码实现
+- ↓
+- Test
+- ↓
+- Review Agent
+- ↓
+- 人工验收
+- ↓
+- Git Commit
+- 而不是以前：
+- text
+- 你
+- ↓
+- “帮我做一下这个”
+- ↓
+- AI
+- ↓
+- 代码
+- ↓
+- 能跑
+- ↓
+- 完事
+- OpenAI 自己现在给 Codex 的工程实践也在强调用 `AGENTS.md`、项目目标和阶段上下文来约束开发流程，而不是每次重新把整个项目解释一遍。([OpenAI Developers][3])
+- **这就是你四周最大的学习目标。**
+
+# 四、第 6 周：产品定型 + Vision 最小实验 + 建 AI 开发规范
+- 这一周我建议：
+- **40% 产品，30% 学习，30% 技术实验。**
+- 先别正式开发完整网站。
+- ## Day 1–2：彻底冻结 MVP
+  - 把墨刀原型完成。
+  - 只允许 MVP 有：
+  - text
+  - 注册 / 登录
+  - ↓
+  - 我的衣柜
+  - ├── 衣物列表
+  - ├── 衣物详情
+  - └── 新增衣物
+  - ↓
+  - 上传照片
+  - ↓
+  - AI 识别
+  - ↓
+  - 用户确认
+  - ↓
+  - 入柜
+  - 衣物详情
+  - ├── 穿着记录
+  - ├── 清洗记录
+  - ├── 当前状态
+  - └── QR 标签
+  - 标签中心
+  - ↓
+  - 选择衣服
+  - ↓
+  - 生成二维码
+  - ↓
+  - A4 排版
+  - ↓
+  - 导出 PDF
+  - 扫码
+  - ↓
+  - 衣物快捷页
+  - ↓
+  - 穿了 / 洗了 / 干洗 / 收纳 / 出售
+  - ↓
+  - 更新记录
+  - 统计
+  - ├── 穿着次数
+  - ├── 最近穿着
+  - ├── 利用率
+  - └── Cost Per Wear
+  - 先把：
+  - **AI 搭配、社区、天气、二手平台对接、智能推荐**
+  - 全部砍掉。
+
+# 五、第 6 周你第一个真正需要学的 AI 技术：Vision
+- 这里有一个很重要的概念：
+- **你不需要学习计算机视觉。**
+- 你不需要：
+- CNN、YOLO、OpenCV、目标检测、训练集、微调。
+- 你要学习的是：
+- **如何把图片传给多模态大模型，并要求它输出结构化 JSON。**
+- 例如：
+- 用户上传：
+- 👕 一张衬衫照片
+- 然后你的后端发送：
+- text
+- 图片
+- +
+- 识别这件衣物。
+- 只判断视觉上可以可靠判断的信息。
+- 要求模型返回：
+- json
+- {
+- "category": "衬衫",
+- "primaryColor": "浅蓝色",
+- "pattern": "纯色",
+- "fit": "宽松",
+- "season": ["春", "秋"],
+- "confidence": {
+- "category": 0.95,
+- "primaryColor": 0.91,
+- "pattern": 0.96
+- }
+- }
+- 然后前端：
+- **AI 识别结果 → 用户确认 → 保存数据库**
+- 这就是你第一次真正的 AI 嵌入式开发。
+
+# 六、水洗标不要和衣服识别混在一起
+- 这是一个非常好的工程拆分练习。
+- 建立两个任务：
+- ### Task A — Garment Recognition
+  - 输入：
+  - 衣服照片
+  - 输出：
+  - text
+  - category
+  - color
+  - pattern
+  - fit
+  - season
+- ### Task B — Care Label Recognition
+  - 输入：
+  - 水洗标照片
+  - 输出：
+  - text
+  - material
+  - washing
+  - bleaching
+  - drying
+  - ironing
+  - dryCleaning
+  - 然后分别建立两个 Prompt。
+  - 这以后就是非常好的比赛材料：
+  - 我们最初使用一个通用 Prompt 同时识别衣物和水洗信息。
+  - ↓
+  - 测试发现：
+  - 模型容易根据衣物外观臆测材质。
+  - ↓
+  - 所以：
+  - 拆分为 Garment Vision 与 Care Label Vision 两条独立 Workflow。
+  - 这就是**非常漂亮的 Prompt/Workflow 迭代案例**。
+
+# 七、第 6 周还有一个任务：建立你的 AI 开发基础设施
+- Git 仓库从第一天就不要只放：
+- text
+- src/
+- 我建议变成：
+- text
+- closet/
+- │
+- ├── src/
+- ├── tests/
+- ├── docs/
+- │   ├── PRD.md
+- │   ├── ARCHITECTURE.md
+- │   ├── DATABASE.md
+- │   └── AI-USAGE-LOG.md
+- │
+- ├── prompts/
+- │   ├── garment-v1.md
+- │   └── care-label-v1.md
+- │
+- ├── skills/
+- │   ├── frontend/
+- │   ├── code-review/
+- │   └── testing/
+- │
+- ├── AGENTS.md
+- │
+- └── README.md
+- 从现在开始：
+- **所有关键 Prompt 都进 Git。**
+- 以后：
+- text
+- garment-v1
+- garment-v2
+- garment-v3
+- 都能查。
+- 这会直接解决你之前说的：
+- “我最后怎么证明自己不是草台班子 vibe coding？”
+- Git 历史就是答案的一部分。
+
+# 八、第 6 周结束时必须交付什么
+- 不是完整网站。
+- 而是：
+- **① 完整原型**
+- **② PRD v1**
+- **③ 数据库 Schema**
+- **④ 技术架构**
+- **⑤ AI Development Workflow**
+- **⑥ 衣物识别 Demo**
+- **⑦ 水洗标识别 Demo**
+- 也就是说：
+- 拿手机拍衣服：
+- → API
+- → JSON
+- 成功。
+- 这周就算完成。
+
+# 九、第 7 周：正式开发核心衣柜
+- 这周变成：
+- **20% 学习 + 80% 开发。**
+- 目标：
+- 做出一个没有 QR，但已经完整可用的数字衣柜。
+- ## Day 1：项目骨架
+  - 技术栈不要搞复杂。
+  - 如果你之前熟悉 React / Vue，就继续用。
+  - 我个人会倾向：
+  - text
+  - Next.js
+  - +
+  - TypeScript
+  - +
+  - PostgreSQL
+  - +
+  - Prisma
+  - +
+  - Docker
+  - +
+  - Nginx
+  - 但**如果你熟悉 Vue，就千万别为了比赛学 Next.js。**
+  - 继续你最熟悉的技术。
+  - 你的 2C4G 云服务器运行这种比赛原型完全可以，不要在基础设施上浪费时间。
+- ## Day 2–3：普通 CRUD
+  - 先完全不碰 AI：
+  - text
+  - 用户
+  - ↓
+  - Wardrobe
+  - ↓
+  - Garment
+  - ↓
+  - WearRecord
+  - ↓
+  - CareRecord
+  - 衣物能：
+  - 新增 / 修改 / 删除 / 分类 / 查询。
+- ## Day 4：接 Vision
+  - 把第 6 周 Demo 正式嵌进去。
+  - 流程：
+  - text
+  - 上传照片
+  - ↓
+  - 后端 Vision API
+  - ↓
+  - Structured JSON
+  - ↓
+  - 前端预填表单
+  - ↓
+  - 用户修改
+  - ↓
+  - 确认
+  - ↓
+  - 数据库
+  - 这里有一个非常重要的产品原则：
+  - **AI 永远不直接写最终数据。**
+  - AI：
+  - **建议**
+  - 用户：
+  - **确认**
+  - 这以后甚至可以成为答辩点：
+  - 我们没有盲目信任 AI，而是设计 Human-in-the-loop。
+  - 非常符合比赛强调的人工核查要求。
+
+# 十、第 7 周开始真正使用 Agent，而不是“学习 Agent”
+- 每开发一个 Feature，固定执行：
+- text
+- ① 你创建 Issue
+- Feature:
+- 衣物 AI 识别
+- Acceptance Criteria:
+  - 支持 JPG/PNG
+  - 最大 10MB
+  - 返回结构化结果
+  - AI 结果可编辑
+  - API 失败可以手动填写
+- ↓
+- 交给 Coding Agent。
+- ↓
+- Agent 完成。
+- ↓
+- 换一个 Agent Session：
+- Review Issue #12 implementation.
+- ↓
+- 再让 Testing Skill：
+- Generate edge cases.
+- ↓
+- 人工测试。
+- ↓
+- Commit。
+- 你会突然发现：
+- **这已经是 Agent Workflow 了。**
+- 根本不需要 LangGraph。
+
+# 十一、第 8 周：做整个项目最有辨识度的 QR 现实闭环
+- 这一周非常重要。
+- 目标只有一句：
+- **把现实中的衣架和数据库连接起来。**
+- 先提醒你：
+- ### QR Code 和 AI 没有任何关系。
+  - 不要为了比赛强行：
+  - “AI 识别二维码。”
+  - 这是错误的技术叙事。
+  - QR 是确定性编码问题。
+  - 浏览器里现成的 ZXing 就可以直接读取摄像头/图片里的 QR Code；官方项目提供了 webcam、image、video 等扫描方式。([GitHub][4])
+  - 这反而能体现你的工程判断：
+  - **确定性任务用传统算法，语义任务才交给 AI。**
+  - 答辩时这句话很加分。
+
+# 十二、第 8 周做完整 Physical ↔ Digital 闭环
+- 每件衣服生成：
+- text
+- https://yourdomain.com/g/{token}
+- QR 里面就存这个 URL。
+- 打印：
+- text
+- ┌──────────────┐
+- │ 白色牛津衬衫 │
+- │              │
+- │   ███████    │
+- │   ██ █ ██    │
+- │   ███████    │
+- │              │
+- │   #G018      │
+- └──────────────┘
+- 手机扫：
+- ↓
+- 打开：
+- text
+- /g/8Kd93sa
+- ↓
+- 快捷页面：
+- text
+- 白色牛津衬衫
+- [今天穿了]
+- [洗衣]
+- [送去干洗]
+- [季节收纳]
+- [出售]
+- [查看详情]
+- ↓
+- 点击：
+- **今天穿了**
+- ↓
+- 数据库：
+- text
+- WearRecord +1
+- ↓
+- Dashboard：
+- text
+- 本月穿着次数 +1
+- **到这里，你的产品灵魂才真正出现。**
+
+# 十三、第 8 周第二个重点：A4 PDF
+- 完成：
+- text
+- 勾选衣物
+- ↓
+- 选择标签尺寸
+- ↓
+- 自动排列
+- ↓
+- A4 Preview
+- ↓
+- PDF
+- ↓
+- 打印
+- 然后：
+- **真的打印出来。**
+- 不要只 Demo PDF。
+- 买几个衣架。
+- 贴上去。
+- 扫。
+- 测试。
+- 比赛视频里：
+- 真实衣柜 → 手机扫码 → 网页变化
+- 视觉效果会比纯录屏强很多。
+
+# 十四、第 8 周开始学习 Workflow，而不是继续学 Agent
+- 这时候你已经会：
+- Agent。
+- 然后开始把整个开发过程串起来。
+- 比如你的 Feature Workflow：
+- text
+- 人
+- │
+- Feature Spec
+- │
+- ▼
+- ┌─────────────┐
+- │ Coding Agent│
+- └──────┬──────┘
+- │
+- ▼
+- Implementation
+- │
+- ┌──────┴──────┐
+- ▼             ▼
+- Review Skill    Test Skill
+- │             │
+- └──────┬──────┘
+- ▼
+- 修改代码
+- │
+- ▼
+- 人工验收
+- │
+- ▼
+- Git
+- 这就是你 PPT 后来可以放的：
+- **AI-Assisted Development Workflow**
+- 而不是一句：
+- “本项目使用 Claude Code 辅助开发。”
+- 两者含金量完全不同。
+
+# 十五、第 9 周：停止做功能，开始做“证据”
+- 这一周我建议你一定忍住。
+- 你会开始想到：
+- 天气推荐是不是也能加？
+- AI 穿搭是不是也能加？
+- NFC 是不是更酷？
+- 要不要接闲鱼？
+- **全部不做。**
+- 第 9 周的关键词：
+
+# Eval
+- 也就是：
+- **证明你的 AI 到底好不好用。**
+
+# 十六、给 Vision 做一个小测试集
+- 比如准备：
+- **30 件衣服。**
+- 包含：
+- text
+- 10 件简单
+- 白 T
+- 黑裤
+- 蓝衬衫
+- 10 件中等
+- 格纹
+- 拼色
+- oversize
+- 10 件困难
+- 复杂花纹
+- 模糊照片
+- 叠放衣服
+- 特殊版型
+- 人工先标 Ground Truth。
+- 然后跑：
+- ### Prompt V1
+  - 得到：
+  - text
+  - 类别准确率 83%
+  - 颜色 93%
+  - 图案 80%
+  - 发现：
+  - season 经常乱猜。
+  - 修改 Prompt：
+- ### Prompt V2
+  - 规定：
+  - 无法可靠判断 season 时输出 uncertain。
+  - 再跑。
+  - 例如：
+  - text
+  - 类别 90%
+  - 颜色 97%
+  - 图案 90%
+  - 这些数字不需要做到论文级严谨。
+  - 但你已经建立：
+  - **Prompt → Test → Result → Analysis → Iterate**
+  - 这就是真正的 AI Engineering。
+
+# 十七、测试水洗标
+- 比如准备 20 张。
+- 比较：
+- text
+- V1
+- ↓
+- 文字识别正常
+- 但容易误解符号
+- V2
+- ↓
+- 明确要求逐项输出
+- washing
+- bleaching
+- drying
+- ironing
+- dryCleaning
+- 然后保存：
+- Prompt V1
+- Prompt V2
+- 测试结果
+- 失败案例
+- 这东西最后交给文档同学。
+- 他们会非常爱你。
+- 因为通知明确要求项目文档最后附 AI 工具、关键 Prompt、开发过程、迭代优化、测试验证和人工核查。
+- 你已经全自动给他们准备好了。
+
+# 十八、第 9 周再做一次真正的用户测试
+- 找 5–10 个人。
+- 给他们：
+- 3 件衣服。
+- 让他们自己：
+- text
+- 入柜
+- ↓
+- AI 识别
+- ↓
+- 生成标签
+- ↓
+- 打印
+- ↓
+- 扫码
+- ↓
+- 记录穿着
+- 你一句话都不要指导。
+- 记录：
+- **完成时间、失败点、误操作、用户反馈。**
+- 然后只修最严重的 3–5 个问题。
+
+# 十九、第 9 周结束，你的代码冻结
+- 我会给项目设置一个明确节点：
+- **Week 9 Sunday 23:59 — Feature Freeze**
+- 以后：
+- **禁止新增 Feature。**
+- 只允许：
+  - bug fix
+  - UI polish
+  - 文案
+  - 性能
+  - Demo 稳定性
+- 于是第 10–11 周：
+- 技术组：
+- 20%维护
+- 文档/PPT组：
+- 80%输出
+
+# 二十、最终四周路线压缩成这一张表
+| 周 | 学习 | 开发 | 最终产物 |
+| --- | --- | --- | --- |
+| <b>第6周</b> | Vision / Structured Output / Skill 基础 | AI识衣、洗标 PoC | PRD + 原型 + Vision Demo + AI Workflow |
+| <b>第7周</b> | Agent工程化使用 | 衣柜 CRUD + AI 入柜 | 可用数字衣柜 |
+| <b>第8周</b> | Workflow / QR | QR + 扫码 + A4标签 | Physical↔Digital完整闭环 |
+| <b>第9周</b> | Eval / Prompt迭代 | 测试、修复、部署 | <b>Final MVP</b> |
+| 第10周 | — | Bug fix | 文档/PPT |
+| 第11周 | — | Demo支持 | 视频/答辩 |
+
+# 二十一、我建议你给自己设一个“学习预算”
+- 你现在千万不要：
+- 看 20 小时 Agent 教程。
+- 每个知识点：
+- **最多学 2 小时，然后必须做东西。**
+- 比如：
+- text
+- Vision
+- 学习 1h
+- ↓
+- 写 Demo 2h
+- Skill
+- 学习 1h
+- ↓
+- 自己写 Skill 1h
+- Agent
+- 学习 1h
+- ↓
+- 跑 Feature Workflow 2h
+- Eval
+- 学习 1h
+- ↓
+- 做测试集 3h
+- 你这次最好的学习方法不是：
+- Course Driven
+- 而是：
+- **Project Driven。**
+
+# 二十二、你这次真正应该追求的“能力升级”
+- 你之前开发半阕，大概是：
+- **Vibe Coding 1.0**
+- text
+- 我有想法
+- ↓
+- 问 AI
+- ↓
+- AI 写
+- ↓
+- 报错
+- ↓
+- 继续问
+- ↓
+- 能跑
+- 这次你应该刻意训练成：
+- **AI Engineering 2.0**
+- text
+- Problem
+- ↓
+- Spec
+- ↓
+- Context
+- ↓
+- Agent
+- ↓
+- Skill
+- ↓
+- Implementation
+- ↓
+- Review
+- ↓
+- Test
+- ↓
+- Eval
+- ↓
+- Human Verification
+- ↓
+- Git
+- 而且现在的 Codex/Agent 生态本身也越来越强调这种模式：Skill 用于封装特定工作流的可复用指导，而不是不断给模型堆巨型 Prompt；官方近期甚至专门提醒，随着 coding agent 能力提升，不要把 `AGENTS.md` 和 Skills 写得越来越臃肿，而应该保持针对性。([OpenAI Developers][5])
+- 所以你**完全没有必要为了“显得高级”做五六个 Agent 互相聊天。**
+- 如果我是评委，我反而更喜欢你们能解释：
+- “衣物属性识别属于语义任务，我们使用多模态模型；QR 识别属于确定性编码任务，因此采用传统二维码库；AI 识别结果存在幻觉风险，因此加入 Human-in-the-loop；Prompt 通过固定测试集进行了三轮 Eval；开发阶段使用可复用 Skills 规范 Coding Agent 的实现、Review 和测试。”
+- 这短短一段话，已经比：
+- “我们使用了先进的 Multi-Agent 协同框架……”
+- 然后实际上只是几个 Prompt 串起来，技术理解深得多。
+- **所以你明天真正该做的第一件事，不是学 Agent。**
+- 打开墨刀，把这个产品的**完整 MVP 页面和跳转逻辑画完**；与此同时建 Git 仓库，写 `PRD.md`、`AGENTS.md` 和 `AI-USAGE-LOG.md`。然后拿 **5 张你自己的衣服照片 + 5 张水洗标照片**，开始做第一个 Vision PoC。
+- 等这个跑通，再进入正式开发。
+- 如果你愿意，我们还可以用语音把**第 6 周具体每天做什么、技术栈怎么定、MVP 到底保留哪些页面**快速讨论一遍；按钮会在新标签页开启一个新的语音聊天，不会延续当前对话。
+- [1]: https://developers.openai.com/api/docs/guides/agents?utm_source=chatgpt.com "Agents | OpenAI API"
+- [2]: https://developers.openai.com/api/docs/guides/tools-skills?utm_source=chatgpt.com "Skills | OpenAI API"
+- [3]: https://developers.openai.com/cookbook/examples/codex/iterating-development-workflows-with-codex?utm_source=chatgpt.com "Iterating Development Workflows with Codex"
+- [4]: https://github.com/zxing-js/browser?utm_source=chatgpt.com "GitHub - zxing-js/browser: ZXing for JS's browser layer with decoding implementations for browser. · GitHub"
+- [5]: https://developers.openai.com/blog/rethinking-skills-and-prompts-for-gpt-6-astra?utm_source=chatgpt.com "Rethinking skills and prompts for GPT-6 Astra | OpenAI Developers"

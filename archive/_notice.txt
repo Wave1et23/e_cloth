@@ -1,0 +1,110 @@
+关于举办杭州电子科技大学第二届AIGC应用创新大赛的通知
+为积极响应国家关于推动人工智能创新应用与人才培养的号召，深化高校人工智能通识教育改革，提升大学生在生成式人工智能（AIGC）领域的应用创新能力，经研究，决定举办杭州电子科技大学第二届AIGC应用创新大赛。现将有关参赛事项说明如下：
+一、 参赛对象及形式
+（一）参赛对象
+2026—2027学年第一学期选修《生成式人工智能应用基础》及《AI智能化办公》课程的学生。
+（二）参赛形式
+比赛形式为团队赛。学生于各教学班内自由组队，每队成员4-6人，鼓励不同专业背景的学生开展协作。每位学生仅能参与一个团队，每队可邀请上述课程的任课教师作为指导老师，每位指导老师指导作品数量不限。
+二、 大赛原则
+（一）以赛促学，检验教学成果
+大赛作为课程教学的延伸与实践检验，强调将理论知识转化为解决实际问题的能力，综合评价课程教学成效。
+（二）激发创新，培育AI思维
+鼓励跨学科思考，探索AIGC技术在多元场景下的创新应用，着重培养学生的计算思维、创新思维与批判性思维。
+（三）赋能产业，对接社会需求
+引导作品选题关注社会热点与产业实际需求，运用AIGC技术助力文化传承、产业升级与社会服务，强化科技向善的责任意识。
+（四）对接省赛，孵化优质项目
+发掘与培育优秀项目，为参与更高级别的人工智能类竞赛进行项目储备与团队锻炼。
+三、 作品要求
+（一）大赛采用规定命题形式（赛题详见附件一），参赛团队可任选其一进行作品创作。
+（二）所有参赛作品必须为原创，严禁任何形式的抄袭或侵权。作品中如使用AIGC工具生成内容，须在项目文档中明确说明。
+（三）团队需在指定日期前提交以下材料到指定线上平台：
+1.项目文档（word格式）： 内容需涵盖项目背景、解决方案、技术实现路径、团队分工、创新点与价值、总结与展望等。项目文档最后附上AI工具使用、关键Prompt、生成或开发过程、迭代优化、测试验证和人工核查情况。项目文档格式规范。
+2.项目演示视频（MP4格式，5分钟内，≤100MB）：全程录屏并配以解说，清晰展示作品核心功能、使用流程与应用效果。
+3.项目方案（PPT格式，20页以内）：内容需涵盖创作理念、问题与需求分析、技术路径或工作流、设计过程、最终成果与团队协作。PPT格式和风格统一，排版美观。
+4.（可选）附加材料：如原型链接、代码仓库地址、可运行文件、测试数据说明或高清作品文件等。
+四、 评审说明
+（一）评审原则
+创意与应用并重：在评审技术实现与方案完整性的同时，重点关注作品的创新性、实用性及社会价值。
+过程与成果结合：综合考察项目方案、文档质量、演示效果及团队在项目完成过程中体现的综合能力。
+符合AIGC应用特色：强调对AIGC技术的理解、选择与组合运用能力，而非复杂的底层代码开发。
+（二）评审阶段
+竞赛评审分为教学班预赛推荐与校级决赛答辩两个阶段。
+预赛阶段：由任课教师依据统一标准进行评审，推荐教学班内排名前8%的团队进入校级决赛，排名8%—20%的团队直接获评校级三等奖，不参加决赛答辩。
+决赛阶段：入围团队进行现场展示与答辩，由大赛评审委员会评定最终一、二等奖。
+（三）预赛评分标准（总分100分）
+<w:tblPr><w:tblW w:w="8375" w:type="dxa"/><w:tblBorders><w:top w:val="single" w:sz="4" w:space="0" w:color="auto"/><w:left w:val="single" w:sz="4" w:space="0" w:color="auto"/><w:bottom w:val="single" w:sz="4" w:space="0" w:color="auto"/><w:right w:val="single" w:sz="4" w:space="0" w:color="auto"/><w:insideH w:val="single" w:sz="4" w:space="0" w:color="auto"/><w:insideV w:val="single" w:sz="4" w:space="0" w:color="auto"/></w:tblBorders><w:tblCellMar><w:top w:w="15" w:type="dxa"/><w:left w:w="15" w:type="dxa"/><w:bottom w:w="15" w:type="dxa"/><w:right w:w="15" w:type="dxa"/></w:tblCellMar><w:tblLook w:val="04A0" w:firstRow="1" w:lastRow="0" w:firstColumn="1" w:lastColumn="0" w:noHBand="0" w:noVBand="1"/></w:tblPr><w:tblGrid><w:gridCol w:w="1265"/><w:gridCol w:w="1260"/><w:gridCol w:w="5850"/></w:tblGrid><w:tr w:rsidR="00BC571D" w14:paraId="5276000E" w14:textId="77777777"><w:trPr><w:trHeight w:val="443"/><w:tblHeader/></w:trPr><w:tc><w:tcPr><w:tcW w:w="1265" w:type="dxa"/><w:tcMar><w:top w:w="100" w:type="dxa"/><w:left w:w="0" w:type="dxa"/><w:bottom w:w="100" w:type="dxa"/><w:right w:w="160" w:type="dxa"/></w:tcMar><w:vAlign w:val="center"/></w:tcPr><w:p w14:paraId="72737587" w14:textId="77777777" w:rsidR="00BC571D" w:rsidRDefault="007F0D3F"><w:pPr><w:jc w:val="center"/><w:rPr><w:sz w:val="24"/><w:szCs w:val="24"/></w:rPr></w:pPr><w:r><w:t>指标
+<w:tcPr><w:tcW w:w="1260" w:type="dxa"/><w:tcMar><w:top w:w="100" w:type="dxa"/><w:left w:w="160" w:type="dxa"/><w:bottom w:w="100" w:type="dxa"/><w:right w:w="160" w:type="dxa"/></w:tcMar><w:vAlign w:val="center"/></w:tcPr><w:p w14:paraId="5270A863" w14:textId="77777777" w:rsidR="00BC571D" w:rsidRDefault="007F0D3F"><w:pPr><w:jc w:val="center"/><w:rPr><w:sz w:val="24"/><w:szCs w:val="24"/></w:rPr></w:pPr><w:r><w:t>预赛权重
+<w:tcPr><w:tcW w:w="5850" w:type="dxa"/><w:tcMar><w:top w:w="100" w:type="dxa"/><w:left w:w="0" w:type="dxa"/><w:bottom w:w="100" w:type="dxa"/></w:tcMar><w:vAlign w:val="center"/></w:tcPr><w:p w14:paraId="46F8D0FB" w14:textId="77777777" w:rsidR="00BC571D" w:rsidRDefault="007F0D3F"><w:pPr><w:jc w:val="center"/><w:rPr><w:sz w:val="24"/><w:szCs w:val="24"/></w:rPr></w:pPr><w:r><w:t>说明
+<w:trPr><w:trHeight w:val="453"/></w:trPr><w:tc><w:tcPr><w:tcW w:w="1265" w:type="dxa"/><w:tcMar><w:top w:w="100" w:type="dxa"/><w:left w:w="0" w:type="dxa"/><w:bottom w:w="100" w:type="dxa"/><w:right w:w="160" w:type="dxa"/></w:tcMar><w:vAlign w:val="center"/></w:tcPr><w:p w14:paraId="13ECEEE2" w14:textId="77777777" w:rsidR="00BC571D" w:rsidRDefault="007F0D3F"><w:pPr><w:jc w:val="center"/><w:rPr><w:sz w:val="24"/><w:szCs w:val="24"/></w:rPr></w:pPr><w:r><w:t>学术诚信与AI使用规范
+<w:tcPr><w:tcW w:w="1260" w:type="dxa"/><w:tcMar><w:top w:w="100" w:type="dxa"/><w:left w:w="160" w:type="dxa"/><w:bottom w:w="100" w:type="dxa"/><w:right w:w="160" w:type="dxa"/></w:tcMar><w:vAlign w:val="center"/></w:tcPr><w:p w14:paraId="039506C2" w14:textId="4B779CEC" w:rsidR="00BC571D" w:rsidRDefault="007F0D3F"><w:pPr><w:jc w:val="center"/><w:rPr><w:sz w:val="24"/><w:szCs w:val="24"/></w:rPr></w:pPr><w:r><w:t>12.5%
+<w:tcPr><w:tcW w:w="5850" w:type="dxa"/><w:tcMar><w:top w:w="100" w:type="dxa"/><w:left w:w="160" w:type="dxa"/><w:bottom w:w="100" w:type="dxa"/><w:right w:w="0" w:type="dxa"/></w:tcMar><w:vAlign w:val="center"/></w:tcPr><w:p w14:paraId="0730EBDD" w14:textId="77777777" w:rsidR="00BC571D" w:rsidRDefault="007F0D3F"><w:pPr><w:jc w:val="left"/><w:rPr><w:sz w:val="24"/><w:szCs w:val="24"/><w:highlight w:val="yellow"/></w:rPr></w:pPr><w:r><w:t>作品原创，资料来源和授权情况清楚；如实说明AI工具、使用环节和生成内容；遵守数据安全、隐私保护、知识产权和学术诚信要求。
+<w:trPr><w:trHeight w:val="453"/></w:trPr><w:tc><w:tcPr><w:tcW w:w="1265" w:type="dxa"/><w:tcMar><w:top w:w="100" w:type="dxa"/><w:left w:w="0" w:type="dxa"/><w:bottom w:w="100" w:type="dxa"/><w:right w:w="160" w:type="dxa"/></w:tcMar><w:vAlign w:val="center"/></w:tcPr><w:p w14:paraId="60B68F42" w14:textId="77777777" w:rsidR="00BC571D" w:rsidRDefault="007F0D3F"><w:pPr><w:jc w:val="center"/><w:rPr><w:sz w:val="24"/><w:szCs w:val="24"/></w:rPr></w:pPr><w:r><w:t>项目文档
+<w:tcPr><w:tcW w:w="1260" w:type="dxa"/><w:tcMar><w:top w:w="100" w:type="dxa"/><w:left w:w="160" w:type="dxa"/><w:bottom w:w="100" w:type="dxa"/><w:right w:w="160" w:type="dxa"/></w:tcMar><w:vAlign w:val="center"/></w:tcPr><w:p w14:paraId="56A2C98A" w14:textId="46CBE226" w:rsidR="00BC571D" w:rsidRDefault="007F0D3F"><w:pPr><w:jc w:val="center"/><w:rPr><w:sz w:val="24"/><w:szCs w:val="24"/></w:rPr></w:pPr><w:r><w:t>25%
+<w:tcPr><w:tcW w:w="5850" w:type="dxa"/><w:tcMar><w:top w:w="100" w:type="dxa"/><w:left w:w="160" w:type="dxa"/><w:bottom w:w="100" w:type="dxa"/><w:right w:w="0" w:type="dxa"/></w:tcMar><w:vAlign w:val="center"/></w:tcPr><w:p w14:paraId="3E1AA8EC" w14:textId="7DD3810E" w:rsidR="00BC571D" w:rsidRDefault="00602CFD"><w:pPr><w:jc w:val="left"/><w:rPr><w:sz w:val="24"/><w:szCs w:val="24"/></w:rPr></w:pPr><w:r><w:rPr><w:rFonts w:hint="eastAsia"/></w:rPr><w:t>根据项目文档评分。项目文档结构完整、排版规范，能够说明项目背景、问题分析、解决方案、技术或工作流设计、团队分工、测试迭代和项目反思。
+<w:trPr><w:trHeight w:val="453"/></w:trPr><w:tc><w:tcPr><w:tcW w:w="1265" w:type="dxa"/><w:tcMar><w:top w:w="100" w:type="dxa"/><w:left w:w="0" w:type="dxa"/><w:bottom w:w="100" w:type="dxa"/><w:right w:w="160" w:type="dxa"/></w:tcMar><w:vAlign w:val="center"/></w:tcPr><w:p w14:paraId="6A205A98" w14:textId="77777777" w:rsidR="00BC571D" w:rsidRDefault="007F0D3F"><w:pPr><w:jc w:val="center"/><w:rPr><w:sz w:val="24"/><w:szCs w:val="24"/></w:rPr></w:pPr><w:r><w:t>项目方案
+<w:tcPr><w:tcW w:w="1260" w:type="dxa"/><w:tcMar><w:top w:w="100" w:type="dxa"/><w:left w:w="160" w:type="dxa"/><w:bottom w:w="100" w:type="dxa"/><w:right w:w="160" w:type="dxa"/></w:tcMar><w:vAlign w:val="center"/></w:tcPr><w:p w14:paraId="76406018" w14:textId="2F186C20" w:rsidR="00BC571D" w:rsidRDefault="007F0D3F"><w:pPr><w:jc w:val="center"/><w:rPr><w:sz w:val="24"/><w:szCs w:val="24"/></w:rPr></w:pPr><w:r><w:t>37.5%
+<w:tcPr><w:tcW w:w="5850" w:type="dxa"/><w:tcMar><w:top w:w="100" w:type="dxa"/><w:left w:w="160" w:type="dxa"/><w:bottom w:w="100" w:type="dxa"/><w:right w:w="0" w:type="dxa"/></w:tcMar><w:vAlign w:val="center"/></w:tcPr><w:p w14:paraId="1EB3619F" w14:textId="360AFBD5" w:rsidR="00BC571D" w:rsidRDefault="007F0D3F"><w:pPr><w:jc w:val="left"/><w:rPr><w:sz w:val="24"/><w:szCs w:val="24"/></w:rPr></w:pPr><w:r><w:t>根据项目方案PPT评分。要求项目逻辑清晰，能够准确展示目标用户、核心问题、解决方案、技术路径或工作流、创新点和应用价值。PPT格式和风格统一，排版美观。
+<w:trPr><w:trHeight w:val="453"/></w:trPr><w:tc><w:tcPr><w:tcW w:w="1265" w:type="dxa"/><w:tcMar><w:top w:w="100" w:type="dxa"/><w:left w:w="0" w:type="dxa"/><w:bottom w:w="100" w:type="dxa"/><w:right w:w="160" w:type="dxa"/></w:tcMar><w:vAlign w:val="center"/></w:tcPr><w:p w14:paraId="4D8E162D" w14:textId="77777777" w:rsidR="00BC571D" w:rsidRDefault="007F0D3F"><w:pPr><w:jc w:val="center"/><w:rPr><w:sz w:val="24"/><w:szCs w:val="24"/></w:rPr></w:pPr><w:r><w:t>项目演示/答辩
+<w:tcPr><w:tcW w:w="1260" w:type="dxa"/><w:tcMar><w:top w:w="100" w:type="dxa"/><w:left w:w="160" w:type="dxa"/><w:bottom w:w="100" w:type="dxa"/><w:right w:w="160" w:type="dxa"/></w:tcMar><w:vAlign w:val="center"/></w:tcPr><w:p w14:paraId="5EF58926" w14:textId="21C9881E" w:rsidR="00BC571D" w:rsidRDefault="007F0D3F"><w:pPr><w:jc w:val="center"/><w:rPr><w:sz w:val="24"/><w:szCs w:val="24"/></w:rPr></w:pPr><w:r><w:t>25%
+<w:tcPr><w:tcW w:w="5850" w:type="dxa"/><w:tcMar><w:top w:w="100" w:type="dxa"/><w:left w:w="160" w:type="dxa"/><w:bottom w:w="100" w:type="dxa"/><w:right w:w="0" w:type="dxa"/></w:tcMar><w:vAlign w:val="center"/></w:tcPr><w:p w14:paraId="0C9B579E" w14:textId="7C62BEFA" w:rsidR="00BC571D" w:rsidRDefault="007F0D3F"><w:pPr><w:jc w:val="left"/><w:rPr><w:sz w:val="24"/><w:szCs w:val="24"/></w:rPr></w:pPr><w:r><w:t>根据项目演示视频评分。要求演示流畅，解说清晰，能够直观呈现作品核心功能、使用效果和团队对项目的理解。
+（四）决赛评分标准（总分100分）
+<w:tblPr><w:tblW w:w="0" w:type="auto"/><w:tblBorders><w:top w:val="single" w:sz="4" w:space="0" w:color="auto"/><w:left w:val="single" w:sz="4" w:space="0" w:color="auto"/><w:bottom w:val="single" w:sz="4" w:space="0" w:color="auto"/><w:right w:val="single" w:sz="4" w:space="0" w:color="auto"/><w:insideH w:val="single" w:sz="4" w:space="0" w:color="auto"/><w:insideV w:val="single" w:sz="4" w:space="0" w:color="auto"/></w:tblBorders><w:tblCellMar><w:top w:w="15" w:type="dxa"/><w:left w:w="15" w:type="dxa"/><w:bottom w:w="15" w:type="dxa"/><w:right w:w="15" w:type="dxa"/></w:tblCellMar><w:tblLook w:val="04A0" w:firstRow="1" w:lastRow="0" w:firstColumn="1" w:lastColumn="0" w:noHBand="0" w:noVBand="1"/></w:tblPr><w:tblGrid><w:gridCol w:w="1619"/><w:gridCol w:w="899"/><w:gridCol w:w="5777"/></w:tblGrid><w:tr w:rsidR="00BC571D" w14:paraId="45E02F64" w14:textId="77777777"><w:trPr><w:tblHeader/></w:trPr><w:tc><w:tcPr><w:tcW w:w="1625" w:type="dxa"/><w:tcMar><w:top w:w="100" w:type="dxa"/><w:left w:w="0" w:type="dxa"/><w:bottom w:w="100" w:type="dxa"/><w:right w:w="160" w:type="dxa"/></w:tcMar><w:vAlign w:val="center"/></w:tcPr><w:p w14:paraId="1AAB180F" w14:textId="77777777" w:rsidR="00BC571D" w:rsidRDefault="007F0D3F"><w:pPr><w:jc w:val="center"/><w:rPr><w:sz w:val="24"/><w:szCs w:val="24"/></w:rPr></w:pPr><w:r><w:t>指标
+<w:tcPr><w:tcW w:w="900" w:type="dxa"/><w:tcMar><w:top w:w="100" w:type="dxa"/><w:left w:w="160" w:type="dxa"/><w:bottom w:w="100" w:type="dxa"/><w:right w:w="160" w:type="dxa"/></w:tcMar><w:vAlign w:val="center"/></w:tcPr><w:p w14:paraId="30C6C6B9" w14:textId="77777777" w:rsidR="00BC571D" w:rsidRDefault="007F0D3F"><w:pPr><w:jc w:val="center"/><w:rPr><w:sz w:val="24"/><w:szCs w:val="24"/></w:rPr></w:pPr><w:r><w:t>权重
+<w:tcPr><w:tcW w:w="5800" w:type="dxa"/><w:tcMar><w:top w:w="100" w:type="dxa"/><w:left w:w="0" w:type="dxa"/><w:bottom w:w="100" w:type="dxa"/></w:tcMar><w:vAlign w:val="center"/></w:tcPr><w:p w14:paraId="54C287CA" w14:textId="77777777" w:rsidR="00BC571D" w:rsidRDefault="007F0D3F"><w:pPr><w:jc w:val="center"/><w:rPr><w:sz w:val="24"/><w:szCs w:val="24"/></w:rPr></w:pPr><w:r><w:t>说明
+<w:tc><w:tcPr><w:tcW w:w="1625" w:type="dxa"/><w:tcMar><w:top w:w="100" w:type="dxa"/><w:left w:w="0" w:type="dxa"/><w:bottom w:w="100" w:type="dxa"/><w:right w:w="160" w:type="dxa"/></w:tcMar><w:vAlign w:val="center"/></w:tcPr><w:p w14:paraId="4486F575" w14:textId="77777777" w:rsidR="00BC571D" w:rsidRDefault="007F0D3F"><w:pPr><w:jc w:val="center"/><w:rPr><w:sz w:val="24"/><w:szCs w:val="24"/></w:rPr></w:pPr><w:r><w:t>创新性
+<w:tcPr><w:tcW w:w="900" w:type="dxa"/><w:tcMar><w:top w:w="100" w:type="dxa"/><w:left w:w="160" w:type="dxa"/><w:bottom w:w="100" w:type="dxa"/><w:right w:w="160" w:type="dxa"/></w:tcMar><w:vAlign w:val="center"/></w:tcPr><w:p w14:paraId="08835316" w14:textId="77777777" w:rsidR="00BC571D" w:rsidRDefault="007F0D3F"><w:pPr><w:jc w:val="center"/><w:rPr><w:sz w:val="24"/><w:szCs w:val="24"/></w:rPr></w:pPr><w:r><w:t>25%
+<w:tcPr><w:tcW w:w="5800" w:type="dxa"/><w:tcMar><w:top w:w="100" w:type="dxa"/><w:left w:w="160" w:type="dxa"/><w:bottom w:w="100" w:type="dxa"/><w:right w:w="0" w:type="dxa"/></w:tcMar><w:vAlign w:val="center"/></w:tcPr><w:p w14:paraId="311734B5" w14:textId="77777777" w:rsidR="00BC571D" w:rsidRDefault="007F0D3F"><w:pPr><w:jc w:val="left"/><w:rPr><w:sz w:val="24"/><w:szCs w:val="24"/></w:rPr></w:pPr><w:r><w:t>选题新颖度、解决方案独创性、对AIGC潜力的思考深度。
+<w:tc><w:tcPr><w:tcW w:w="1625" w:type="dxa"/><w:tcMar><w:top w:w="100" w:type="dxa"/><w:left w:w="0" w:type="dxa"/><w:bottom w:w="100" w:type="dxa"/><w:right w:w="160" w:type="dxa"/></w:tcMar><w:vAlign w:val="center"/></w:tcPr><w:p w14:paraId="5C32F051" w14:textId="77777777" w:rsidR="00BC571D" w:rsidRDefault="007F0D3F"><w:pPr><w:jc w:val="center"/><w:rPr><w:sz w:val="24"/><w:szCs w:val="24"/></w:rPr></w:pPr><w:r><w:t>技术应用
+<w:tcPr><w:tcW w:w="900" w:type="dxa"/><w:tcMar><w:top w:w="100" w:type="dxa"/><w:left w:w="160" w:type="dxa"/><w:bottom w:w="100" w:type="dxa"/><w:right w:w="160" w:type="dxa"/></w:tcMar><w:vAlign w:val="center"/></w:tcPr><w:p w14:paraId="293A4279" w14:textId="77777777" w:rsidR="00BC571D" w:rsidRDefault="007F0D3F"><w:pPr><w:jc w:val="center"/><w:rPr><w:sz w:val="24"/><w:szCs w:val="24"/></w:rPr></w:pPr><w:r><w:t>25%
+<w:tcPr><w:tcW w:w="5800" w:type="dxa"/><w:tcMar><w:top w:w="100" w:type="dxa"/><w:left w:w="160" w:type="dxa"/><w:bottom w:w="100" w:type="dxa"/><w:right w:w="0" w:type="dxa"/></w:tcMar><w:vAlign w:val="center"/></w:tcPr><w:p w14:paraId="3B14D6C7" w14:textId="77777777" w:rsidR="00BC571D" w:rsidRDefault="007F0D3F"><w:pPr><w:jc w:val="left"/><w:rPr><w:sz w:val="24"/><w:szCs w:val="24"/></w:rPr></w:pPr><w:r><w:t>AIGC工具的综合与深入运用能力，技术方案或工作流设计的合理性。
+<w:trPr><w:trHeight w:val="612"/></w:trPr><w:tc><w:tcPr><w:tcW w:w="1625" w:type="dxa"/><w:tcMar><w:top w:w="100" w:type="dxa"/><w:left w:w="0" w:type="dxa"/><w:bottom w:w="100" w:type="dxa"/><w:right w:w="160" w:type="dxa"/></w:tcMar><w:vAlign w:val="center"/></w:tcPr><w:p w14:paraId="3C15E750" w14:textId="77777777" w:rsidR="00BC571D" w:rsidRDefault="007F0D3F"><w:pPr><w:jc w:val="center"/><w:rPr><w:sz w:val="24"/><w:szCs w:val="24"/></w:rPr></w:pPr><w:r><w:t>完整与实用性
+<w:tcPr><w:tcW w:w="900" w:type="dxa"/><w:tcMar><w:top w:w="100" w:type="dxa"/><w:left w:w="160" w:type="dxa"/><w:bottom w:w="100" w:type="dxa"/><w:right w:w="160" w:type="dxa"/></w:tcMar><w:vAlign w:val="center"/></w:tcPr><w:p w14:paraId="2F57B4A4" w14:textId="77777777" w:rsidR="00BC571D" w:rsidRDefault="007F0D3F"><w:pPr><w:jc w:val="center"/><w:rPr><w:sz w:val="24"/><w:szCs w:val="24"/></w:rPr></w:pPr><w:r><w:t>20%
+<w:tcPr><w:tcW w:w="5800" w:type="dxa"/><w:tcMar><w:top w:w="100" w:type="dxa"/><w:left w:w="160" w:type="dxa"/><w:bottom w:w="100" w:type="dxa"/><w:right w:w="0" w:type="dxa"/></w:tcMar><w:vAlign w:val="center"/></w:tcPr><w:p w14:paraId="52B9C37B" w14:textId="77777777" w:rsidR="00BC571D" w:rsidRDefault="007F0D3F"><w:pPr><w:jc w:val="left"/><w:rPr><w:sz w:val="24"/><w:szCs w:val="24"/></w:rPr></w:pPr><w:r><w:t>作品完成度、核心功能演示清晰度、解决实际问题的有效性。
+<w:tc><w:tcPr><w:tcW w:w="1625" w:type="dxa"/><w:tcMar><w:top w:w="100" w:type="dxa"/><w:left w:w="0" w:type="dxa"/><w:bottom w:w="100" w:type="dxa"/><w:right w:w="160" w:type="dxa"/></w:tcMar><w:vAlign w:val="center"/></w:tcPr><w:p w14:paraId="30020939" w14:textId="77777777" w:rsidR="00BC571D" w:rsidRDefault="007F0D3F"><w:pPr><w:jc w:val="center"/><w:rPr><w:sz w:val="24"/><w:szCs w:val="24"/></w:rPr></w:pPr><w:r><w:t>答辩表现
+<w:tcPr><w:tcW w:w="900" w:type="dxa"/><w:tcMar><w:top w:w="100" w:type="dxa"/><w:left w:w="160" w:type="dxa"/><w:bottom w:w="100" w:type="dxa"/><w:right w:w="160" w:type="dxa"/></w:tcMar><w:vAlign w:val="center"/></w:tcPr><w:p w14:paraId="5928A4F9" w14:textId="77777777" w:rsidR="00BC571D" w:rsidRDefault="007F0D3F"><w:pPr><w:jc w:val="center"/><w:rPr><w:sz w:val="24"/><w:szCs w:val="24"/></w:rPr></w:pPr><w:r><w:t>30%
+<w:tcPr><w:tcW w:w="5800" w:type="dxa"/><w:tcMar><w:top w:w="100" w:type="dxa"/><w:left w:w="160" w:type="dxa"/><w:bottom w:w="100" w:type="dxa"/><w:right w:w="0" w:type="dxa"/></w:tcMar><w:vAlign w:val="center"/></w:tcPr><w:p w14:paraId="074DD96D" w14:textId="77777777" w:rsidR="00BC571D" w:rsidRDefault="007F0D3F"><w:pPr><w:jc w:val="left"/><w:rPr><w:sz w:val="24"/><w:szCs w:val="24"/></w:rPr></w:pPr><w:r><w:t>陈述逻辑性、演示流畅度、问题回答准确性。
+五、 奖项设置
+大赛设一等奖、二等奖、三等奖，奖励数量分别约占参赛团队总数的3%、5%和12%。具体名额根据实际参赛情况微调。
+六、 大赛日程安排
+（一）大赛启动：本学期第5周
+（二）项目过程辅导：本学期第5-11周（由任课老师提供指导）
+（三）教学班推荐截止：本学期第12周（由任课老师完成预赛评审与推荐）
+（四）校级决赛：第15周左右
+（五）优秀作品展示：学期末
+各参赛团队须严格按照时间节点提交相关材料，具体提交方式与要求由课程组另行通知。
+七、 补充说明
+所有选修《生成式人工智能应用基础》和《AI智能化办公》课程的学生均须以团队形式报名参赛。预赛成绩将作为对应课程期末成绩。
+杭州电子科技大学教务处、计算机学院（软件学院）二〇二六年十月十日
+附件一：赛题描述
+【赛题一：AI辅助开发 · 创意产品原型】
+1.任务描述
+本赛题要求参赛团队从学习生活、校园服务、文化创意、健康管理、产业应用等任一领域出发，发现一个具体的小问题或小需求，提出一个有明确用户和使用场景的创意产品，并使用AI编码工具完成可操作的产品原型。作品可以是网页、交互式工具、信息管理工具、学习辅助工具、生活服务工具等。没有深厚编程基础的学生，也可以使用自然语言AI编码、低代码或无代码工具完成产品原型。
+任务重点考察创意是否清晰、需求是否真实、核心功能是否可体验，以及团队能否使用AI编码完成界面、功能和交互的基本实现。作品不要求达到商业产品的生产级标准，但不能只停留在概念口号、静态海报或功能说明层面，至少应完成一个从用户输入到结果输出的核心闭环。可以使用模拟数据展示功能，但应说明数据来源、模拟条件等。
+2.推荐工具
+工具不作强制要求。AI 编码工具可选用 Qoder CN（原通义灵码）、腾讯 CodeBuddy 等；通用大模型可选用 ChatGPT、DeepSeek、Kimi、豆包、通义千问等，用于需求分析、方案设计、代码生成、调试和文档整理；如需制作界面和视觉素材，还可结合即梦、豆包图像生成、通义万相、剪映等工具。
+3.拓展学习资源
+建议学习《生成式人工智能应用基础》“拓展学习”章节中的“商汤小浣熊OPC能力挑战赛”的案例视频，帮助激发产品创意，了解如何从创意或需求出发，使用AI编码工具进行需求拆解、界面设计、代码生成、运行调试和产品原型迭代等。
+4.制作过程建议
+问题发现与需求分析：从学习、工作、生产、生活等场景中选择一个具体问题，明确目标用户、使用需求和现有方式的不足。
+产品设计：拆解用户流程，确定输入、处理、输出和核心功能，绘制页面草图或功能流程图。
+AI辅助开发：使用AI编码或低代码工具逐步生成界面、代码和说明，并记录关键Prompt和修改过程。
+测试与迭代：使用典型案例运行原型，记录错误、缺失和不易使用的地方，针对问题修改提示词、代码或流程。
+视频展示：展示产品原型的完整操作过程，并说明作品的实际价值、当前限制和后续改进方向。
+【赛题二：AI智能体·业务流程自动化】
+1.任务描述
+本赛题要求参赛团队从真实的业务、办公或校园事务场景出发，选择一个具体流程，识别其中重复性高、信息处理量大、沟通成本高或容易出错的问题，运用大语言模型、知识库、工作流、工具调用和多模态生成等能力，完成一个可运行、可重复使用的技能 Skills或AI 智能体。
+作品应说明目标使用者、业务流程、AI参与的环节、人工确认的节点和预期解决价值。作品应至少呈现一个从任务输入、AI处理或工具调用到结果输出的业务闭环，说明它如何提高效率、降低错误或改善服务体验。作品可以使用模拟数据，但应说明数据来源、模拟条件和实际应用时需要进一步解决的问题。
+2.推荐工具
+工具不作强制要求。 具体可按以下两类选用：
+（1）AI 智能体：可选用 Coze、Dify等平台搭建；
+（2）技能 Skills：可选用 WorkBuddy、千问办公等工具开发。
+此外，通用大模型可选用 ChatGPT、DeepSeek、Kimi、豆包、通义千问等；如需处理文档、表格、图片或视频，还可结合 WPS AI、腾讯文档、飞书、即梦、豆包图像生成、通义万相、剪映等工具。
+3.拓展学习资源
+建议学习《生成式人工智能应用基础》“拓展学习”章节中的“AI Agent实战”视频，重点了解如何分析业务场景，设计智能体角色与任务，配置知识库、工作流和工具调用，并通过案例测试和迭代优化提升实际效果。
+4.制作过程建议
+场景调研：选择一个真实业务流程，梳理参与者、输入资料、处理步骤、输出结果和现有痛点。
+任务拆解：判断哪些步骤适合由AI完成，哪些步骤需要规则、工具或人工确认，确定智能体或工作流边界。
+资料与流程设计：整理必要的知识资料，设计提示词、知识库、工作流节点、工具调用和结果格式。
+案例测试与迭代：使用典型案例和边界案例测试，检查事实、格式、权限、异常处理和人工接管机制。
+视频展示：展示业务流程和实际效果，用案例或前后对比说明作品如何提高效率、降低错误或改善服务体验。
+=== TOTAL LINES: 109
