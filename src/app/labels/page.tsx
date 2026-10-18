@@ -165,7 +165,11 @@ export default function LabelsPage() {
             </div>
           </div>
 
-          {error ? <div className="form-error">{error}</div> : null}
+          {error ? (
+            <div className="form-error" role="alert">
+              {error}
+            </div>
+          ) : null}
 
           {loading ? (
             <p className="muted">正在准备标签…</p>

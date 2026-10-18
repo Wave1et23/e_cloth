@@ -79,12 +79,12 @@ export default async function ScanPage({ params, searchParams }: Props) {
         </div>
 
         {done ? (
-          <div className="banner banner-ok" style={{ marginTop: 14 }}>
+          <div className="banner banner-ok" style={{ marginTop: 14 }} role="status">
             已记录 ✓ 现在状态：{statusLabel(garment.status)}
           </div>
         ) : null}
         {error ? (
-          <div className="banner banner-warn" style={{ marginTop: 14 }}>
+          <div className="banner banner-warn" style={{ marginTop: 14 }} role="alert">
             {error}
           </div>
         ) : null}

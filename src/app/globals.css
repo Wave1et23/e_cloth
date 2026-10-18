@@ -70,6 +70,25 @@ a {
   text-decoration: none;
 }
 
+:where(a, button, input, select, textarea):focus-visible {
+  outline: 2px solid var(--gold);
+  outline-offset: 2px;
+}
+
+.detail-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 24px;
+  margin-top: 14px;
+}
+
+@media (min-width: 900px) {
+  .detail-grid {
+    grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+    align-items: start;
+  }
+}
+
 .page {
   width: min(1080px, 100% - 40px);
   margin: 0 auto;
@@ -103,6 +122,8 @@ a {
   gap: 18px;
   color: var(--ink-muted);
   font-size: 14px;
+  flex-wrap: wrap;
+  justify-content: flex-end;
 }
 
 .card {
@@ -379,6 +400,10 @@ a {
   font-size: 16px;
 }
 
+.scan-card h1 {
+  overflow-wrap: anywhere;
+}
+
 .stat-bar {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -514,6 +539,11 @@ a {
 
 .garment-card {
   overflow: hidden;
+  transition: border-color 0.15s ease;
+}
+
+.garment-card:hover {
+  border-color: var(--gold);
 }
 
 .garment-thumb {
@@ -525,6 +555,11 @@ a {
   color: var(--ink-muted);
   font-size: 13px;
   object-fit: cover;
+  transition: opacity 0.15s ease;
+}
+
+.garment-card:hover .garment-thumb {
+  opacity: 0.92;
 }
 
 .garment-body {

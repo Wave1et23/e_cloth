@@ -80,14 +80,7 @@ export default async function GarmentDetailPage({ params }: Params) {
           ← 回衣柜
         </Link>
 
-        <div
-          style={{
-            display: "grid",
-            gridTemplateColumns: "minmax(0, 1fr)",
-            gap: 24,
-            marginTop: 14,
-          }}
-        >
+        <div className="detail-grid">
           <div className="card" style={{ overflow: "hidden" }}>
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
@@ -95,9 +88,10 @@ export default async function GarmentDetailPage({ params }: Params) {
               alt={garment.name}
               style={{
                 width: "100%",
-                maxHeight: 420,
-                objectFit: "contain",
+                aspectRatio: "4 / 5",
+                objectFit: "cover",
                 background: "var(--paper-raised)",
+                display: "block",
               }}
             />
           </div>
@@ -208,7 +202,7 @@ export default async function GarmentDetailPage({ params }: Params) {
 
             <p className="muted" style={{ fontSize: 13 }}>
               标签已生成，token 尾号 {garment.label?.token.slice(-4) ?? "—"}。
-              打印功能在标签页开放。
+              打印时请选「实际大小 / 缩放 100%」。
             </p>
           </div>
         </div>

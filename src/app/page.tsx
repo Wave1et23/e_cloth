@@ -221,6 +221,12 @@ async function Dashboard() {
                     </span>
                     <strong style={{ fontSize: 15 }}>{garment.name}</strong>
                     <span className="badge">{statusLabel(garment.status)}</span>
+                    <span className="muted" style={{ fontSize: 13 }}>
+                      单次{" "}
+                      {formatCny(
+                        computeCpw(garment.priceCents, garment.events.length),
+                      )}
+                    </span>
                   </div>
                 </Link>
               ))}

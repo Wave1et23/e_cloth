@@ -9,7 +9,8 @@
     "lint": "eslint",
     "test": "node --test tests/unit/status.test.ts tests/unit/cost.test.ts tests/unit/token.test.ts tests/unit/session.test.ts tests/unit/password.test.ts tests/unit/ai-schema.test.ts tests/unit/label-layout.test.ts tests/unit/scan.test.ts",
     "db:migrate": "prisma migrate dev",
-    "db:seed": "node prisma/seed.ts"
+    "db:seed": "node prisma/seed.ts",
+    "db:seed:demo": "node prisma/seed-demo.ts"
   },
   "prisma": {
     "seed": "node prisma/seed.ts"

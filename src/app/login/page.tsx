@@ -46,7 +46,11 @@ export default function LoginPage() {
         <h1>欢迎回来</h1>
         <p className="sub">登录后继续整理你的衣柜。</p>
         <form className="auth-form" onSubmit={submit}>
-          {error ? <div className="form-error">{error}</div> : null}
+          {error ? (
+            <div className="form-error" role="alert">
+              {error}
+            </div>
+          ) : null}
           <div className="field">
             <label htmlFor="email">邮箱</label>
             <input

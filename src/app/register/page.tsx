@@ -51,7 +51,11 @@ export default function RegisterPage() {
         <h1>创建账号</h1>
         <p className="sub">一个邮箱、一个密码，就可以开始。</p>
         <form className="auth-form" onSubmit={submit}>
-          {error ? <div className="form-error">{error}</div> : null}
+          {error ? (
+            <div className="form-error" role="alert">
+              {error}
+            </div>
+          ) : null}
           <div className="field">
             <label htmlFor="email">邮箱</label>
             <input

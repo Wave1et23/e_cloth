@@ -313,23 +313,31 @@ export default function NewGarmentPage() {
           )}
         </section>
 
-        {error ? <div className="form-error">{error}</div> : null}
+        {error ? (
+          <div className="form-error" role="alert">
+            {error}
+          </div>
+        ) : null}
 
         {aiState === "loading" ? (
-          <div className="banner">AI 正在看这张照片…（最长 20 秒）</div>
+          <div className="banner" role="status">
+            AI 正在看这张照片…（最长 20 秒）
+          </div>
         ) : null}
         {aiState === "done" ? (
-          <div className="banner banner-ok">
+          <div className="banner banner-ok" role="status">
             AI 已填好。标黄的字段表示它不太确定，请你确认或自己选。
           </div>
         ) : null}
         {aiState === "error" ? (
-          <div className="banner banner-warn">
+          <div className="banner banner-warn" role="alert">
             {aiMsg || "AI 没识别成功，不影响建档，手动填完就行"}
           </div>
         ) : null}
         {aiState === "skipped" ? (
-          <div className="banner">已跳过 AI，直接手动填写。</div>
+          <div className="banner" role="status">
+            已跳过 AI，直接手动填写。
+          </div>
         ) : null}
 
         <section className="card" style={{ padding: 20 }}>

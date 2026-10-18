@@ -104,7 +104,11 @@ export function GarmentActions({ garment }: { garment: EditableGarment }) {
   if (!editing) {
     return (
       <div style={{ display: "grid", gap: 10 }}>
-        {error ? <div className="form-error">{error}</div> : null}
+        {error ? (
+          <div className="form-error" role="alert">
+            {error}
+          </div>
+        ) : null}
         <div className="cta-row">
           <button
             type="button"

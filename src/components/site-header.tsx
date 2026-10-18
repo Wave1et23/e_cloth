@@ -10,6 +10,7 @@ export function SiteHeader({ showLogout = false }: { showLogout?: boolean }) {
         </Link>
         <nav className="nav-links">
           <Link href="/garments">我的衣柜</Link>
+          <Link href="/labels">打印标签</Link>
           {showLogout ? <LogoutButton /> : null}
         </nav>
       </div>
