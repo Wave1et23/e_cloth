@@ -175,6 +175,15 @@ export default async function GarmentDetailPage({ params }: Params) {
               )}
             </section>
 
+            <div className="cta-row">
+              <Link
+                href={`/labels?ids=${garment.id}`}
+                className="btn"
+              >
+                打印标签
+              </Link>
+            </div>
+
             <GarmentActions
               garment={{
                 id: garment.id,

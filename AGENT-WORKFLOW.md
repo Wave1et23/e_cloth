@@ -363,6 +363,7 @@
 - [x] **Stage 1 完成**：`docs/DESIGN.md`（8 页路由、跳转图、三态与文案、写入点、权限矩阵）；G1 十项已确认
 - [x] **Stage 2 完成**：Prisma 四表迁移 + demo seed；注册/登录/退出/`/api/garments`/`/api/health`；状态映射、CPW、token、session、密码单测 15 项通过；`npm run build` exit 0；游客访问 `/garments` 307 到 `/login`，登录后空列表可见
 - [x] **Stage 4 本地部分完成**：Ark adapter（`json_schema`、关闭深度思考、20s 超时、1 次重试、`AI_UNAVAILABLE` 降级、300 次预算告警）；图片魔数校验/临时区/正式区；`POST /api/ai/garment`（失败仍返回 imageToken）；`POST /api/garments`（Garment+Label、seq 编号、事务、token 冲突重试）；列表/详情/编辑/删除/照片读取；`/garments/new` 与 `/garments/[id]`；AI 归一化单测 5 项（总 20 项通过）；本地 mock 全链路 smoke 通过（上传→AI→G001→详情→改→删）
+- [x] **Stage 5 本地部分完成**：A4 24 格排版数学（`src/lib/label/layout.ts`，4×6、QR 354px、100mm 尺）；canvas 合成 2480×3508 PNG（`render.ts`，QR 容错 M，下载）；`/labels` 选择/上限 24/预览；`/api/labels`（token 补建）；`/g/[token]` 免登录页 + 6 表单；`/api/g/[token]/action`（303 回跳、30 秒幂等、5 状态映射、限流）；`/api/g/[token]/photo`；首页数据条（本月穿着/在柜/平均 CPW/最近 4 件）；单测总 27 项通过；build exit 0；headless Chrome 实跑 canvas 生成预览成功（无 error，含 100mm 校验尺）
 
 ### 环境事实（新窗口不要重复踩）
 
@@ -382,6 +383,8 @@
 | AI 本地验收 | `AI_MOCK=1` 时 adapter 返回固定建议，不调 Ark；真实 key 由 G3 填写，上线前必须删掉 `AI_MOCK` |
 | Prisma 生成 | Windows 下 dev server 会锁 `query_engine-windows.dll.node`；跑 `prisma generate/migrate` 前先停 dev server |
 | 图片 | 临时区 `uploads/tmp/<userId>/<token>`；正式区 `uploads/garments/<uuid>.<jpg|png>`；均被 Git 忽略 |
+| 标签 | `qrcode@1.5.4`；排版数学与 canvas 渲染分离；QR 内容 = `APP_BASE_URL + /g/{token}`；本地 `APP_BASE_URL=http://localhost:3000` |
+| 浏览器验证 | 不装 Playwright；用系统 Chrome/Edge `--headless --remote-debugging-port` + Node 内置 WebSocket 走 CDP 截图验证（临时脚本放 `backup/`，不进 Git） |
 
 ### 未决
 
