@@ -2,7 +2,7 @@ import Link from "next/link";
 import { redirect } from "next/navigation";
 import { SiteHeader } from "@/components/site-header";
 import { getCurrentUser } from "@/lib/auth/user";
-import { formatCny, computeCpw } from "@/lib/cost";
+import { computeCpw, formatCny } from "@/lib/cost";
 import { prisma } from "@/lib/db";
 import { normalizeStatus, statusLabel } from "@/lib/status";
 
@@ -22,10 +22,11 @@ export default async function GarmentsPage() {
 
   const garments = await prisma.garment.findMany({
     where: { userId: user.id },
-    orderBy: { createdAt: "desc" },
+    orderBy: { seq: "desc" },
     take: 200,
     select: {
       id: true,
+      seq: true,
       name: true,
       category: true,
       status: true,
@@ -56,9 +57,9 @@ export default async function GarmentsPage() {
               共 {garments.length} 件
             </p>
           </div>
-          <span className="muted" style={{ fontSize: 13 }}>
-            拍照建档即将开放
-          </span>
+          <Link href="/garments/new" className="btn btn-primary">
+            新增
+          </Link>
         </div>
 
         {garments.length === 0 ? (
@@ -75,9 +76,9 @@ export default async function GarmentsPage() {
                 marginTop: 20,
               }}
             >
-              <button type="button" className="btn btn-primary" disabled>
-                拍照建档（下一步开放）
-              </button>
+              <Link href="/garments/new" className="btn btn-primary">
+                拍照建档
+              </Link>
             </div>
           </section>
         ) : (
@@ -91,8 +92,17 @@ export default async function GarmentsPage() {
                   href={`/garments/${garment.id}`}
                   className="card garment-card"
                 >
-                  <div className="garment-thumb">还没有照片路由</div>
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img
+                    className="garment-thumb"
+                    src={`/api/garments/${garment.id}/photo`}
+                    alt={garment.name}
+                    loading="lazy"
+                  />
                   <div className="garment-body">
+                    <span className="muted" style={{ fontSize: 12 }}>
+                      G{String(garment.seq).padStart(3, "0")} · {garment.category}
+                    </span>
                     <strong style={{ fontSize: 15 }}>{garment.name}</strong>
                     <span className={badgeClass(garment.status)}>
                       {statusLabel(garment.status)}

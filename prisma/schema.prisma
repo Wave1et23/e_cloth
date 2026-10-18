@@ -23,6 +23,7 @@ model Garment {
   id           String         @id @default(cuid())
   userId       String
   user         User           @relation(fields: [userId], references: [id], onDelete: Cascade)
+  seq          Int
   name         String
   category     String
   primaryColor String?
@@ -43,6 +44,7 @@ model Garment {
   label        Label?
 
   @@index([userId, createdAt])
+  @@unique([userId, seq])
 }
 
 model GarmentEvent {

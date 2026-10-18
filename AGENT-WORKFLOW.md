@@ -362,6 +362,7 @@
 - [x] **Stage 0 完成**：Next.js 脚手架已生成在仓库根目录，依赖已装，`npm run build` 通过（exit 0，4 个静态页）
 - [x] **Stage 1 完成**：`docs/DESIGN.md`（8 页路由、跳转图、三态与文案、写入点、权限矩阵）；G1 十项已确认
 - [x] **Stage 2 完成**：Prisma 四表迁移 + demo seed；注册/登录/退出/`/api/garments`/`/api/health`；状态映射、CPW、token、session、密码单测 15 项通过；`npm run build` exit 0；游客访问 `/garments` 307 到 `/login`，登录后空列表可见
+- [x] **Stage 4 本地部分完成**：Ark adapter（`json_schema`、关闭深度思考、20s 超时、1 次重试、`AI_UNAVAILABLE` 降级、300 次预算告警）；图片魔数校验/临时区/正式区；`POST /api/ai/garment`（失败仍返回 imageToken）；`POST /api/garments`（Garment+Label、seq 编号、事务、token 冲突重试）；列表/详情/编辑/删除/照片读取；`/garments/new` 与 `/garments/[id]`；AI 归一化单测 5 项（总 20 项通过）；本地 mock 全链路 smoke 通过（上传→AI→G001→详情→改→删）
 
 ### 环境事实（新窗口不要重复踩）
 
@@ -378,6 +379,9 @@
 | 单测 | Node 24 原生跑 TS：`npm test` → `node --test tests/unit/*.test.ts`，不引入 Vitest |
 | 会话 | 签名 cookie（HMAC-SHA256，`SESSION_SECRET`），不建 Session 表；密码用 Node 内置 scrypt |
 | 本地环境 | `.env` 已生成（Git 忽略）；demo 账号 `demo@example.com` / `demo1234`，仅本地 seed |
+| AI 本地验收 | `AI_MOCK=1` 时 adapter 返回固定建议，不调 Ark；真实 key 由 G3 填写，上线前必须删掉 `AI_MOCK` |
+| Prisma 生成 | Windows 下 dev server 会锁 `query_engine-windows.dll.node`；跑 `prisma generate/migrate` 前先停 dev server |
+| 图片 | 临时区 `uploads/tmp/<userId>/<token>`；正式区 `uploads/garments/<uuid>.<jpg|png>`；均被 Git 忽略 |
 
 ### 未决
 
