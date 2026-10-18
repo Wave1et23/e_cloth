@@ -1,0 +1,46 @@
+{
+  "version": "care-label-eval-v1",
+  "note": "8 张水洗标：离线实验，不进产品界面。图片放到 tests/eval/care-images/；expected 为人工 Ground Truth。",
+  "items": [
+    {
+      "id": "c01",
+      "image": "c01.png",
+      "expected": { "washTemp": "30", "bleach": "no", "iron": "low", "dryClean": "no", "tumbleDry": "no" }
+    },
+    {
+      "id": "c02",
+      "image": "c02.png",
+      "expected": { "washTemp": "40", "bleach": "no", "iron": "medium", "dryClean": "no", "tumbleDry": "yes" }
+    },
+    {
+      "id": "c03",
+      "image": "c03.png",
+      "expected": { "washTemp": "cold", "bleach": "no", "iron": "low", "dryClean": "yes", "tumbleDry": "no" }
+    },
+    {
+      "id": "c04",
+      "image": "c04.png",
+      "expected": { "washTemp": "30", "bleach": "yes", "iron": "medium", "dryClean": "no", "tumbleDry": "no" }
+    },
+    {
+      "id": "c05",
+      "image": "c05.png",
+      "expected": { "washTemp": "unknown", "bleach": "no", "iron": "unknown", "dryClean": "yes", "tumbleDry": "unknown" }
+    },
+    {
+      "id": "c06",
+      "image": "c06.png",
+      "expected": { "washTemp": "40", "bleach": "no", "iron": "high", "dryClean": "no", "tumbleDry": "yes" }
+    },
+    {
+      "id": "c07",
+      "image": "c07.png",
+      "expected": { "washTemp": "cold", "bleach": "no", "iron": "low", "dryClean": "no", "tumbleDry": "no" }
+    },
+    {
+      "id": "c08",
+      "image": "c08.png",
+      "expected": { "washTemp": "30", "bleach": "no", "iron": "low", "dryClean": "no", "tumbleDry": "unknown" }
+    }
+  ]
+}

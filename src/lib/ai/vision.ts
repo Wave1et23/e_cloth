@@ -4,7 +4,7 @@ import {
   normalizeSuggestion,
   parseModelJson,
   type GarmentSuggestion,
-} from "@/lib/ai/schema";
+} from "./schema.ts";
 
 const TIMEOUT_MS = 20_000;
 
@@ -59,12 +59,18 @@ type AnalyzeInput = {
   mime: "image/jpeg" | "image/png";
 };
 
+type AnalyzeOptions = {
+  /** Eval 用：允许传入 V1/V2 等不同版本的 system prompt。 */
+  systemPrompt?: string;
+};
+
 /**
  * 调 Ark 的 OpenAI 兼容接口做衣物识别。
  * 失败只返回 AI_UNAVAILABLE，由页面降级为手动填写，不抛异常。
  */
 export async function analyzeGarmentImage(
   input: AnalyzeInput,
+  options: AnalyzeOptions = {},
 ): Promise<VisionResult> {
   if (process.env.AI_MOCK === "1") {
     return { ok: true, suggestion: mockSuggestion(), mock: true };
@@ -88,7 +94,7 @@ export async function analyzeGarmentImage(
   const body: Record<string, unknown> = {
     model,
     messages: [
-      { role: "system", content: SYSTEM_PROMPT },
+      { role: "system", content: options.systemPrompt ?? SYSTEM_PROMPT },
       {
         role: "user",
         content: [

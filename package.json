@@ -7,10 +7,14 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
-    "test": "node --test tests/unit/status.test.ts tests/unit/cost.test.ts tests/unit/token.test.ts tests/unit/session.test.ts tests/unit/password.test.ts tests/unit/ai-schema.test.ts tests/unit/label-layout.test.ts tests/unit/scan.test.ts",
+    "test": "node --test tests/unit/status.test.ts tests/unit/cost.test.ts tests/unit/token.test.ts tests/unit/session.test.ts tests/unit/password.test.ts tests/unit/ai-schema.test.ts tests/unit/label-layout.test.ts tests/unit/scan.test.ts tests/unit/vision.test.ts tests/unit/images.test.ts",
     "db:migrate": "prisma migrate dev",
     "db:seed": "node prisma/seed.ts",
-    "db:seed:demo": "node prisma/seed-demo.ts"
+    "db:seed:demo": "node prisma/seed-demo.ts",
+    "eval:dry": "node tests/eval/run-ai-eval.ts --dry-run",
+    "eval": "node tests/eval/run-ai-eval.ts",
+    "eval:care:dry": "node tests/eval/run-care-label.ts --dry-run",
+    "eval:care": "node tests/eval/run-care-label.ts"
   },
   "prisma": {
     "seed": "node prisma/seed.ts"

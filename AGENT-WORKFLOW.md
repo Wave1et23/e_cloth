@@ -364,7 +364,8 @@
 - [x] **Stage 2 完成**：Prisma 四表迁移 + demo seed；注册/登录/退出/`/api/garments`/`/api/health`；状态映射、CPW、token、session、密码单测 15 项通过；`npm run build` exit 0；游客访问 `/garments` 307 到 `/login`，登录后空列表可见
 - [x] **Stage 4 本地部分完成**：Ark adapter（`json_schema`、关闭深度思考、20s 超时、1 次重试、`AI_UNAVAILABLE` 降级、300 次预算告警）；图片魔数校验/临时区/正式区；`POST /api/ai/garment`（失败仍返回 imageToken）；`POST /api/garments`（Garment+Label、seq 编号、事务、token 冲突重试）；列表/详情/编辑/删除/照片读取；`/garments/new` 与 `/garments/[id]`；AI 归一化单测 5 项（总 20 项通过）；本地 mock 全链路 smoke 通过（上传→AI→G001→详情→改→删）
 - [x] **Stage 5 本地部分完成**：A4 24 格排版数学（`src/lib/label/layout.ts`，4×6、QR 354px、100mm 尺）；canvas 合成 2480×3508 PNG（`render.ts`，QR 容错 M，下载）；`/labels` 选择/上限 24/预览；`/api/labels`（token 补建）；`/g/[token]` 免登录页 + 6 表单；`/api/g/[token]/action`（303 回跳、30 秒幂等、5 状态映射、限流）；`/api/g/[token]/photo`；首页数据条（本月穿着/在柜/平均 CPW/最近 4 件）；单测总 27 项通过；build exit 0；headless Chrome 实跑 canvas 生成预览成功（无 error，含 100mm 校验尺）
-- [x] **Stage 6 本地部分完成**：全站三态（列表 loading/error、详情 loading/error/不存在、标签空/错误、AI 失败、扫码非法/错误/成功）；全局中文 404/error；详情桌面双栏、移动端扫码页 2 列；按钮焦点态、hover、`role=alert/status`；修复受保护页 `Date.now()` 预渲染问题（`getCurrentUser` 显式 `connection()`）；新增 8 件模拟演示数据（`prisma/seed-demo.ts` + `prisma/demo-assets/`，图片与备注都标注模拟）；headless Chrome 全站截图完成，G5 待确认
+- [x] **Stage 6 本地部分完成**：全站三态（列表 loading/error、详情 loading/error/不存在、标签空/错误、AI 失败、扫码非法/错误/成功）；全局中文 404/error；详情桌面双栏、移动端扫码页 2 列；按钮焦点态、hover、`role=alert/status`；修复受保护页 `Date.now()` 预渲染问题（`getCurrentUser` 显式 `connection()`）；新增 8 件模拟演示数据（`prisma/seed-demo.ts` + `prisma/demo-assets/`，图片与备注都标注模拟）；headless Chrome 全站截图完成，G5 已确认
+- [x] **Stage 7 本地部分完成**：单测扩到 **31 项**（新增图片魔数、AI mock/无 key 降级）；HTTP 实测「无 key → `AI_NOT_CONFIGURED`，仍可用 imageToken 手动建档」；20 件衣物 Eval 清单 + `run-ai-eval.ts`（dry-run 通过，真跑待 key/照片）；8 张水洗标离线脚本 + 清单（dry-run 通过）；`docs/EVAL-REPORT.md`、`docs/AI-USAGE-LOG.md` 模板就绪，真实准确率与失败样本待补
 
 ### 环境事实（新窗口不要重复踩）
 
@@ -398,7 +399,8 @@
 | U3 | **服务器访问方式** | host / 用户 / 端口（**建议用 SSH key，不要把密码写进文件或聊天**） |
 | U4 | **仓库推送授权** | 允许我 `git commit` 但不 `push`（你自己推）？还是另有安排？ |
 | U5 | **同机共存** | 香港服务器上是否已有其他项目在跑？部署时我必须只动本项目 |
-| G5 | **视觉走查** | 全站截图已产出（`backup/screens/`）；请确认「可以」或指出要改的页面 |
+| G5 | **视觉走查** | 全站截图已产出（`backup/screens/`）；G5 已确认「暂时不改」 |
+| G6 | **Eval 准确率** | 脚本与清单已就绪；待 `ARK_API_KEY` + 20 张衣物 + 8 张水洗标后跑真实准确率 |
 
 ### 待你执行（我做不了）
 

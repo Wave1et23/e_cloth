@@ -46,6 +46,13 @@ yarn-error.log*
 /uploads/
 /backup/
 
+# eval photos and results (user-supplied, not source)
+/tests/eval/images/*
+!/tests/eval/images/README.md
+/tests/eval/care-images/*
+!/tests/eval/care-images/README.md
+/tests/eval/results/
+
 # logs
 *.log
 
