@@ -365,7 +365,9 @@
 - [x] **Stage 4 本地部分完成**：Ark adapter（`json_schema`、关闭深度思考、20s 超时、1 次重试、`AI_UNAVAILABLE` 降级、300 次预算告警）；图片魔数校验/临时区/正式区；`POST /api/ai/garment`（失败仍返回 imageToken）；`POST /api/garments`（Garment+Label、seq 编号、事务、token 冲突重试）；列表/详情/编辑/删除/照片读取；`/garments/new` 与 `/garments/[id]`；AI 归一化单测 5 项（总 20 项通过）；本地 mock 全链路 smoke 通过（上传→AI→G001→详情→改→删）
 - [x] **Stage 5 本地部分完成**：A4 24 格排版数学（`src/lib/label/layout.ts`，4×6、QR 354px、100mm 尺）；canvas 合成 2480×3508 PNG（`render.ts`，QR 容错 M，下载）；`/labels` 选择/上限 24/预览；`/api/labels`（token 补建）；`/g/[token]` 免登录页 + 6 表单；`/api/g/[token]/action`（303 回跳、30 秒幂等、5 状态映射、限流）；`/api/g/[token]/photo`；首页数据条（本月穿着/在柜/平均 CPW/最近 4 件）；单测总 27 项通过；build exit 0；headless Chrome 实跑 canvas 生成预览成功（无 error，含 100mm 校验尺）
 - [x] **Stage 6 本地部分完成**：全站三态（列表 loading/error、详情 loading/error/不存在、标签空/错误、AI 失败、扫码非法/错误/成功）；全局中文 404/error；详情桌面双栏、移动端扫码页 2 列；按钮焦点态、hover、`role=alert/status`；修复受保护页 `Date.now()` 预渲染问题（`getCurrentUser` 显式 `connection()`）；新增 8 件模拟演示数据（`prisma/seed-demo.ts` + `prisma/demo-assets/`，图片与备注都标注模拟）；headless Chrome 全站截图完成，G5 已确认
-- [x] **Stage 7 本地部分完成**：单测扩到 **31 项**（新增图片魔数、AI mock/无 key 降级）；HTTP 实测「无 key → `AI_NOT_CONFIGURED`，仍可用 imageToken 手动建档」；20 件衣物 Eval 清单 + `run-ai-eval.ts`（dry-run 通过，真跑待 key/照片）；8 张水洗标离线脚本 + 清单（dry-run 通过）；`docs/EVAL-REPORT.md`、`docs/AI-USAGE-LOG.md` 模板就绪，真实准确率与失败样本待补
+- [x] **Stage 7 本地部分完成**：单测扩到 **33 项**（新增图片魔数、AI mock/无 key 降级、图片压缩尺寸）；HTTP 实测「无 key → `AI_NOT_CONFIGURED`，仍可用 imageToken 手动建档」；20 件衣物 Eval 清单 + `run-ai-eval.ts`（dry-run 通过）；8 张水洗标离线脚本 + 清单（dry-run 通过）；`docs/EVAL-REPORT.md`、`docs/AI-USAGE-LOG.md`
+- [x] **2026-10-19 真实 Ark 试跑**：关闭 `AI_MOCK`，7 张衣物 + 4 张水洗标，共 11 次真实视觉调用全部成功（单张 1.4–2.7s）；7 件类别/颜色基本正确，图案在星星/字母装饰上有 `其他` vs `印花` 分歧；正式准确率仍等 20 件 Ground Truth
+- [x] **2026-10-19 图片压缩**：`sharp` 入库前统一旋正 + 等比缩到 **1440×1920** 内 + JPEG q82；实测 4000×3000 → 1440×1080 / 9KB，1280×1280 真图 218KB → 166KB；AI 也只读压缩图
 
 ### 环境事实（新窗口不要重复踩）
 
@@ -382,9 +384,9 @@
 | 单测 | Node 24 原生跑 TS：`npm test` → `node --test tests/unit/*.test.ts`，不引入 Vitest |
 | 会话 | 签名 cookie（HMAC-SHA256，`SESSION_SECRET`），不建 Session 表；密码用 Node 内置 scrypt |
 | 本地环境 | `.env` 已生成（Git 忽略）；demo 账号 `demo@example.com` / `demo1234`，仅本地 seed |
-| AI 本地验收 | `AI_MOCK=1` 时 adapter 返回固定建议，不调 Ark；真实 key 由 G3 填写，上线前必须删掉 `AI_MOCK` |
+| AI 本地验收 | `AI_MOCK=1` 时 adapter 返回固定建议，不调 Ark；2026-10-19 已用真实 key 跑过 11 次；`.env` 当前 `AI_MOCK=0`，上线前确认删掉或为 0 |
 | Prisma 生成 | Windows 下 dev server 会锁 `query_engine-windows.dll.node`；跑 `prisma generate/migrate` 前先停 dev server |
-| 图片 | 临时区 `uploads/tmp/<userId>/<token>`；正式区 `uploads/garments/<uuid>.<jpg|png>`；均被 Git 忽略 |
+| 图片 | 入库前 `sharp` 压缩：EXIF 旋正、等比 ≤1440×1920、JPEG q82、透明铺白；临时区 `uploads/tmp/<userId>/<token>`，正式区 `uploads/garments/<uuid>.jpg`；均被 Git 忽略 |
 | 标签 | `qrcode@1.5.4`；排版数学与 canvas 渲染分离；QR 内容 = `APP_BASE_URL + /g/{token}`；本地 `APP_BASE_URL=http://localhost:3000` |
 | 浏览器验证 | 不装 Playwright；用系统 Chrome/Edge `--headless --remote-debugging-port` + Node 内置 WebSocket 走 CDP 截图验证（临时脚本放 `backup/`，不进 Git） |
 | 演示数据 | `npm run db:seed:demo`：8 件「演示·」衣物 + 历史 WORN/WASHED/STORED/SOLD；图片在 `prisma/demo-assets/`；全部标注模拟数据，答辩时需说明 |

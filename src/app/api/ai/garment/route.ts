@@ -1,5 +1,6 @@
 import { analyzeGarmentImage } from "@/lib/ai/vision";
 import { getCurrentUser } from "@/lib/auth/user";
+import { compressGarmentImage } from "@/lib/image-compress";
 import {
   MAX_IMAGE_BYTES,
   cleanupStaleTempImages,
@@ -42,14 +43,28 @@ export async function POST(request: Request) {
     return jsonError("VALIDATION", "只支持 JPG/PNG，且不超过 10MB", 400);
   }
 
+  let compressed;
+  try {
+    compressed = await compressGarmentImage(buffer);
+  } catch {
+    return jsonError("VALIDATION", "这张图片读不出来，换一张试试", 400);
+  }
+  console.info(
+    `[image] ${file.size}B -> ${compressed.bytes}B, ${compressed.width}x${compressed.height}`,
+  );
+
   await cleanupStaleTempImages(user.id);
-  const imageToken = await saveTempImage(user.id, buffer);
+  const imageToken = await saveTempImage(user.id, compressed.buffer);
 
   if (form.get("skipAi") === "1") {
     return jsonOk({ imageToken, ai: null });
   }
 
-  const result = await analyzeGarmentImage({ buffer, mime: type.mime });
+  // 压缩后统一是 JPEG；AI 只看压缩图，省流量也省视觉 token。
+  const result = await analyzeGarmentImage({
+    buffer: compressed.buffer,
+    mime: "image/jpeg",
+  });
   return jsonOk(
     result.ok
       ? { imageToken, ai: { ok: true, suggestion: result.suggestion } }
