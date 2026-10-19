@@ -1,17 +1,19 @@
 # 衣橱镜像 · Agent 运行时工作流
 
-> 版本 1.0 ｜ 2026-10-18
-> **本文是新对话窗口的唯一入口文档。** 不含时间表，按阶段与闸门推进。
-> 配套权威文件：`docs/DECISIONS.md`（技术选型与硬参数）、`WEB_DEV_SKILL.md`（工程规范）、`衣橱镜像-产品方案.md`（产品定义与比赛策略）
+> 版本 1.1 ｜ 2026-10-19
+> **本文是新对话窗口的流程入口。** 只负责阶段、闸门与汇报格式；进度不写在这里。
+> 配套文件：`AGENTS.md`（文档分工）、`docs/PRD.md`（功能与验收）、`docs/ARCHITECTURE.md`（技术快照）、`docs/ITERATION_LOG.md`（已完成进度）、`tasks/`（进行中任务）、`docs/DECISIONS.md`（选型与硬参数）、`WEB_DEV_SKILL.md`（工程规范）
 
 ---
 
 ## 0. 给新窗口的启动指令（直接复制这段发给 AI）
 
 ```
-读 C:\myproject\e_cloth\AGENT-WORKFLOW.md、docs/DECISIONS.md、WEB_DEV_SKILL.md。
+读 C:\myproject\e_cloth\AGENTS.md、AGENT-WORKFLOW.md、docs/PRD.md、docs/ARCHITECTURE.md、
+docs/DECISIONS.md、docs/DESIGN.md，以及 tasks/ 的进行中任务。
 不要重新规划时间表，不要重新讨论已定技术选型。
-从「§10 当前进度」往下继续，遇到 🔴 G 闸门必须停下来问我，不要自己往下走。
+已完成进度看 docs/ITERATION_LOG.md；待办看 tasks/。
+遇到 🔴 G 闸门必须停下来问我，不要自己往下走。
 每完成一件事，按 §8 的格式汇报。
 ```
 
@@ -69,16 +71,14 @@
 
 ## 3. 文档地图与权威性
 
-| 文件 | 用途 | 权威性 |
-| --- | --- | --- |
-| `AGENT-WORKFLOW.md`（本文） | 运行时流程、闸门、进度 | **权威** |
-| `docs/DECISIONS.md` | 技术选型、标签尺寸数学、色值、目录约定、密钥规则 | **权威** |
-| `WEB_DEV_SKILL.md` | 工程规范：Git 先行、设计确认、安全基线、分阶段部署、用行为验证 | **权威（规范层）** |
-| `衣橱镜像-产品方案.md` | 产品定义、目标用户、比赛评分策略、需组长拍板事项 | 参考（产品与材料层） |
-| `关于举办…AIGC应用创新大赛的通知.docx` | 赛题原文、提交材料要求、评分表 | 参考（规则原文） |
-| `archive/*` | 早期讨论记录与已废弃方案 | **作废，不要再读** |
+**各文档的职责、读者与边界见 `AGENTS.md` 的「文档分工」表**，这里不重复。
 
-**冲突时的优先级：本文 + DECISIONS > WEB_DEV_SKILL > 产品方案 > archive**
+**冲突时的优先级**：本文（流程/闸门）+ `docs/DECISIONS.md`（技术选型与硬参数） > `WEB_DEV_SKILL.md`（规范层） > `衣橱镜像-产品方案.md`（产品层） > `archive/`（作废）。
+
+**进度归属**：
+- 已完成：`docs/ITERATION_LOG.md`
+- 进行中/待开始/阻塞：`tasks/`
+- 本文不维护进度、环境事实或待办清单。
 
 ---
 
@@ -125,7 +125,7 @@
 **目标**：能跑起一个空项目，Git 干净，目录结构就位。
 
 我要做：
-1. 确认脚手架位置（**当前工作区未发现 `package.json`，见 §10**）
+1. 确认脚手架位置（**脚手架已在仓库根目录**）
 2. 补 `.gitignore`：`node_modules/`、`.env*`（保留 `.env.example`）、`*.db`、`prisma/*.db*`、`uploads/`、`*.log`、`.next/`
 3. 建目录：`prisma/`、`src/lib/ai/`、`src/lib/label/`、`prompts/`、`skills/`、`tests/unit/`、`tests/eval/`、`docs/`
 4. 写 `.env.example`（只放占位符）：
@@ -221,7 +221,7 @@
 我要做：
 1. `src/lib/label/`：A4 拼版
    - 4 列 × 6 行网格（等分可用区，非绝对 mm，避免取整误差）
-   - 每格：二维码 24–28mm + 下方一行 8pt（衣物名 + 编号 `G018`）
+   - 每格：二维码 **30mm** + 下方一行 8pt（衣物名 + 编号 `G018`）
    - 右下角 **100mm 校验尺**
    - 输出 2480×3508 PNG，`toDataURL` 下载
    - 页面提示：「打印时请选 **实际大小 / 缩放 100%**」
@@ -347,69 +347,14 @@
 
 ---
 
-## 10. 当前进度与未决事项
+## 10. 进度与任务（单一真源）
 
-### 已完成
+- **已完成版本与可追溯锚点**：`docs/ITERATION_LOG.md`
+- **进行中 / 待开始 / 阻塞任务**：`tasks/`（字段见 `tasks/_template.md`）
+- **当前技术栈、目录、数据流、运行环境事实**：`docs/ARCHITECTURE.md`
+- **功能规格与验收标准**：`docs/PRD.md`
 
-- [x] 产品定位与 MVP 边界定稿
-- [x] 技术选型全部拍板（D1–D15）
-- [x] 标签排版规格定稿（24 张/页、4×6、46×44mm、QR 30mm）
-- [x] 视觉 tokens 定稿（古典暖色调）
-- [x] 运行环境确认：香港 VPS + 已有域名 + 免备案
-- [x] 视觉模型确认：`doubao-seed-2-1-lite-260915` 支持图片输入与 `json_schema` 结构化输出
-- [x] 仓库确定：`https://github.com/Wave1et23/e_cloth`
-- [x] 早期讨论文档与废弃方案已归档至 `archive/`
-- [x] **Stage 0 完成**：Next.js 脚手架已生成在仓库根目录，依赖已装，`npm run build` 通过（exit 0，4 个静态页）
-- [x] **Stage 1 完成**：`docs/DESIGN.md`（8 页路由、跳转图、三态与文案、写入点、权限矩阵）；G1 十项已确认
-- [x] **Stage 2 完成**：Prisma 四表迁移 + demo seed；注册/登录/退出/`/api/garments`/`/api/health`；状态映射、CPW、token、session、密码单测 15 项通过；`npm run build` exit 0；游客访问 `/garments` 307 到 `/login`，登录后空列表可见
-- [x] **Stage 4 本地部分完成**：Ark adapter（`json_schema`、关闭深度思考、20s 超时、1 次重试、`AI_UNAVAILABLE` 降级、300 次预算告警）；图片魔数校验/临时区/正式区；`POST /api/ai/garment`（失败仍返回 imageToken）；`POST /api/garments`（Garment+Label、seq 编号、事务、token 冲突重试）；列表/详情/编辑/删除/照片读取；`/garments/new` 与 `/garments/[id]`；AI 归一化单测 5 项（总 20 项通过）；本地 mock 全链路 smoke 通过（上传→AI→G001→详情→改→删）
-- [x] **Stage 5 本地部分完成**：A4 24 格排版数学（`src/lib/label/layout.ts`，4×6、QR 354px、100mm 尺）；canvas 合成 2480×3508 PNG（`render.ts`，QR 容错 M，下载）；`/labels` 选择/上限 24/预览；`/api/labels`（token 补建）；`/g/[token]` 免登录页 + 6 表单；`/api/g/[token]/action`（303 回跳、30 秒幂等、5 状态映射、限流）；`/api/g/[token]/photo`；首页数据条（本月穿着/在柜/平均 CPW/最近 4 件）；单测总 27 项通过；build exit 0；headless Chrome 实跑 canvas 生成预览成功（无 error，含 100mm 校验尺）
-- [x] **Stage 6 本地部分完成**：全站三态（列表 loading/error、详情 loading/error/不存在、标签空/错误、AI 失败、扫码非法/错误/成功）；全局中文 404/error；详情桌面双栏、移动端扫码页 2 列；按钮焦点态、hover、`role=alert/status`；修复受保护页 `Date.now()` 预渲染问题（`getCurrentUser` 显式 `connection()`）；新增 8 件模拟演示数据（`prisma/seed-demo.ts` + `prisma/demo-assets/`，图片与备注都标注模拟）；headless Chrome 全站截图完成，G5 已确认
-- [x] **Stage 7 本地部分完成**：单测扩到 **33 项**（新增图片魔数、AI mock/无 key 降级、图片压缩尺寸）；HTTP 实测「无 key → `AI_NOT_CONFIGURED`，仍可用 imageToken 手动建档」；20 件衣物 Eval 清单 + `run-ai-eval.ts`（dry-run 通过）；8 张水洗标离线脚本 + 清单（dry-run 通过）；`docs/EVAL-REPORT.md`、`docs/AI-USAGE-LOG.md`
-- [x] **2026-10-19 真实 Ark 试跑**：关闭 `AI_MOCK`，7 张衣物 + 4 张水洗标，共 11 次真实视觉调用全部成功（单张 1.4–2.7s）；7 件类别/颜色基本正确，图案在星星/字母装饰上有 `其他` vs `印花` 分歧；正式准确率仍等 20 件 Ground Truth
-- [x] **2026-10-19 图片压缩**：`sharp` 入库前统一旋正 + 等比缩到 **1440×1920** 内 + JPEG q82；实测 4000×3000 → 1440×1080 / 9KB，1280×1280 真图 218KB → 166KB；AI 也只读压缩图
-
-### 环境事实（新窗口不要重复踩）
-
-| 项 | 值 / 结论 |
-| --- | --- |
-| Node / npm | `v24.18.0` / `11.16.0` |
-| Next.js | **16.4.2**（Turbopack），React 19.3，Tailwind 4 |
-| npm 源 | **官方源 `registry.npmjs.org` 会 ECONNRESET**，必须用 `https://registry.npmmirror.com` |
-| create-next-app | **v16 拒绝在非空目录生成**。若需重建：先生成到临时子目录再移回根目录，且子目录名**不能以下划线开头** |
-| 框架文档 | Next 16 自带版本匹配文档在 `node_modules/next/dist/docs/`；**写代码前必须先读对应章节**（见根目录 `AGENTS.md`） |
-| 默认能力 | `Cache Components` 与 `Partial Prefetching` 默认开启 → 页面里读 cookie / 数据库需按新规则处理（写页面前先读 docs 的 caching / data-fetching 章节） |
-| Prisma | **6.19.3**（`prisma` + `@prisma/client` 同版本）；SQLite 文件在 `prisma/dev.db`（Git 忽略） |
-| Prisma 引擎下载 | `binaries.prisma.sh` 本机不可达；用 `PRISMA_ENGINES_MIRROR=https://registry.npmmirror.com/-/binary/prisma` 后再跑 postinstall / migrate |
-| 单测 | Node 24 原生跑 TS：`npm test` → `node --test tests/unit/*.test.ts`，不引入 Vitest |
-| 会话 | 签名 cookie（HMAC-SHA256，`SESSION_SECRET`），不建 Session 表；密码用 Node 内置 scrypt |
-| 本地环境 | `.env` 已生成（Git 忽略）；demo 账号 `demo@example.com` / `demo1234`，仅本地 seed |
-| AI 本地验收 | `AI_MOCK=1` 时 adapter 返回固定建议，不调 Ark；2026-10-19 已用真实 key 跑过 11 次；`.env` 当前 `AI_MOCK=0`，上线前确认删掉或为 0 |
-| Prisma 生成 | Windows 下 dev server 会锁 `query_engine-windows.dll.node`；跑 `prisma generate/migrate` 前先停 dev server |
-| 图片 | 入库前 `sharp` 压缩：EXIF 旋正、等比 ≤1440×1920、JPEG q82、透明铺白；临时区 `uploads/tmp/<userId>/<token>`，正式区 `uploads/garments/<uuid>.jpg`；均被 Git 忽略 |
-| 标签 | `qrcode@1.5.4`；排版数学与 canvas 渲染分离；QR 内容 = `APP_BASE_URL + /g/{token}`；本地 `APP_BASE_URL=http://localhost:3000` |
-| 浏览器验证 | 不装 Playwright；用系统 Chrome/Edge `--headless --remote-debugging-port` + Node 内置 WebSocket 走 CDP 截图验证（临时脚本放 `backup/`，不进 Git） |
-| 演示数据 | `npm run db:seed:demo`：8 件「演示·」衣物 + 历史 WORN/WASHED/STORED/SOLD；图片在 `prisma/demo-assets/`；全部标注模拟数据，答辩时需说明 |
-| 截图 | `backup/screens/*.png`（Git 忽略）：home、garments、detail、new、labels、scan-mobile、login、register |
-
-### 未决
-
-| # | 事项 | 需要你回答 |
-| --- | --- | --- |
-| ~~U1~~ | ~~脚手架在哪~~ | ✅ 已解决：已在仓库根目录建好并验证构建 |
-| U2 | **域名** | 具体域名是什么？要写进二维码与 `APP_BASE_URL`（当前为占位符 `https://example.com`） |
-| U3 | **服务器访问方式** | host / 用户 / 端口（**建议用 SSH key，不要把密码写进文件或聊天**） |
-| U4 | **仓库推送授权** | 允许我 `git commit` 但不 `push`（你自己推）？还是另有安排？ |
-| U5 | **同机共存** | 香港服务器上是否已有其他项目在跑？部署时我必须只动本项目 |
-| G5 | **视觉走查** | 全站截图已产出（`backup/screens/`）；G5 已确认「暂时不改」 |
-| G6 | **Eval 准确率** | 脚本与清单已就绪；待 `ARK_API_KEY` + 20 张衣物 + 8 张水洗标后跑真实准确率 |
-
-### 待你执行（我做不了）
-
-- 填写 `ARK_API_KEY` 到 `.env.local`
-- 拍摄真实衣物与水洗标照片
-- 打印 A4 标签、裁剪、贴衣架、真机扫码（含微信内置浏览器）
-- 微信群/决赛现场演示
+本文不再维护“已完成 / 环境事实 / 未决 / 待你执行”四张表；需要进度请只看上面两处。
 
 ---
 

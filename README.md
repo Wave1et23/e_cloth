@@ -76,3 +76,18 @@ tests/unit/        单测
 tests/eval/        Eval 清单、脚本、图片目录（图片不入 Git）
 docs/              DESIGN / DECISIONS / EVAL-REPORT / AI-USAGE-LOG
 ```
+
+## 文档入口
+
+| 想了解 | 看 |
+| --- | --- |
+| 当前已实现功能与验收标准 | [`docs/PRD.md`](docs/PRD.md) |
+| 当前技术结构、数据流、AI 链路 | [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md) |
+| 为什么这么选、砍掉了什么 | [`docs/DECISIONS.md`](docs/DECISIONS.md) |
+| 页面与交互设计 | [`docs/DESIGN.md`](docs/DESIGN.md) |
+| 已完成版本与提交锚点 | [`docs/ITERATION_LOG.md`](docs/ITERATION_LOG.md) |
+| 进行中 / 待开始任务 | [`tasks/`](tasks/) |
+| AI 使用过程、提示词、人工核查 | [`docs/AI-USAGE-LOG.md`](docs/AI-USAGE-LOG.md) |
+| AI 准确率状态 | [`docs/EVAL-REPORT.md`](docs/EVAL-REPORT.md) |
+
+完整文档职责表见 [`AGENTS.md`](AGENTS.md)。

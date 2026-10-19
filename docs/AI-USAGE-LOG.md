@@ -10,7 +10,7 @@
 | DeepSeek Harness（本 Agent，deepseek-flash） | 需求拆解、设计文档、代码实现、单测、HTTP/浏览器验证、部署脚本草稿 |
 | DeepSeek Harness 插件：dsh-code-review | 阶段末独立代码审查（只读 Git 范围） |
 | DeepSeek Harness 插件：dsh-composer-plus | 开发期 Git Changes 面板与输入辅助 |
-| 豆包 `doubao-seed-2-1-lite-260915`（Ark） | 产品内的衣物识别（尚未用真实 key 跑过） |
+| 豆包 `doubao-seed-2-1-lite-260915`（Ark） | 产品内的衣物识别；已用真实 key 试跑 11 次，见 §3 |
 
 ## 2. 关键提示词（产品内）
 
@@ -39,7 +39,8 @@
 
 ### 待补（用户提供素材后）
 
-- [ ] 真实 Ark 调用次数与费用记录
+- [x] 真实 Ark 调用次数（11 次：7 衣物 + 4 水洗标，见 §3）
+- [ ] 真实 Ark 费用记录（待补充）
 - [ ] 20 件衣物 Eval 的 V1/V2 准确率
 - [ ] 8 张水洗标实验结果
 - [ ] 3 位试用者的录屏与反馈
