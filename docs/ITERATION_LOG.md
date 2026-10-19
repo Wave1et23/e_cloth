@@ -40,6 +40,7 @@
 | M6 视觉与演示数据 | 全站三态、中文 404/error、详情双栏、扫码页窄屏、8 件模拟衣物；G5 确认 | `46253cf` | `prisma/seed-demo.ts`、`prisma/demo-assets/`、`backup/screens/` |
 | M7 测试与 Eval 脚手架 | 31 项单测、AI 失败用例、20 件衣物清单、8 张水洗标清单、Eval 报告与 AI 日志 | `8df1531` | [`EVAL-REPORT.md`](EVAL-REPORT.md)；`npm run eval:dry` |
 | M8 真实 Ark + 压缩 | 关闭 `AI_MOCK`，7 张衣物 + 4 张水洗标共 11 次真实调用；上传压缩到 1440×1920；33 项单测 | `751d46f` | [`EVAL-REPORT.md`](EVAL-REPORT.md) §8；`image-compress.ts` |
+| M9 文档基线 | `AGENTS.md` 项目规则/文档分工、PRD、ARCHITECTURE、ITERATION_LOG、tasks 模板与待办；进度单一真源 | `6377690` | [`PRD.md`](PRD.md)、[`ARCHITECTURE.md`](ARCHITECTURE.md)、[`tasks/`](../tasks/) |
 
 ### 验证证据（v0.1）
 
@@ -51,12 +52,14 @@
 - 真实 AI：7 张衣物 2.2–2.7s、4 张水洗标 1.4–2.3s，全部返回结构化 JSON；**未计算正式准确率**。
 - 图片压缩：4000×3000 → 1440×1080（9KB 测试图）；1280×1280 真图 218KB → 166KB。
 - 演示数据：8 件「演示·」衣物，图片与备注均标注模拟数据。
+- 文档：PRD/ARCHITECTURE/ITERATION_LOG/tasks 建立；相对链接检查 0 broken；`AGENTS.md` 的 Next 块未改动。
 
 ### v0.1 不包含（已转 tasks/）
 
 - 正式部署（域名 / Nginx / pm2 / HTTPS）→ `tasks/001-deploy-g2.md`
 - 20 件衣物正式 Eval 准确率 → `tasks/002-ai-eval-g3-g6.md`
 - 真实打印、裁剪、贴衣架、手机/微信扫码 → `tasks/003-print-scan-g4.md`
+- 已进入 Git 历史的 `ARK_API_KEY` / `SESSION_SECRET` 轮换 → `tasks/004-rotate-secrets.md`
 
 ---
 

@@ -58,7 +58,7 @@ docs/DECISIONS.md、docs/DESIGN.md，以及 tasks/ 的进行中任务。
 | 视觉 | 古典暖色调，色值见 DECISIONS §4；**不引入中文字体 webfont** |
 | 部署 | 香港 VPS（已有）+ 已有域名 + Nginx + pm2 + Let's Encrypt，**无备案** |
 | 仓库 | `https://github.com/Wave1et23/e_cloth` |
-| 测试 | 只写单元测试（状态映射、CPW、token、排版容量），不写 Playwright |
+| 测试 | 只写单元测试（状态映射、CPW、token、排版容量、AI 归一化、图片压缩、密码/session），不写 Playwright |
 
 **核心业务原则（比技术选型更重要）**
 
