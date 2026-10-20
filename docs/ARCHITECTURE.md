@@ -82,6 +82,7 @@ src/
 │       └── health/route.ts                数据库连通
 ├── components/
 │   ├── site-header.tsx、logout-button.tsx
+│   ├── garment-category-filter.tsx 列表分类标签栏（横向滚动/多选）
 │   ├── garment-actions.tsx       详情页内联编辑/删除
 │   └── garment-status-actions.tsx 详情页登录态补记状态（6 动作）
 └── lib/
@@ -92,6 +93,7 @@ src/
     ├── images.ts                 魔数、临时区、正式区、读/删/清理
     ├── garments.ts               衣物字段校验
     ├── garment-fields.ts         枚举白名单（前后端/AI 共用）
+    ├── garment-filter.ts         列表分类参数/派生/过滤（纯函数）
     ├── status.ts                 5 状态 / 6 事件映射
     ├── cost.ts                   CPW / 金额格式化 / 价格解析
     ├── token.ts                  12 位 base62
@@ -165,7 +167,7 @@ User 1 ── n Garment 1 ── n GarmentEvent
 
 ### 5.3 列表 / 详情 / 编辑 / 删除
 
-- 列表：`GET /api/garments` / 页面 `prisma.garment.findMany({ userId, orderBy: seq desc, take: 200 })`。
+- 列表：页面 `prisma.garment.findMany({ userId, orderBy: seq desc, take: 200 })`；分类筛选从 `searchParams` 读取重复 `category`，在已取回的 200 条内派生分类并过滤。`GET /api/garments` 保持无参数、返回全量，供标签页等复用。
 - 详情：`findFirst({ id, userId })` + `events`（最多 100）+ `label.token`。
 - 编辑：`PATCH /api/garments/[id]`，字段校验后 `update`。
 - 补记状态：`POST /api/garments/[id]/events`，登录 + `userId` 归属校验；复用 `isDuplicateScan()` 做 30 秒幂等；非重复时事务写 `GarmentEvent` 并更新 `Garment.status`。扫码接口保持不变。

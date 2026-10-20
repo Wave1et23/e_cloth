@@ -595,6 +595,48 @@ a {
   border-color: color-mix(in srgb, var(--danger) 40%, var(--line));
 }
 
+.category-scroll {
+  display: flex;
+  flex-wrap: nowrap;
+  gap: 8px;
+  max-width: 100%;
+  margin: 0 0 16px;
+  padding: 2px 0 8px;
+  overflow-x: auto;
+  overscroll-behavior-x: contain;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+}
+
+.category-scroll::-webkit-scrollbar {
+  display: none;
+}
+
+.category-chip {
+  flex: 0 0 auto;
+  min-height: 40px;
+  padding: 0 14px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: var(--paper-raised);
+  color: var(--ink);
+  font: inherit;
+  font-size: 14px;
+  white-space: nowrap;
+  cursor: pointer;
+}
+
+.category-chip.is-active {
+  background: var(--accent-fill);
+  border-color: var(--accent-fill);
+  color: #fff;
+}
+
+.category-chip:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
 .skeleton {
   background: linear-gradient(
     90deg,

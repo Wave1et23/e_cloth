@@ -1,12 +1,23 @@
 import Link from "next/link";
 import { redirect } from "next/navigation";
+import { GarmentCategoryFilter } from "@/components/garment-category-filter";
 import { SiteHeader } from "@/components/site-header";
 import { getCurrentUser } from "@/lib/auth/user";
 import { computeCpw, formatCny } from "@/lib/cost";
 import { prisma } from "@/lib/db";
+import { CATEGORY_OPTIONS } from "@/lib/garment-fields";
+import {
+  filterByCategories,
+  parseCategoryParams,
+  resolveCategoryFilter,
+} from "@/lib/garment-filter";
 import { normalizeStatus, statusLabel } from "@/lib/status";
 
 export const instant = false;
+
+type Props = {
+  searchParams: Promise<{ category?: string | string[] }>;
+};
 
 function badgeClass(status: string): string {
   const value = normalizeStatus(status);
@@ -16,27 +27,37 @@ function badgeClass(status: string): string {
   return "badge";
 }
 
-export default async function GarmentsPage() {
+export default async function GarmentsPage({ searchParams }: Props) {
   const user = await getCurrentUser();
   if (!user) redirect("/login");
 
-  const garments = await prisma.garment.findMany({
-    where: { userId: user.id },
-    orderBy: { seq: "desc" },
-    take: 200,
-    select: {
-      id: true,
-      seq: true,
-      name: true,
-      category: true,
-      status: true,
-      priceCents: true,
-      events: {
-        where: { type: "WORN" },
-        select: { id: true },
+  const [garments, params] = await Promise.all([
+    prisma.garment.findMany({
+      where: { userId: user.id },
+      orderBy: { seq: "desc" },
+      take: 200,
+      select: {
+        id: true,
+        seq: true,
+        name: true,
+        category: true,
+        status: true,
+        priceCents: true,
+        events: {
+          where: { type: "WORN" },
+          select: { id: true },
+        },
       },
-    },
-  });
+    }),
+    searchParams,
+  ]);
+
+  const { categories, selected } = resolveCategoryFilter(
+    garments,
+    CATEGORY_OPTIONS,
+    parseCategoryParams(params.category),
+  );
+  const filtered = filterByCategories(garments, selected);
 
   return (
     <>
@@ -48,19 +69,23 @@ export default async function GarmentsPage() {
             alignItems: "baseline",
             justifyContent: "space-between",
             gap: 16,
-            marginBottom: 22,
+            marginBottom: 14,
           }}
         >
           <div>
             <h1 style={{ fontSize: 28 }}>我的衣柜</h1>
             <p className="muted" style={{ fontSize: 14, marginTop: 4 }}>
-              共 {garments.length} 件
+              共 {filtered.length} 件
             </p>
           </div>
           <Link href="/garments/new" className="btn btn-primary">
             新增
           </Link>
         </div>
+
+        {garments.length > 0 ? (
+          <GarmentCategoryFilter categories={categories} selected={selected} />
+        ) : null}
 
         {garments.length === 0 ? (
           <section className="card empty">
@@ -81,9 +106,28 @@ export default async function GarmentsPage() {
               </Link>
             </div>
           </section>
+        ) : filtered.length === 0 ? (
+          <section className="card empty">
+            <h2>这个分类下还没有衣物</h2>
+            <p className="muted" style={{ fontSize: 15 }}>
+              {selected.join("、")} 暂时是空的，换个分类看看。
+            </p>
+            <div
+              style={{
+                display: "flex",
+                gap: 12,
+                justifyContent: "center",
+                marginTop: 20,
+              }}
+            >
+              <Link href="/garments" className="btn btn-primary">
+                查看全部
+              </Link>
+            </div>
+          </section>
         ) : (
           <div className="grid-garments">
-            {garments.map((garment) => {
+            {filtered.map((garment) => {
               const wornCount = garment.events.length;
               const cpw = computeCpw(garment.priceCents, wornCount);
               return (
