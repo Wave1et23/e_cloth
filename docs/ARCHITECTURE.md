@@ -72,6 +72,7 @@ src/
 │       ├── auth/{register,login,logout,me}/route.ts
 │       ├── garments/route.ts              GET 列表 / POST 创建
 │       ├── garments/[id]/route.ts         GET / PATCH / DELETE
+│       ├── garments/[id]/events/route.ts  登录态补记状态（30s 幂等）
 │       ├── garments/[id]/photo/route.ts   登录态照片
 │       ├── ai/garment/route.ts            上传 + 压缩 + AI 建议
 │       ├── labels/route.ts                标签 token/baseUrl
@@ -81,7 +82,8 @@ src/
 │       └── health/route.ts                数据库连通
 ├── components/
 │   ├── site-header.tsx、logout-button.tsx
-│   └── garment-actions.tsx       详情页内联编辑/删除
+│   ├── garment-actions.tsx       详情页内联编辑/删除
+│   └── garment-status-actions.tsx 详情页登录态补记状态（6 动作）
 └── lib/
     ├── auth/                     密码 scrypt、session HMAC、getCurrentUser
     ├── ai/                       Ark adapter、json_schema、归一化
@@ -166,6 +168,7 @@ User 1 ── n Garment 1 ── n GarmentEvent
 - 列表：`GET /api/garments` / 页面 `prisma.garment.findMany({ userId, orderBy: seq desc, take: 200 })`。
 - 详情：`findFirst({ id, userId })` + `events`（最多 100）+ `label.token`。
 - 编辑：`PATCH /api/garments/[id]`，字段校验后 `update`。
+- 补记状态：`POST /api/garments/[id]/events`，登录 + `userId` 归属校验；复用 `isDuplicateScan()` 做 30 秒幂等；非重复时事务写 `GarmentEvent` 并更新 `Garment.status`。扫码接口保持不变。
 - 删除：`DELETE /api/garments/[id]`，先查归属，再删数据库（级联），最后删照片。
 - 所有查询都带 `userId`；越权返回 404。
 

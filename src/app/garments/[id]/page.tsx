@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import { GarmentActions } from "@/components/garment-actions";
+import { GarmentStatusActions } from "@/components/garment-status-actions";
 import { SiteHeader } from "@/components/site-header";
 import { getCurrentUser } from "@/lib/auth/user";
 import { computeCpw, formatCny } from "@/lib/cost";
@@ -144,6 +145,11 @@ export default async function GarmentDetailPage({ params }: Params) {
                   : "还没有穿着记录，扫一下衣架上的码试试"}
               </p>
             </section>
+
+            <GarmentStatusActions
+              garmentId={garment.id}
+              initialStatus={garment.status}
+            />
 
             <section className="card" style={{ padding: 18 }}>
               <h2 style={{ fontSize: 16, marginBottom: 10 }}>事件时间线</h2>
