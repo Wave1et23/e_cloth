@@ -63,6 +63,39 @@
 
 ---
 
+## v0.2 · 详情页登录态「修改状态」（已完成，仅本地）
+
+| 项 | 值 |
+| --- | --- |
+| 版本 | **v0.2** |
+| 类型 | feature |
+| 状态 | 本地完成；未部署 |
+| 时间 | 2026-10-20 |
+| 范围 | 详情页新增「状态记录」卡片：登录态补记 6 个事件 |
+
+### 完成范围
+
+- `/garments/[id]` 增加「修改状态」按钮，展开 6 个动作，文案/顺序与扫码页共用 `EVENT_VALUES`。
+- 新增 `POST /api/garments/[id]/events`：登录 + `userId` 归属校验，30 秒内同事件幂等，事务写 `GarmentEvent` + `Garment.status`。
+- 提交后 `router.refresh()` 刷新详情页状态与时间线；返回首页/刷新首页时数据条同步。
+- 未改扫码页 `/g/[token]` 的行为、URL、样式；未改 5 状态/6 事件映射。
+
+### 可追溯锚点
+
+- Git：`c75cd62`（feature）
+- 任务：`tasks/005-detail-status-actions.md`
+- 文档：[`DESIGN.md`](DESIGN.md) §2/§3.6/§4/§5/§10、[`PRD.md`](PRD.md) F4、[`ARCHITECTURE.md`](ARCHITECTURE.md) API/数据流
+
+### 验证
+
+- `npm test` → **35 passed / 0 failed**（新增动作顺序/文案测试）。
+- `npm run build` → **exit 0**；新增 `/api/garments/[id]/events` 路由。
+- HTTP：同一动作连续两次 → `duplicate:false` 后 `duplicate:true`，事件数仍 1；`WASHED` → `TO_WASH`；`/api/stats` 月穿着/在柜数随之变化。
+- 浏览器（headless Chrome）：详情页展开按钮顺序为「今天穿了 / 要洗 / 送干洗 / 放回衣柜 / 收起来 / 卖掉了」；点击后显示「已记录 ✓ 当前状态：穿着中」，时间线出现新事件。
+- 未登录访问详情页仍 `307 /login`。
+
+---
+
 ## 下一版本
 
 未定。新版本发布前不在此预写计划；进行中的工作只在 `tasks/`。

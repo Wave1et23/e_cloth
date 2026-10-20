@@ -34,7 +34,7 @@ Next 配置开启 `cacheComponents: true` 与 `partialPrefetching: true`；CSS �
 Next.js 16 单体应用（App Router）
   ├─ proxy.ts                 乐观鉴权：/garments*、/labels 无 session cookie → 307 /login
   ├─ React Server Components  页面查询（首页、列表、详情、扫码页）
-  ├─ Client Components        表单、标签 canvas、编辑/删除、AI 上传
+  ├─ Client Components        表单、标签 canvas、编辑/删除、状态补记、AI 上传
   ├─ Route Handlers (/api/*)  CRUD、鉴权、AI、扫码动作
   ├─ Prisma Client            SQLite 读写
   └─ 本地文件系统             uploads/tmp、uploads/garments
