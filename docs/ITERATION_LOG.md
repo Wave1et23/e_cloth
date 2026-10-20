@@ -96,6 +96,41 @@
 
 ---
 
+## v0.3 · 衣柜列表分类筛选（已完成，仅本地）
+
+| 项 | 值 |
+| --- | --- |
+| 版本 | **v0.3** |
+| 类型 | feature |
+| 状态 | 本地完成；未部署 |
+| 时间 | 2026-10-20 |
+| 范围 | `/garments` 顶部横向分类标签栏：多选筛选，默认全部 |
+
+### 完成范围
+
+- 分类来源为当前衣物已有的 `category`；已知分类按 `CATEGORY_OPTIONS` 顺序，未知分类排后。
+- 标签栏横向滚动、不换行；「全部」固定第一项，选中它清空其他项；单选/多选并集/再次点击取消。
+- URL 用重复 `category` 参数：`/garments?category=上衣&category=裤装`；全部 = 无参数。
+- 服务端读取 `searchParams` 后在已取回的 200 条内过滤；排序、200 条上限、卡片结构不变；`GET /api/garments` 未改。
+- 筛选结果为空时显示「这个分类下还没有衣物」+「查看全部」；本来没有衣物时保留「衣柜还是空的」。
+- 刷新策略按用户确认的选项 A：无参数进入默认全部；刷新保留当前 URL 筛选。
+
+### 可追溯锚点
+
+- Git：`6ed80eb`（feature）
+- 任务：`tasks/006-garment-category-filter.md`
+- 文档：[`DESIGN.md`](DESIGN.md) §3.4/§9/§10、[`PRD.md`](PRD.md) F4、[`ARCHITECTURE.md`](ARCHITECTURE.md) 组件/lib/列表数据流
+
+### 验证
+
+- `npm test` → **40 passed / 0 failed**（新增分类参数/派生/并集/空结果测试）。
+- `npm run build` → **exit 0**；`/garments` 仍为 PPR。
+- HTTP：全部分类计数与列表一致；单选每个类别只返回该类别；`裙装+连衣裙` 并集数量正确；`?category=马甲` 显示空态；未知分类按全部；未登录 `307 /login`。
+- 浏览器（headless Chrome，390px）：`pageScrollWidth = 390` 无整页横向溢出；标签栏 `clientWidth 350 / scrollWidth 402`，`overflow-x:auto`；「全部」初始选中；点「上衣」→ URL 单参数、3 件；再加「裤装」→ 并集 5 件；浏览器返回恢复「上衣」3 件；点「全部」清空；刷新筛选 URL 保留筛选。
+- 截图：`backup/screens/category-filter-390.png`。
+
+---
+
 ## 下一版本
 
 未定。新版本发布前不在此预写计划；进行中的工作只在 `tasks/`。
