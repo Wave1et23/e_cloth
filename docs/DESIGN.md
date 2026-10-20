@@ -298,7 +298,7 @@
 | --- | --- |
 | 会话 | 签名 cookie（HMAC-SHA256，`SESSION_SECRET`），HttpOnly + SameSite=Lax + 生产 Secure，30 天；不新增会话表 |
 | 密码 | Node 内置 `crypto.scrypt` 加盐哈希，不引入 bcrypt 依赖 |
-| 登录限流 | 同一 IP+邮箱 15 分钟内失败 5 次后暂时拒绝 |
+| 登录限流 | 邮箱 5 次/15 分钟后锁定；IP 20 次/15 分钟后锁定 |
 | CSRF | SameSite=Lax + 写操作校验 `Origin` 与 `APP_BASE_URL` 同源 |
 | 图片 | 存 `uploads/garments/<id>.<ext>`（Git 忽略）；读取走带鉴权的路由，不直接暴露目录 |
 | 图片校验 | 前后端双校验：扩展名/MIME + 魔数 + ≤10MB |

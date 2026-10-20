@@ -78,7 +78,7 @@ export default function RegisterPage() {
     setCooldown(result.data.cooldownSeconds ?? 60);
     setCooldownEmail(target);
     setCode("");
-    setNotice("验证码已发送。控制台模式下请查看服务端日志。");
+    setNotice("验证码已发送，请查看邮箱（控制台模式见服务端日志）。");
     setSending(false);
   }
 

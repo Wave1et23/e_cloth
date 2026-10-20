@@ -91,7 +91,7 @@ src/
 │   └── garment-status-actions.tsx 详情页登录态补记状态（6 动作）
 └── lib/
     ├── auth/                     密码 scrypt、session HMAC、getCurrentUser
-    ├── mail/                     MailAdapter 接口、console 实现、工厂
+    ├── mail/                     MailAdapter 接口、console/SMTP 实现、工厂
     ├── verification.ts           验证码生成/格式/有效期/尝试次数（纯函数）
     ├── verification-store.ts     验证码表读写、哈希、惰性清理
     ├── ai/                       Ark adapter、json_schema、归一化
@@ -151,7 +151,7 @@ VerificationCode（独立表，无外键）
 
 ### 5.1 注册 / 登录 / 会话
 
-1. `POST /api/auth/verification-code` 校验邮箱与限流 → 生成 6 位码 → 作废旧码、写哈希 → 邮件 adapter 发送（当前 console 只打日志）。
+1. `POST /api/auth/verification-code` 校验邮箱与限流 → 生成 6 位码 → 作废旧码、写哈希 → 邮件 adapter 发送（console 打日志 / SMTP 真发）。
 2. `POST /api/auth/register` 校验邮箱/密码/限流 → 校验最新验证码（错误/过期/已用/次数）→ scrypt 哈希密码 → 事务：标记验证码已用 + 创建 `User` → 写签名 cookie。
 3. `POST /api/auth/login` 按邮箱与 IP 两个维度检查失败锁定 → 查 `User` → `scrypt` 校验 → 成功后清邮箱维度并写 cookie。
 4. `getCurrentUser()`：`await connection()` → 读 cookie → HMAC/过期校验 → 查 `User`。
@@ -270,9 +270,11 @@ VerificationCode（独立表，无外键）
 | `APP_BASE_URL` | 二维码 URL 前缀；本地 `http://localhost:3000`，上线换正式域名 |
 | `AI_CALL_BUDGET` | 视觉调用预算告警阈值（默认 300） |
 | `AI_MOCK` | `1` 时返回固定 mock；有真实 key 时应为 `0` 或删除 |
-| `MAIL_PROVIDER` | 当前仅 `console`；production 下 console 被拒绝 |
-| `MAIL_CONSOLE_LOG_CODE` | `1` 允许控制台日志打印验证码；`0` 只打元数据 |
-| `MAIL_API_URL` / `MAIL_API_KEY` / `MAIL_FROM` | 真实邮件服务商占位配置，当前未接入 |
+| `MAIL_PROVIDER` | `console`（本地）或 `smtp`（真实发信）；production 下 console 被拒绝 |
+| `MAIL_CONSOLE_LOG_CODE` | console 模式下 `1` 允许日志打印验证码；`0` 只打元数据 |
+| `MAIL_SMTP_HOST` / `MAIL_SMTP_PORT` / `MAIL_SMTP_SECURE` | SMTP 地址、端口、是否 SSL；163 用 `smtp.163.com:465` + `1` |
+| `MAIL_SMTP_USER` / `MAIL_SMTP_PASS` | SMTP 登录邮箱与授权码（只写本地 `.env`） |
+| `MAIL_FROM` | 发件人；163 场景为发件邮箱地址 |
 | `REGISTER_SKIP_EMAIL_VERIFICATION` | 仅 development 生效；`1` 跳过注册验证码；production 忽略，上线前必须为 `0` |
 
 开发环境事实：
@@ -297,6 +299,7 @@ VerificationCode（独立表，无外键）
 | `@prisma/client` | ^6.19.3 | SQLite ORM 客户端 |
 | `qrcode` | ^1.5.4 | 二维码 data URL |
 | `sharp` | ^0.35.5 | 上传图片压缩 |
+| `nodemailer` | ^10.1.7 | SMTP 真实发信（163 授权码） |
 
 ### 开发
 
@@ -310,7 +313,7 @@ VerificationCode（独立表，无外键）
 
 - **单进程内存状态**：登录/注册/发码限流、扫码限流、AI 调用计数都在进程内；重启清零，不能多实例共享。
 - **真实 IP 依赖代理头**：`getClientIp()` 读取 `x-forwarded-for`/`x-real-ip`；生产 Nginx 必须覆盖这两个头，否则 IP 维度限流可被伪造。
-- **邮件只实现 console**：没有真实邮件服务商；production 下发送验证码会失败，控制台模式不会打印明文码。
+- **邮件发送依赖 SMTP**：当前用 163 SMTP（`smtp.163.com:465`）与授权码；邮箱后台需开启 SMTP；授权码只存本地 `.env`，不打印、不入库。SMTP 失败时接口返回 503，不会回退到打印验证码。
 - **验证码惰性清理**：没有定时任务；过期/已用记录在下一次发码时清理。
 - **SQLite 单写者**：适合单人/演示；高并发写入需要换数据库。
 - **本地磁盘存图**：部署时必须是持久磁盘；不能直接上无状态多副本。

@@ -28,7 +28,7 @@
 | D17 | 页面范围 | 原约定上限 8 页；v0.4 因隐私协议/用户协议合规需要，新增 2 个静态法务页 `/legal/privacy`、`/legal/terms`，当前共 10 页 | 例外仅限法务静态页；不新增功能页；后续新增功能页仍应先确认或删除一个页面 |
 | D18 | 验证码存储 | 独立 `VerificationCode` 表：邮箱、哈希、用途、过期时间、尝试次数、是否已用、创建时间、请求 IP；只存 scrypt 哈希；有效期 10 分钟、最多 5 次；发送新码时作废旧码；过期/24 小时前已用记录惰性清理 | 不新增密钥/依赖；没有定时任务；不保留明文 |
 | D19 | 限流矩阵 | 发码：1 次/60 秒/邮箱、5 次/小时/邮箱、10 次/小时/IP；注册：5 次/小时/邮箱、10 次/小时/IP；登录失败：5 次/15 分钟/邮箱、20 次/15 分钟/IP；429 返回 `retryAfterSeconds` | 单进程内存，pm2 单实例；重启清零；Nginx 必须覆盖真实 IP 头 |
-| D20 | 邮件 adapter | `MailAdapter` 接口 + 当前 console 实现；真实服务商 key 到位后再接 `MAIL_API_URL/MAIL_API_KEY/MAIL_FROM`；production 禁止 console；`REGISTER_SKIP_EMAIL_VERIFICATION` 仅 development 生效、默认 0、上线前必须关闭 | 控制台模式才允许打印明文码；其他日志不得打印；不接第三方统计 |
+| D20 | 邮件 adapter | `MailAdapter` 接口 + console/SMTP 实现；真实发信用 163 `smtp.163.com:465` + 授权码，配置 `MAIL_SMTP_HOST/PORT/SECURE/USER/PASS/MAIL_FROM`；production 禁止 console；`REGISTER_SKIP_EMAIL_VERIFICATION` 仅 development 生效、默认 0、上线前必须关闭 | 新增 `nodemailer` 依赖；控制台模式才允许打印明文码；SMTP 错误不得带出授权码；不接第三方统计 |
 
 ---
 
