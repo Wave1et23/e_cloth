@@ -56,6 +56,9 @@ yarn-error.log*
 # logs
 *.log
 
+# 本地私有资料：赛题原文、个人工作随记等，不进仓库
+/private/
+
 # vercel
 .vercel
 
