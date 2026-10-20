@@ -660,3 +660,162 @@ a {
     animation: none;
   }
 }
+
+.legal-page {
+  width: min(820px, 100% - 40px);
+}
+
+.legal-page h1 {
+  font-size: 32px;
+  margin-top: 6px;
+}
+
+.legal-page a {
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+.legal-back {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 10px;
+  color: var(--ink-muted);
+  font-size: 13px;
+  margin-bottom: 20px;
+}
+
+.legal-back span {
+  color: var(--line);
+}
+
+.legal-meta {
+  color: var(--ink-muted);
+  font-size: 13px;
+  margin: 8px 0 0;
+}
+
+.legal-notice {
+  margin: 18px 0 0;
+  padding: 14px 16px;
+  border-left: 3px solid var(--warn);
+  border-radius: 0 8px 8px 0;
+  background: color-mix(in srgb, var(--warn) 8%, var(--paper-raised));
+  color: var(--ink);
+  font-size: 14px;
+  line-height: 1.75;
+}
+
+.legal-pending {
+  display: inline;
+  padding: 0 4px;
+  border-radius: 3px;
+  background: #f1ddb5;
+  color: #6b4a17;
+  font-weight: 600;
+}
+
+.legal-toc {
+  margin: 20px 0 0;
+  padding: 14px 16px;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: var(--paper-raised);
+  font-size: 14px;
+}
+
+.legal-toc ol {
+  margin: 8px 0 0;
+  padding-left: 1.4em;
+  color: var(--ink-muted);
+}
+
+.legal-toc li {
+  margin: 3px 0;
+}
+
+.legal-body {
+  margin-top: 6px;
+}
+
+.legal-section {
+  margin-top: 28px;
+}
+
+.legal-section h2 {
+  font-size: 20px;
+  margin-bottom: 8px;
+}
+
+.legal-section p,
+.legal-section li {
+  overflow-wrap: anywhere;
+  word-break: break-word;
+}
+
+.legal-section p {
+  margin: 8px 0 0;
+  line-height: 1.8;
+}
+
+.legal-section ul {
+  margin: 8px 0 0;
+  padding-left: 1.3em;
+}
+
+.legal-section li {
+  margin: 6px 0;
+  line-height: 1.75;
+}
+
+.legal-section strong {
+  font-weight: 600;
+}
+
+.legal-footer {
+  margin-top: 40px;
+  padding-top: 16px;
+  border-top: 1px solid var(--line);
+  color: var(--ink-muted);
+  font-size: 13px;
+}
+
+.legal-footer p {
+  margin: 0 0 8px;
+}
+
+.legal-footer span {
+  margin: 0 8px;
+}
+
+.legal-consent {
+  margin: 12px 0 0;
+  color: var(--ink-muted);
+  font-size: 12px;
+  line-height: 1.7;
+  text-align: center;
+}
+
+.legal-consent a {
+  color: var(--accent);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+@media (max-width: 640px) {
+  .legal-page {
+    width: calc(100% - 32px);
+  }
+
+  .legal-page h1 {
+    font-size: 27px;
+  }
+
+  .legal-section h2 {
+    font-size: 18px;
+  }
+
+  .legal-toc,
+  .legal-notice {
+    font-size: 13px;
+  }
+}

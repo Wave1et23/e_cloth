@@ -98,6 +98,7 @@ export default function RegisterPage() {
             {busy ? "创建中…" : "创建账号"}
           </button>
         </form>
+        <p className="legal-consent">注册或登录即表示你已阅读并同意<Link href="/legal/privacy">《隐私协议》</Link>和<Link href="/legal/terms">《用户协议》</Link></p>
         <p className="auth-foot">
           已经有账号？<Link href="/login">去登录</Link>
         </p>

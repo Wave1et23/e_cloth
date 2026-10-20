@@ -44,6 +44,7 @@ Next.js 16 单体应用（App Router）
 ```
 
 当前没有独立后端、没有消息队列、没有对象存储、没有多实例。
+两个法务页为纯静态内容，不读数据库、不要求登录；登录/注册页只增加指向它们的链接。
 
 ---
 
@@ -68,6 +69,8 @@ src/
 │   │       ├── loading.tsx / error.tsx
 │   ├── labels/page.tsx           标签选择 + canvas 生成（client）
 │   ├── g/[token]/page.tsx        免登录扫码页（server，instant=false）
+│   ├── legal/privacy/page.tsx    隐私协议（静态，免登录）
+│   ├── legal/terms/page.tsx      用户协议（静态，免登录）
 │   └── api/
 │       ├── auth/{register,login,logout,me}/route.ts
 │       ├── garments/route.ts              GET 列表 / POST 创建

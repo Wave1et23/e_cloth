@@ -79,6 +79,7 @@ export default function LoginPage() {
             {busy ? "登录中…" : "登录"}
           </button>
         </form>
+        <p className="legal-consent">注册或登录即表示你已阅读并同意<Link href="/legal/privacy">《隐私协议》</Link>和<Link href="/legal/terms">《用户协议》</Link></p>
         <p className="auth-foot">
           还没有账号？<Link href="/register">去注册</Link>
         </p>
