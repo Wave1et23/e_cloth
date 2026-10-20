@@ -2,7 +2,7 @@ import re
 import sys
 import zipfile
 
-path = r"C:\myproject\e_cloth\关于举办杭州电子科技大学第二届AIGC应用创新大赛的通知.docx"
+path = r"C:\myproject\e_cloth\private\关于举办杭州电子科技大学第二届AIGC应用创新大赛的通知.docx"
 
 with zipfile.ZipFile(path) as z:
     names = [n for n in z.namelist() if n.startswith("word/") and n.endswith(".xml")]

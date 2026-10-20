@@ -32,15 +32,15 @@
 
 | 里程碑 | 内容 | Git 锚点 | 其他锚点 |
 | --- | --- | --- | --- |
-| M1 仓库与脚手架 | Next.js 16 脚手架、Git 初始化、项目文档归档 | `f95fdb6` | `README.md`、`AGENT-WORKFLOW.md` |
-| M2 设计确认 | 8 页路由、跳转图、三态、权限矩阵；G1 确认 | `072a31c` | [`DESIGN.md`](DESIGN.md) |
-| M3 数据层与鉴权 | Prisma 四表、迁移、demo seed、注册/登录/退出、`/api/garments`、`/api/health`；15 项单测 | `d7c8717` | [`PRD.md`](PRD.md) F1/F4；`npm test` |
-| M4 AI 建档 | Ark adapter、`json_schema`、失败降级、图片临时区、创建事务、详情/编辑/删除；20 项单测 | `43e1aea` | [`AI-USAGE-LOG.md`](AI-USAGE-LOG.md) |
-| M5 标签与扫码 | A4 24 格排版、canvas PNG、`/labels`、`/g/[token]`、6 事件、幂等、首页数据条；27 项单测 | `e5abef6` | [`DESIGN.md`](DESIGN.md) §7；CDP 手跑 canvas |
-| M6 视觉与演示数据 | 全站三态、中文 404/error、详情双栏、扫码页窄屏、8 件模拟衣物；G5 确认 | `46253cf` | `prisma/seed-demo.ts`、`prisma/demo-assets/`、`backup/screens/` |
-| M7 测试与 Eval 脚手架 | 31 项单测、AI 失败用例、20 件衣物清单、8 张水洗标清单、Eval 报告与 AI 日志 | `8df1531` | [`EVAL-REPORT.md`](EVAL-REPORT.md)；`npm run eval:dry` |
-| M8 真实 Ark + 压缩 | 关闭 `AI_MOCK`，7 张衣物 + 4 张水洗标共 11 次真实调用；上传压缩到 1440×1920；33 项单测 | `751d46f` | [`EVAL-REPORT.md`](EVAL-REPORT.md) §8；`image-compress.ts` |
-| M9 文档基线 | `AGENTS.md` 项目规则/文档分工、PRD、ARCHITECTURE、ITERATION_LOG、tasks 模板与待办；进度单一真源 | `6377690` | [`PRD.md`](PRD.md)、[`ARCHITECTURE.md`](ARCHITECTURE.md)、[`tasks/`](../tasks/) |
+| M1 仓库与脚手架 | Next.js 16 脚手架、Git 初始化、项目文档归档 | `a175885` | `README.md`、`AGENT-WORKFLOW.md` |
+| M2 设计确认 | 8 页路由、跳转图、三态、权限矩阵；G1 确认 | `0bdde28` | [`DESIGN.md`](DESIGN.md) |
+| M3 数据层与鉴权 | Prisma 四表、迁移、demo seed、注册/登录/退出、`/api/garments`、`/api/health`；15 项单测 | `d504665` | [`PRD.md`](PRD.md) F1/F4；`npm test` |
+| M4 AI 建档 | Ark adapter、`json_schema`、失败降级、图片临时区、创建事务、详情/编辑/删除；20 项单测 | `ae45776` | [`AI-USAGE-LOG.md`](AI-USAGE-LOG.md) |
+| M5 标签与扫码 | A4 24 格排版、canvas PNG、`/labels`、`/g/[token]`、6 事件、幂等、首页数据条；27 项单测 | `1ec6643` | [`DESIGN.md`](DESIGN.md) §7；CDP 手跑 canvas |
+| M6 视觉与演示数据 | 全站三态、中文 404/error、详情双栏、扫码页窄屏、8 件模拟衣物；G5 确认 | `95c67f4` | `prisma/seed-demo.ts`、`prisma/demo-assets/`、`backup/screens/` |
+| M7 测试与 Eval 脚手架 | 31 项单测、AI 失败用例、20 件衣物清单、8 张水洗标清单、Eval 报告与 AI 日志 | `3c0b02d` | [`EVAL-REPORT.md`](EVAL-REPORT.md)；`npm run eval:dry` |
+| M8 真实 Ark + 压缩 | 关闭 `AI_MOCK`，7 张衣物 + 4 张水洗标共 11 次真实调用；上传压缩到 1440×1920；33 项单测 | `ee1bcfa` | [`EVAL-REPORT.md`](EVAL-REPORT.md) §8；`image-compress.ts` |
+| M9 文档基线 | `AGENTS.md` 项目规则/文档分工、PRD、ARCHITECTURE、ITERATION_LOG、tasks 模板与待办；进度单一真源 | `4db2c75` | [`PRD.md`](PRD.md)、[`ARCHITECTURE.md`](ARCHITECTURE.md)、[`tasks/`](../tasks/) |
 
 ### 验证证据（v0.1）
 
@@ -82,7 +82,7 @@
 
 ### 可追溯锚点
 
-- Git：`c75cd62`（feature）
+- Git：`de7288d`（feature）
 - 任务：`tasks/005-detail-status-actions.md`
 - 文档：[`DESIGN.md`](DESIGN.md) §2/§3.6/§4/§5/§10、[`PRD.md`](PRD.md) F4、[`ARCHITECTURE.md`](ARCHITECTURE.md) API/数据流
 
@@ -117,7 +117,7 @@
 
 ### 可追溯锚点
 
-- Git：`6ed80eb`（feature）
+- Git：`fbd2ee3`（feature）
 - 任务：`tasks/006-garment-category-filter.md`
 - 文档：[`DESIGN.md`](DESIGN.md) §3.4/§9/§10、[`PRD.md`](PRD.md) F4、[`ARCHITECTURE.md`](ARCHITECTURE.md) 组件/lib/列表数据流
 
@@ -153,7 +153,7 @@
 
 ### 可追溯锚点
 
-- Git：`1ae0e1d`（feature）
+- Git：`d91e9b7`（feature）
 - 任务：`tasks/007-legal-pages.md`
 - 文档：[`PRD.md`](PRD.md) F7、[`DESIGN.md`](DESIGN.md) §1/§2/§3.9/§3.10/§5/§10、[`DECISIONS.md`](DECISIONS.md) D17、[`ARCHITECTURE.md`](ARCHITECTURE.md) 静态路由
 
@@ -190,7 +190,7 @@
 
 ### 可追溯锚点
 
-- Git：`12dddf4`（feature）
+- Git：`6f26bfc`（feature）
 - 任务：`tasks/008-email-verification-rate-limit.md`
 - 文档：[`ARCHITECTURE.md`](ARCHITECTURE.md) 邮件/验证码/限流、[`DECISIONS.md`](DECISIONS.md) D18–D20、[`PRD.md`](PRD.md) F1、[`DESIGN.md`](DESIGN.md) §3.2/§3.3、`.env.example`
 
@@ -227,7 +227,7 @@
 
 ### 可追溯锚点
 
-- Git：`f1fa421`（feature）
+- Git：`9b2c1eb`（feature）
 - 任务：`tasks/009-smtp-provider.md`
 - 文档：[`ARCHITECTURE.md`](ARCHITECTURE.md) 邮件/env/依赖、[`DECISIONS.md`](DECISIONS.md) D20、[`PRD.md`](PRD.md) F1、[`DESIGN.md`](DESIGN.md) §3.3
 
@@ -236,6 +236,47 @@
 - `npm test` → **49 passed / 0 failed**；`npm run build` → **exit 0**。
 - 真实 SMTP：向发件邮箱自身发送注册验证码，`POST /api/auth/verification-code` 返回 `200`，SMTP 已接受；服务端日志未打印验证码；测试验证码已从数据库删除。
 - 安全：`git grep` 当前树未发现授权码；`.env` 被 `.gitignore` 忽略；`.env.example` 只有空占位符。
+
+---
+
+## 附：Git 历史重写记录（2026-10-20）
+
+**原因**：提交 `751d46f`（重写后为 `ee1bcfa`）的 `.env.example` 含真实 `ARK_API_KEY` / `SESSION_SECRET`；同时赛题 docx 自首个提交起就在仓库里。仓库从未 push、无 remote，因此在首次推送前做了唯一一次干净重写。
+
+**手段**：`git filter-branch --tree-filter`，对每个提交执行：
+1. `/usr/bin/sed -i -E 's/^(ARK_API_KEY|SESSION_SECRET|MAIL_SMTP_PASS)=.*/\1=/' .env.example`
+2. `rm -f *.docx`（赛题 docx 移入被忽略的 `private/`）
+
+**结果**：全部提交哈希改变（旧哈希在任何工具里都已失效）；新 `master` 共 22 个提交，HEAD `fa6c7d2`。验证：新历史中非空密钥 **0 命中**、`.docx` **0 次出现**。
+
+**锚点映射（旧 → 新）**，本文件其余位置的锚点已全部替换为新值：
+
+| 旧 | 新 | 提交 |
+| --- | --- | --- |
+| `f95fdb6` | `a175885` | chore: initialize repository… |
+| `072a31c` | `0bdde28` | docs: add Stage 1 design |
+| `d7c8717` | `d504665` | feat(stage2)… |
+| `43e1aea` | `ae45776` | feat(stage4)… |
+| `e5abef6` | `1ec6643` | feat(stage5)… |
+| `46253cf` | `95c67f4` | feat(stage6)… |
+| `8df1531` | `3c0b02d` | test(stage7)… |
+| `751d46f` | `ee1bcfa` | feat: compress uploads…（原泄露提交） |
+| `6377690` | `4db2c75` | docs: establish PRD… |
+| `8e3b1c7` | `2a89c26` | docs: record documentation baseline |
+| `d03b303` | `f9dd417` | docs: tighten PRD scope |
+| `c75cd62` | `de7288d` | feat: detail status actions |
+| `042b249` | `e1fdfce` | docs: record v0.2 |
+| `6ed80eb` | `fbd2ee3` | feat: category filter |
+| `3930d51` | `f343d2a` | docs: record v0.3 |
+| `1ae0e1d` | `d91e9b7` | feat: legal pages |
+| `9bc452f` | `aa4b652` | docs: record v0.4 |
+| `12dddf4` | `6f26bfc` | feat: email verification |
+| `9abe416` | `faf8db0` | docs: record v0.5 |
+| `f1fa421` | `9b2c1eb` | feat: SMTP adapter |
+| `5086a80` | `7a06c68` | docs: record v0.5.1 |
+| `344f421` | `fa6c7d2` | chore: move notice & work log to `private/` |
+
+> 若在别处（截图、外部笔记、旧聊天记录）引用过旧哈希，需按上表对照。**注意：重写只是删掉仓库里的副本，不等于吊销密钥——旧 key 必须在火山方舟控制台确认删除。**
 
 ---
 

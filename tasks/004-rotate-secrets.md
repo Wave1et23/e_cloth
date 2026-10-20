@@ -1,11 +1,22 @@
 # 轮换已进入 Git 历史的密钥
 
-- **状态**：进行中（等待用户轮换）
-- **版本**：v0.1 安全修复
+- **状态**：历史已清理；**仍待确认旧 key 是否已在控制台吊销**
+- **版本**：v0.6（安全修复）
 - **类型**：security
 - **对应 task**：无（安全事件，非原计划闸门）
-- **改了什么**：本次文档基线已把 `.env.example` 里的真实 `ARK_API_KEY` / `SESSION_SECRET` 替换为空占位符；**未重写 Git 历史**。提交 `751d46f` 中仍能读到旧值（更早的提交没有这两个值）。
-- **为什么**：任何进入 Git 的密钥都视为已泄露（`AGENTS.md` 规则 5）。该文件曾被提交，不能只靠“再提交一次空值”消除历史暴露；原因来自 `git show HEAD:.env.example` 的实际内容。
-- **怎么验证的**：待验证。计划：在火山方舟控制台吊销旧 key 并新建；重新生成 `SESSION_SECRET`；只写入 `.env`/`.env.local`；确认 `git grep` 当前树无密钥；评估是否需要 `git filter-repo` 清理历史（需用户授权，且当前仓库未配置 remote）。
-- **影响哪些文档**：`README.md`（环境变量）、`AGENTS.md`（密钥规则）、`docs/ARCHITECTURE.md`（配置）、`docs/ITERATION_LOG.md`（完成后记录）。
-- **已知限制**：历史重写会改变所有提交哈希；当前 `master` 没有配置 remote，未 push。是否重写历史必须由用户决定。
+- **改了什么**：
+  - **2026-10-20 用 `git filter-branch` 重写了全部提交**，把 `.env.example` 里 `ARK_API_KEY` / `SESSION_SECRET` 的非空值清为空占位符。
+  - 同一次重写顺带把赛题 docx（`关于举办…通知.docx`）从**全部历史**中移除；该文件改放到被忽略的 `private/` 目录。
+  - 重写后 `master` 共 **22 个提交**，HEAD 为 `fa6c7d2`；所有提交哈希已改变，新旧映射见 `docs/ITERATION_LOG.md` 的「附：Git 历史重写记录」。
+- **为什么**：任何进入 Git 的密钥都视为已泄露（`AGENTS.md` 规则 5）。原 `751d46f` 提交（重写后为 `ee1bcfa`）的 `.env.example` 含真实值，仅靠"再提交一次空值"无法消除历史暴露。仓库当时**从未 push、无 remote**，因此重写不需要 force push，也不影响任何协作者——这是唯一一次可以"干净重写"的时机。
+- **怎么验证的**：
+  - 对**新 master 的全历史**逐一扫描 `ARK_API_KEY=[非空]`、`SESSION_SECRET=[非空]` → **0 命中**。
+  - `git log master -- '*.docx'` → 0 个提交；`git ls-tree -r master` 中无 `.docx`。
+  - 关键提交 `ee1bcfa` 的 `.env.example` 两个变量均为空。
+  - `.env` 仍被 `.gitignore` 忽略；当前 `.env` 中的值与历史泄露值**长度不同**（ARK 46→48、SESSION 44→66），不是同一串。
+  - `npm test` → 49 passed / 0 failed；`npm run build` → exit 0。
+- **影响哪些文档**：`docs/ITERATION_LOG.md`（锚点 + 重写记录）、`tasks/004`（本文件）、`archive/_extract_docx.py`（路径改为 `private/`）
+- **已知限制**：
+  - **重写不能替代吊销**。若火山方舟控制台里那把 46 字符的旧 key 仍然启用，拿到旧值的人依旧可以调用。**必须去控制台确认并删除它。**
+  - 泄露的两个值在 2026-10-20 的本地终端输出里也出现过一次（一条命令的报错回显），因此被视为已泄露；若旧值仍有效，清理历史不足以消除风险。
+  - `git filter-branch` 的备份 ref（`refs/original/`）在验证完成后删除，并过期回收 reflog，避免旧对象残留。
