@@ -207,6 +207,38 @@
 
 ---
 
+## v0.5.1 · 真实 163 SMTP 发信（已完成，仅本地）
+
+| 项 | 值 |
+| --- | --- |
+| 版本 | **v0.5.1** |
+| 类型 | feature |
+| 状态 | 本地完成；未部署 |
+| 时间 | 2026-10-20 |
+| 范围 | 邮件 adapter 增加 SMTP 实现，接入 163 授权码 |
+
+### 完成范围
+
+- 新增 `src/lib/mail/smtp.ts`：基于 `nodemailer` 的 SMTP adapter；163 使用 `smtp.163.com:465` + SSL。
+- 工厂支持 `MAIL_PROVIDER=console|smtp`；SMTP 缺配置返回 unavailable，接口 503；production 继续拒绝 console。
+- `.env` 写入 SMTP 邮箱/授权码/发件人；授权码只存在本地 `.env`（Git 忽略），未进入代码、文档或日志。
+- `.env.example` 增加 `MAIL_SMTP_HOST/PORT/SECURE/USER/PASS` 占位符。
+- 注册页发送成功提示改为「验证码已发送，请查看邮箱」。
+
+### 可追溯锚点
+
+- Git：`f1fa421`（feature）
+- 任务：`tasks/009-smtp-provider.md`
+- 文档：[`ARCHITECTURE.md`](ARCHITECTURE.md) 邮件/env/依赖、[`DECISIONS.md`](DECISIONS.md) D20、[`PRD.md`](PRD.md) F1、[`DESIGN.md`](DESIGN.md) §3.3
+
+### 验证
+
+- `npm test` → **49 passed / 0 failed**；`npm run build` → **exit 0**。
+- 真实 SMTP：向发件邮箱自身发送注册验证码，`POST /api/auth/verification-code` 返回 `200`，SMTP 已接受；服务端日志未打印验证码；测试验证码已从数据库删除。
+- 安全：`git grep` 当前树未发现授权码；`.env` 被 `.gitignore` 忽略；`.env.example` 只有空占位符。
+
+---
+
 ## 下一版本
 
 未定。新版本发布前不在此预写计划；进行中的工作只在 `tasks/`。
