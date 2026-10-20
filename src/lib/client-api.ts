@@ -2,7 +2,7 @@
 
 export type ClientResult<T> =
   | { ok: true; data: T }
-  | { ok: false; msg: string; code?: string };
+  | { ok: false; msg: string; code?: string; retryAfterSeconds?: number };
 
 const NETWORK_ERROR = "网络不太好，再试一次";
 
@@ -44,6 +44,10 @@ export async function apiFetch<T>(
           ? record.msg
           : "请求没成功，再试一次",
       code: typeof record?.code === "string" ? record.code : undefined,
+      retryAfterSeconds:
+        typeof record?.retryAfterSeconds === "number"
+          ? record.retryAfterSeconds
+          : undefined,
     };
   } catch {
     return { ok: false, msg: NETWORK_ERROR };

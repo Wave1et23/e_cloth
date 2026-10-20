@@ -73,6 +73,7 @@ src/
 │   ├── legal/terms/page.tsx      用户协议（静态，免登录）
 │   └── api/
 │       ├── auth/{register,login,logout,me}/route.ts
+│       ├── auth/verification-code/route.ts 发送邮箱验证码
 │       ├── garments/route.ts              GET 列表 / POST 创建
 │       ├── garments/[id]/route.ts         GET / PATCH / DELETE
 │       ├── garments/[id]/events/route.ts  登录态补记状态（30s 幂等）
@@ -90,6 +91,9 @@ src/
 │   └── garment-status-actions.tsx 详情页登录态补记状态（6 动作）
 └── lib/
     ├── auth/                     密码 scrypt、session HMAC、getCurrentUser
+    ├── mail/                     MailAdapter 接口、console 实现、工厂
+    ├── verification.ts           验证码生成/格式/有效期/尝试次数（纯函数）
+    ├── verification-store.ts     验证码表读写、哈希、惰性清理
     ├── ai/                       Ark adapter、json_schema、归一化
     ├── label/                    排版数学（纯函数）、canvas 渲染（浏览器）
     ├── image-compress.ts         sharp 压缩
@@ -117,11 +121,13 @@ src/
 
 ## 4. 数据模型
 
-SQLite，四张表；状态/事件用 String 存，取值由 `src/lib/status.ts` 约束。
+SQLite，五张表；状态/事件用 String 存，取值由 `src/lib/status.ts` 约束。
 
 ```text
 User 1 ── n Garment 1 ── n GarmentEvent
                  └──── 1 Label
+
+VerificationCode（独立表，无外键）
 ```
 
 | 表 | 关键字段 | 约束/索引 |
@@ -130,11 +136,13 @@ User 1 ── n Garment 1 ── n GarmentEvent
 | `Garment` | `id`、`userId`、`seq`、`name`、`category`、`primaryColor`、`pattern`、`fit`、`season`、`style`、`material`、`brand`、`priceCents`、`purchaseDate`、`notes`、`photoPath`、`status`、`createdAt`、`updatedAt` | `@@index([userId, createdAt])`、`@@unique([userId, seq])` |
 | `GarmentEvent` | `id`、`garmentId`、`type`、`createdAt` | `@@index([garmentId, createdAt])` |
 | `Label` | `id`、`garmentId`、`token`、`createdAt` | `garmentId` unique、`token` unique |
+| `VerificationCode` | `id`、`email`、`codeHash`、`purpose`、`expiresAt`、`attempts`、`used`、`createdAt`、`requestIp` | `@@index([email, purpose, used, createdAt])`、`@@index([expiresAt])`、`@@index([requestIp, createdAt])` |
 
 - `brand` 默认 `uncertain`，业务代码创建时也强制写 `"uncertain"`。
 - `priceCents` 用整数分，避免浮点误差；展示时除 100。
 - `seq` 按用户递增，展示为 `G001`；唯一约束 `(userId, seq)` 防止并发重复。
 - 删除 `Garment` 时级联删除 `GarmentEvent` / `Label`；照片文件由接口额外删除。
+- 验证码只存 scrypt 哈希；用途当前固定 `REGISTER`；过期/24 小时前已使用的记录在发送新码时惰性删除。
 - 没有 `Session` 表、没有 `Wardrobe` 表。
 
 ---
@@ -143,10 +151,11 @@ User 1 ── n Garment 1 ── n GarmentEvent
 
 ### 5.1 注册 / 登录 / 会话
 
-1. `POST /api/auth/register` 校验邮箱/密码 → `scrypt` 哈希 → 创建 `User` → 写签名 cookie。
-2. `POST /api/auth/login` 按 `IP+email` 限流 → 查 `User` → `scrypt` 校验 → 写 cookie。
-3. `getCurrentUser()`：`await connection()` → 读 cookie → HMAC/过期校验 → 查 `User`。
-4. `proxy.ts` 只做乐观检查：没有 cookie 就 307；签名/用户有效性仍由页面/接口校验。
+1. `POST /api/auth/verification-code` 校验邮箱与限流 → 生成 6 位码 → 作废旧码、写哈希 → 邮件 adapter 发送（当前 console 只打日志）。
+2. `POST /api/auth/register` 校验邮箱/密码/限流 → 校验最新验证码（错误/过期/已用/次数）→ scrypt 哈希密码 → 事务：标记验证码已用 + 创建 `User` → 写签名 cookie。
+3. `POST /api/auth/login` 按邮箱与 IP 两个维度检查失败锁定 → 查 `User` → `scrypt` 校验 → 成功后清邮箱维度并写 cookie。
+4. `getCurrentUser()`：`await connection()` → 读 cookie → HMAC/过期校验 → 查 `User`。
+5. `proxy.ts` 只做乐观检查：没有 cookie 就 307；签名/用户有效性仍由页面/接口校验。
 
 ### 5.2 AI 拍照建档
 
@@ -261,6 +270,10 @@ User 1 ── n Garment 1 ── n GarmentEvent
 | `APP_BASE_URL` | 二维码 URL 前缀；本地 `http://localhost:3000`，上线换正式域名 |
 | `AI_CALL_BUDGET` | 视觉调用预算告警阈值（默认 300） |
 | `AI_MOCK` | `1` 时返回固定 mock；有真实 key 时应为 `0` 或删除 |
+| `MAIL_PROVIDER` | 当前仅 `console`；production 下 console 被拒绝 |
+| `MAIL_CONSOLE_LOG_CODE` | `1` 允许控制台日志打印验证码；`0` 只打元数据 |
+| `MAIL_API_URL` / `MAIL_API_KEY` / `MAIL_FROM` | 真实邮件服务商占位配置，当前未接入 |
+| `REGISTER_SKIP_EMAIL_VERIFICATION` | 仅 development 生效；`1` 跳过注册验证码；production 忽略，上线前必须为 `0` |
 
 开发环境事实：
 
@@ -295,7 +308,10 @@ User 1 ── n Garment 1 ── n GarmentEvent
 
 ## 10. 已知架构限制
 
-- **单进程内存状态**：登录限流、扫码限流、AI 调用计数都在进程内；重启清零，不能多实例共享。
+- **单进程内存状态**：登录/注册/发码限流、扫码限流、AI 调用计数都在进程内；重启清零，不能多实例共享。
+- **真实 IP 依赖代理头**：`getClientIp()` 读取 `x-forwarded-for`/`x-real-ip`；生产 Nginx 必须覆盖这两个头，否则 IP 维度限流可被伪造。
+- **邮件只实现 console**：没有真实邮件服务商；production 下发送验证码会失败，控制台模式不会打印明文码。
+- **验证码惰性清理**：没有定时任务；过期/已用记录在下一次发码时清理。
 - **SQLite 单写者**：适合单人/演示；高并发写入需要换数据库。
 - **本地磁盘存图**：部署时必须是持久磁盘；不能直接上无状态多副本。
 - **标签单页 24 张**：没有多页排版；超过 24 件需要分次生成。

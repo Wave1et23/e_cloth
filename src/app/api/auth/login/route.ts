@@ -8,11 +8,21 @@ import {
   jsonOk,
   readJsonObject,
 } from "@/lib/http";
-import { isRateLimited, recordFailure, resetFailures } from "@/lib/rate-limit";
+import { getRateLimit, recordFailure, resetFailures } from "@/lib/rate-limit";
 import { normalizeEmail } from "@/lib/validation";
 
 const WINDOW_MS = 15 * 60 * 1000;
-const MAX_FAILURES = 5;
+const MAX_EMAIL_FAILURES = 5;
+const MAX_IP_FAILURES = 20;
+
+function locked(seconds: number) {
+  return jsonError(
+    "RATE_LIMITED",
+    `尝试太多次，请 ${seconds} 秒后再试`,
+    429,
+    seconds,
+  );
+}
 
 export async function POST(request: Request) {
   if (!isSameOrigin(request)) {
@@ -30,10 +40,19 @@ export async function POST(request: Request) {
     return jsonError("VALIDATION", "请填写邮箱和密码", 400);
   }
 
-  const key = `${getClientIp(request)}:${email}`;
-  if (isRateLimited(key, MAX_FAILURES, WINDOW_MS)) {
-    return jsonError("RATE_LIMITED", "尝试太多次，请 15 分钟后再试", 429);
-  }
+  const ip = getClientIp(request);
+  const emailKey = `login:fail:email:${email}`;
+  const ipKey = `login:fail:ip:${ip}`;
+
+  const emailLimit = getRateLimit(
+    emailKey,
+    MAX_EMAIL_FAILURES,
+    WINDOW_MS,
+  );
+  if (emailLimit.limited) return locked(emailLimit.retryAfterSeconds);
+
+  const ipLimit = getRateLimit(ipKey, MAX_IP_FAILURES, WINDOW_MS);
+  if (ipLimit.limited) return locked(ipLimit.retryAfterSeconds);
 
   const user = await prisma.user.findUnique({
     where: { email },
@@ -44,11 +63,13 @@ export async function POST(request: Request) {
     : false;
 
   if (!user || !matched) {
-    recordFailure(key, WINDOW_MS);
+    recordFailure(emailKey, WINDOW_MS);
+    recordFailure(ipKey, WINDOW_MS);
     return jsonError("UNAUTHORIZED", "邮箱或密码不对", 401);
   }
 
-  resetFailures(key);
+  // 成功登录只清邮箱维度；IP 维度的攻击记录继续保留。
+  resetFailures(emailKey);
   await setSessionCookie(user.id);
   return jsonOk({ id: user.id, email: user.email });
 }

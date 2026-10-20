@@ -1,5 +1,5 @@
 // 衣橱镜像 · 数据模型
-// 四张表：User / Garment / GarmentEvent / Label
+// 五张表：User / Garment / GarmentEvent / Label / VerificationCode
 // 约定：状态与事件用 String 存（SQLite 不支持 Prisma enum），取值由 src/lib/status.ts 约束。
 
 generator client {
@@ -63,4 +63,21 @@ model Label {
   garment   Garment  @relation(fields: [garmentId], references: [id], onDelete: Cascade)
   token     String   @unique
   createdAt DateTime @default(now())
+}
+
+// 邮箱验证码：只存哈希；用途当前固定 REGISTER；过期记录惰性清理。
+model VerificationCode {
+  id        String   @id @default(cuid())
+  email     String
+  codeHash  String
+  purpose   String
+  expiresAt DateTime
+  attempts  Int      @default(0)
+  used      Boolean  @default(false)
+  createdAt DateTime @default(now())
+  requestIp String
+
+  @@index([email, purpose, used, createdAt])
+  @@index([expiresAt])
+  @@index([requestIp, createdAt])
 }

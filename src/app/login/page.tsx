@@ -11,6 +11,7 @@ export default function LoginPage() {
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [busy, setBusy] = useState(false);
+  const [retryAfter, setRetryAfter] = useState(0);
 
   useEffect(() => {
     let cancelled = false;
@@ -22,9 +23,18 @@ export default function LoginPage() {
     };
   }, [router]);
 
+  useEffect(() => {
+    if (retryAfter <= 0) return;
+    const timer = setTimeout(
+      () => setRetryAfter((value) => Math.max(0, value - 1)),
+      1000,
+    );
+    return () => clearTimeout(timer);
+  }, [retryAfter]);
+
   async function submit(event: React.FormEvent) {
     event.preventDefault();
-    if (busy) return;
+    if (busy || retryAfter > 0) return;
     setError("");
     setBusy(true);
     const result = await apiFetch<{ id: string }>("/api/auth/login", {
@@ -37,6 +47,7 @@ export default function LoginPage() {
       return;
     }
     setError(result.msg);
+    if (result.retryAfterSeconds) setRetryAfter(result.retryAfterSeconds);
     setBusy(false);
   }
 
@@ -75,8 +86,16 @@ export default function LoginPage() {
               onChange={(event) => setPassword(event.target.value)}
             />
           </div>
-          <button type="submit" className="btn btn-primary" disabled={busy}>
-            {busy ? "登录中…" : "登录"}
+          <button
+            type="submit"
+            className="btn btn-primary"
+            disabled={busy || retryAfter > 0}
+          >
+            {busy
+              ? "登录中…"
+              : retryAfter > 0
+                ? `稍后重试（${retryAfter}s）`
+                : "登录"}
           </button>
         </form>
         <p className="legal-consent">注册或登录即表示你已阅读并同意<Link href="/legal/privacy">《隐私协议》</Link>和<Link href="/legal/terms">《用户协议》</Link></p>

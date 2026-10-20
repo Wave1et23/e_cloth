@@ -11,7 +11,12 @@ export type ApiErrorCode =
   | "INTERNAL";
 
 export type ApiOk<T> = { ok: true; data: T };
-export type ApiFail = { ok: false; code: ApiErrorCode; msg: string };
+export type ApiFail = {
+  ok: false;
+  code: ApiErrorCode;
+  msg: string;
+  retryAfterSeconds?: number;
+};
 export type ApiResult<T> = ApiOk<T> | ApiFail;
 
 export function jsonOk<T>(data: T, status = 200): NextResponse<ApiOk<T>> {
@@ -22,8 +27,19 @@ export function jsonError(
   code: ApiErrorCode,
   msg: string,
   status: number,
+  retryAfterSeconds?: number,
 ): NextResponse<ApiFail> {
-  return NextResponse.json({ ok: false, code, msg }, { status });
+  const body: ApiFail =
+    retryAfterSeconds === undefined
+      ? { ok: false, code, msg }
+      : { ok: false, code, msg, retryAfterSeconds };
+  return NextResponse.json(body, {
+    status,
+    headers:
+      retryAfterSeconds === undefined
+        ? undefined
+        : { "Retry-After": String(retryAfterSeconds) },
+  });
 }
 
 /** 读 JSON body；不是对象时返回 null。 */
