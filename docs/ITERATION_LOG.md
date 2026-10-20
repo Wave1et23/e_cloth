@@ -167,6 +167,46 @@
 
 ---
 
+## v0.5 · 邮箱验证码注册与认证限流（已完成，仅本地）
+
+| 项 | 值 |
+| --- | --- |
+| 版本 | **v0.5** |
+| 类型 | feature |
+| 状态 | 本地完成；未部署 |
+| 时间 | 2026-10-20 |
+| 范围 | 邮箱验证码注册、邮件 adapter（控制台模式）、发送/注册/登录限流与倒计时 |
+
+### 完成范围
+
+- 新增 `VerificationCode` 表与迁移 `20261020135803_add_verification_codes`：邮箱、scrypt 哈希、用途、过期时间、尝试次数、是否已用、创建时间、请求 IP，含邮箱/过期/IP 索引。
+- 新增 `POST /api/auth/verification-code`：6 位码、10 分钟有效、同邮箱 60 秒冷却、邮箱 5 次/小时、IP 10 次/小时；只返回冷却/有效期，不返回验证码。
+- 注册改为 `{ email, password, code }`：错误/过期/已用/尝试过多分别提示；正确后事务标记验证码已用 + 创建 `User` + 自动登录。
+- 新增邮件 adapter：`src/lib/mail/`，当前只有 console 实现；production 拒绝 console，不打印明文码；真实服务商只留 `MAIL_*` 配置位。
+- 登录改为邮箱与 IP 两个维度失败限流：邮箱 5 次/15 分钟、IP 20 次/15 分钟，429 带 `retryAfterSeconds`。
+- 登录/注册页增加倒计时：发送按钮 60 秒、登录锁定按钮显示剩余秒数；注册限流也显示倒计时。
+- 开发跳过开关 `REGISTER_SKIP_EMAIL_VERIFICATION=1`（仅 development；production 忽略；默认 0）。
+- demo 账号未改 seed，正确密码仍可登录。
+
+### 可追溯锚点
+
+- Git：`12dddf4`（feature）
+- 任务：`tasks/008-email-verification-rate-limit.md`
+- 文档：[`ARCHITECTURE.md`](ARCHITECTURE.md) 邮件/验证码/限流、[`DECISIONS.md`](DECISIONS.md) D18–D20、[`PRD.md`](PRD.md) F1、[`DESIGN.md`](DESIGN.md) §3.2/§3.3、`.env.example`
+
+### 验证
+
+- `npm test` → **49 passed / 0 failed**（新增限流与验证码规则测试）。
+- `npm run build` → **exit 0**；`/api/auth/verification-code` 路由存在。
+- 控制台模式：服务端日志出现 `[mail:console] ... code=xxxxxx`；数据库 `codeHash` 以 `scrypt$` 开头且不含明文。
+- HTTP：第二次发送同邮箱 60 秒内 `429` 并返回剩余秒数（实测 46 秒）；错误码、过期码、已用码、尝试 5 次分别返回不同中文提示；正确码 `201` 并自动登录；demo 登录 `200`；登录第 6 次失败 `429` + 900 秒；同 IP 发码第 11 次 `429` + 剩余秒数。
+- 跳过开关：development 下 `REGISTER_SKIP_EMAIL_VERIFICATION=1` 无验证码注册 `201`。
+- 浏览器（390px）：注册页发送按钮显示 `重新发送（59s）`，提交后跳 `/garments`；登录锁定页按钮显示 `稍后重试（882s）`，无横向溢出。
+- 截图：`backup/screens/register-code-390.png`、`backup/screens/login-lockout-390.png`。
+- 测试用户与验证码已清理，未污染 demo 数据。
+
+---
+
 ## 下一版本
 
 未定。新版本发布前不在此预写计划；进行中的工作只在 `tasks/`。
