@@ -260,7 +260,8 @@
 
 ### 可追溯锚点
 
-- 代码版本：`9b2c1eb`（SMTP adapter）；部署文档基线：`fc9e687`
+- 代码版本：`9b2c1eb`（SMTP adapter）
+- 部署文档提交：`edfac7b`
 - 任务：`tasks/001-deploy-g2.md`
 - 文档：[`ARCHITECTURE.md`](ARCHITECTURE.md) 部署状态/环境、[`DECISIONS.md`](DECISIONS.md) D14、[`README.md`](../README.md) 线上地址
 
