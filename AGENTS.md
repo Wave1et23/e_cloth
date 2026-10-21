@@ -18,6 +18,8 @@ This block is written and re-added by `next dev` — verify at `node_modules/nex
 6. **写 Next.js 代码前**先读 `node_modules/next/dist/docs/` 对应章节；不要按旧版本 API 猜。
 7. **验证用行为**：HTTP、页面、单测、构建；不只比 diff/hash。
 8. **不越过闸门**：部署、真实 key、真机打印/扫码等需要用户确认或实物的事项，先建/更新 `tasks/` 并向用户确认。
+9. **不自动同步云服务器**：`mirrorwardrobe.dpdns.org` 的部署不会随本地提交、构建或文档更新自动同步；只有用户明确说“部署 / 上线 / 同步”时才推送代码、迁移数据库、重启 pm2 或改 Nginx。日常迭代只改本地与 Git。
+10. **不碰同机其他项目**：云服务器上已有的 Python 项目、Postgres/Redis/Celery、宝塔配置不属于本仓库；不得停止、重启、改配置或迁移其数据。
 
 ## 文档分工
 

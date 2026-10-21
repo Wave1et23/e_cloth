@@ -239,6 +239,43 @@
 
 ---
 
+## v0.6 · 香港服务器上线（已完成）
+
+| 项 | 值 |
+| --- | --- |
+| 版本 | **v0.6** |
+| 类型 | deploy |
+| 状态 | **已上线** |
+| 时间 | 2026-10-21 |
+| 范围 | `mirrorwardrobe.dpdns.org` 部署：Node 24、Next 构建、pm2、Nginx 反代、Let's Encrypt |
+
+### 完成范围
+
+- 服务器安装 Node 24.18（`/opt/node-v24.18.0-linux-x64`）；应用目录 `/www/wwwroot/mirrorwardrobe`；生产库 `prisma/prod.db`。
+- `npm ci`、`prisma migrate deploy`、demo seed 完成；Next 生产构建成功。
+- pm2 进程 `mirrorwardrobe` 只监听 `127.0.0.1:3000`；`pm2-root` 已设开机自启。
+- Nginx 新增独立 server block，HTTP 301 到 HTTPS，反代到 3000；证书由 Let's Encrypt 签发，`certbot.timer` 自动续期。
+- 原有 Python 项目（Gunicorn/Postgres/Redis/Celery）与原有站点继续运行，未改配置/未重启。
+- 部署前已备份 Nginx 配置到 `/root/deploy-backups/nginx-pre-mirrorwardrobe-20261021-070441.tar.gz`。
+
+### 可追溯锚点
+
+- 代码版本：`9b2c1eb`（SMTP adapter）；部署文档基线：`fc9e687`
+- 任务：`tasks/001-deploy-g2.md`
+- 文档：[`ARCHITECTURE.md`](ARCHITECTURE.md) 部署状态/环境、[`DECISIONS.md`](DECISIONS.md) D14、[`README.md`](../README.md) 线上地址
+
+### 验证
+
+- 外部 `web_fetch`：`https://mirrorwardrobe.dpdns.org/api/health` → `{"ok":true,"data":{"db":"up"}}`。
+- 页面：`/`、`/login`、`/register`、`/legal/privacy`、`/legal/terms` 均 `200`；未登录 `/garments` → `307 /login`。
+- demo 登录 `200`；8 件演示衣物；标签接口 `baseUrl=https://mirrorwardrobe.dpdns.org`。
+- 生产 AI 上传：`200`，返回结构化建议；生产 SMTP 发码：`200`。
+- 原有 `https://joint-poem.site/` 仍 `200`；Postgres/Redis/Gunicorn 进程未变。
+- 资源：Next 常驻约 75 MB，内存可用约 1.1 GiB；pm2/证书续期已启用。
+- **不自动同步**：本地提交/构建不会自动上线；后续部署需用户明确授权。
+
+---
+
 ## 附：Git 历史重写记录（2026-10-20）
 
 **原因**：提交 `751d46f`（重写后为 `ee1bcfa`）的 `.env.example` 含真实 `ARK_API_KEY` / `SESSION_SECRET`；同时赛题 docx 自首个提交起就在仓库里。仓库从未 push、无 remote，因此在首次推送前做了唯一一次干净重写。

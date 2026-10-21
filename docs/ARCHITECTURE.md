@@ -284,7 +284,16 @@ VerificationCode（独立表，无外键）
 - Windows 下 dev server 会锁 `query_engine-windows.dll.node`，跑 `prisma generate/migrate` 前需停 dev server。
 - 浏览器验证不引入 Playwright：系统 Chrome/Edge headless + CDP（临时脚本在 `backup/`，不入 Git）。
 
-当前部署状态：**仅本地**。仓库里没有 Nginx / pm2 / HTTPS / 域名配置；正式部署与真机验证仍是待办（见 `tasks/`）。
+当前部署状态：**已上线（2026-10-21，v0.6）**。
+
+- 域名：`https://mirrorwardrobe.dpdns.org`，A 记录指向香港服务器 `103.133.178.145`。
+- 应用目录：`/www/wwwroot/mirrorwardrobe`；数据库：`prisma/prod.db`；上传图：应用目录下 `uploads/`。
+- Node：`/opt/node-v24.18.0-linux-x64`（`/usr/local/bin/node` 等软链）。
+- 进程：pm2 `mirrorwardrobe`（`pm2-root` systemd 自启）；Next 只监听 `127.0.0.1:3000`。
+- 反向代理：Nginx `/www/server/panel/vhost/nginx/mirrorwardrobe.dpdns.org.conf`；HTTP 301 到 HTTPS，ACME 路径保留。
+- 证书：Let's Encrypt `/etc/letsencrypt/live/mirrorwardrobe.dpdns.org`；`certbot.timer` 自动续期。
+- 服务器：2 vCPU / 1.9 GiB RAM（可用约 1.1 GiB）/ 39 GiB 磁盘；Next 常驻约 75 MB。
+- 同机原有 Python 项目（Gunicorn/Postgres/Redis/Celery）继续运行，未改动；新站点使用独立目录、端口和数据库。
 
 ---
 
@@ -321,4 +330,5 @@ VerificationCode（独立表，无外键）
 - **无对象存储/CDN**：照片通过应用路由读取，流量由 Node 进程承担。
 - **AI 计数只告警**：超过预算不阻断调用。
 - **无正式 Eval 数字**：20 件 Ground Truth 未跑，准确率状态见 [`EVAL-REPORT.md`](EVAL-REPORT.md)。
-- **部署未落地**：没有生产构建产物、反代、证书、进程守护配置。
+- **单机 2C2G**：运行余量够，但服务器构建峰值接近 1.1 GiB；后续构建需低峰、限内存或本地构建。不能多实例。
+- **不自动同步**：本地提交/构建不会自动上线；每次部署、迁移、pm2 重启或 Nginx 改动都需要用户明确授权。
