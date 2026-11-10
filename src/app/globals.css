@@ -404,35 +404,6 @@ a {
   overflow-wrap: anywhere;
 }
 
-.stat-bar {
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 12px;
-}
-
-.stat-card {
-  padding: 16px;
-  display: grid;
-  gap: 4px;
-}
-
-.stat-label {
-  color: var(--ink-muted);
-  font-size: 12px;
-}
-
-.stat-value {
-  font-family: var(--font-display);
-  font-size: 26px;
-  line-height: 1.2;
-}
-
-@media (max-width: 640px) {
-  .stat-bar {
-    grid-template-columns: 1fr;
-  }
-}
-
 .label-list {
   display: grid;
   gap: 8px;

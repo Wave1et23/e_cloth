@@ -32,7 +32,7 @@ Next 配置开启 `cacheComponents: true` 与 `partialPrefetching: true`；CSS �
   │  HTTPS/HTTP
   ▼
 Next.js 16 单体应用（App Router）
-  ├─ proxy.ts                 乐观鉴权：/garments*、/labels 无 session cookie → 307 /login
+  ├─ proxy.ts                 乐观鉴权：`/` 有 cookie → 307 `/garments`；受保护页无 cookie → 307 `/login`
   ├─ React Server Components  页面查询（首页、列表、详情、扫码页）
   ├─ Client Components        表单、标签 canvas、编辑/删除、状态补记、AI 上传
   ├─ Route Handlers (/api/*)  CRUD、鉴权、AI、扫码动作
@@ -56,7 +56,7 @@ src/
 ├── app/
 │   ├── layout.tsx                metadata / viewport / 全局样式入口
 │   ├── globals.css               暖色 tokens + 组件级 CSS
-│   ├── page.tsx                  首页：Suspense 内读 session，游客落地页 / 登录用户数据条
+│   ├── page.tsx                  游客落地页（静态）；有 session cookie 时由 proxy 跳 /garments
 │   ├── error.tsx / not-found.tsx 全局中文错误/404
 │   ├── login/page.tsx            登录表单（client）
 │   ├── register/page.tsx         注册表单（client）
@@ -82,7 +82,6 @@ src/
 │       ├── labels/route.ts                标签 token/baseUrl
 │       ├── g/[token]/action/route.ts       扫码动作（303 + 幂等）
 │       ├── g/[token]/photo/route.ts        token 照片
-│       ├── stats/route.ts                 首页聚合
 │       └── health/route.ts                数据库连通
 ├── components/
 │   ├── site-header.tsx、logout-button.tsx
@@ -213,13 +212,12 @@ VerificationCode（独立表，无外键）
      → 303 /g/{token}?done=<type>
 ```
 
-### 5.6 首页数据条
+### 5.6 首页定位
 
-`/` 在 `Suspense` 内读取 session；登录用户通过 Prisma 聚合：
-- 本月 `WORN` 事件数；
-- `IN_CLOSET` 件数；
-- 有价格且有 `WORN` 记录的衣物平均 CPW；
-- 最近 4 件（`seq` 倒序）。
+- `/` 是静态游客落地页，不查询用户数据。
+- `proxy.ts` 匹配 `/`：有 `closet_session` cookie 时 307 到 `/garments`；无 cookie 放行落地页。
+- 真正的 session 签名/过期/用户校验仍由 `/garments` 页面完成；失效 cookie 会再被 `/garments` 送到 `/login`。
+- 首页数据条与最近 4 件已移除；`GET /api/stats` 已删除。
 
 ---
 

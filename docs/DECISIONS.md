@@ -29,6 +29,7 @@
 | D18 | 验证码存储 | 独立 `VerificationCode` 表：邮箱、哈希、用途、过期时间、尝试次数、是否已用、创建时间、请求 IP；只存 scrypt 哈希；有效期 10 分钟、最多 5 次；发送新码时作废旧码；过期/24 小时前已用记录惰性清理 | 不新增密钥/依赖；没有定时任务；不保留明文 |
 | D19 | 限流矩阵 | 发码：1 次/60 秒/邮箱、5 次/小时/邮箱、10 次/小时/IP；注册：5 次/小时/邮箱、10 次/小时/IP；登录失败：5 次/15 分钟/邮箱、20 次/15 分钟/IP；429 返回 `retryAfterSeconds` | 单进程内存，pm2 单实例；重启清零；Nginx 必须覆盖真实 IP 头 |
 | D20 | 邮件 adapter | `MailAdapter` 接口 + console/SMTP 实现；真实发信用 163 `smtp.163.com:465` + 授权码，配置 `MAIL_SMTP_HOST/PORT/SECURE/USER/PASS/MAIL_FROM`；production 禁止 console；`REGISTER_SKIP_EMAIL_VERIFICATION` 仅 development 生效、默认 0、上线前必须关闭 | 新增 `nodemailer` 依赖；控制台模式才允许打印明文码；SMTP 错误不得带出授权码；不接第三方统计 |
+| D21 | 首页定位 | 登录用户访问 `/` 由 `proxy.ts` 按 session cookie 307 到 `/garments`；首页只保留游客落地页；删除数据条、最近 4 件与 `GET /api/stats` | 会议决策；页面层 `redirect()` 在 Next 16 Cache Components 生产构建下返回 200 错误页，故改 proxy；真实 session 由 `/garments` 再校验；游客新文案待补充 |
 
 ---
 
