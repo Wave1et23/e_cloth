@@ -4,7 +4,6 @@ import { prisma } from "@/lib/db";
 import {
   EVENT_VALUES,
   eventLabel,
-  isGarmentEventType,
   statusLabel,
 } from "@/lib/status";
 
@@ -17,7 +16,7 @@ export const metadata: Metadata = {
 
 type Props = {
   params: Promise<{ token: string }>;
-  searchParams: Promise<{ done?: string; error?: string }>;
+  searchParams: Promise<{ error?: string }>;
 };
 
 const ERROR_TEXT: Record<string, string> = {
@@ -56,7 +55,6 @@ export default async function ScanPage({ params, searchParams }: Props) {
   }
 
   const garment = label.garment;
-  const done = isGarmentEventType(query.done) ? query.done : null;
   const error = query.error ? ERROR_TEXT[query.error] ?? "没记录成功，再试一次" : "";
 
   return (
@@ -78,11 +76,6 @@ export default async function ScanPage({ params, searchParams }: Props) {
           </span>
         </div>
 
-        {done ? (
-          <div className="banner banner-ok" style={{ marginTop: 14 }} role="status">
-            已记录 ✓ 现在状态：{statusLabel(garment.status)}
-          </div>
-        ) : null}
         {error ? (
           <div className="banner banner-warn" style={{ marginTop: 14 }} role="alert">
             {error}

@@ -19,6 +19,26 @@ function back(
   return NextResponse.redirect(url, 303);
 }
 
+function success(
+  request: Request,
+  token: string,
+  event: string,
+): NextResponse {
+  const proto =
+    request.headers.get("x-forwarded-proto")?.split(",")[0]?.trim() || "http";
+  const host =
+    request.headers.get("x-forwarded-host") ||
+    request.headers.get("host") ||
+    new URL(request.url).host;
+  const url = new URL(
+    `/g/${encodeURIComponent(token)}/done`,
+    `${proto}://${host}`,
+  );
+  url.searchParams.set("event", event);
+  url.searchParams.set("ts", String(Date.now()));
+  return NextResponse.redirect(url, 303);
+}
+
 export async function POST(request: Request, { params }: Params) {
   const { token } = await params;
 
@@ -55,7 +75,7 @@ export async function POST(request: Request, { params }: Params) {
   });
 
   if (isDuplicateScan(last, type)) {
-    return back(request, token, { done: type });
+    return success(request, token, type);
   }
 
   try {
@@ -72,5 +92,5 @@ export async function POST(request: Request, { params }: Params) {
     return back(request, token, { error: "write" });
   }
 
-  return back(request, token, { done: type });
+  return success(request, token, type);
 }

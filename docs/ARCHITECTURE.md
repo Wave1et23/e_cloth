@@ -69,6 +69,7 @@ src/
 │   │       ├── loading.tsx / error.tsx
 │   ├── labels/page.tsx           标签选择 + canvas 生成（client）
 │   ├── g/[token]/page.tsx        免登录扫码页（server，instant=false）
+│   ├── g/[token]/done/page.tsx   扫码动作成功结果页（server，instant=false）
 │   ├── legal/privacy/page.tsx    隐私协议（静态，免登录）
 │   ├── legal/terms/page.tsx      用户协议（静态，免登录）
 │   └── api/
@@ -87,7 +88,8 @@ src/
 │   ├── site-header.tsx、logout-button.tsx
 │   ├── garment-category-filter.tsx 列表分类标签栏（横向滚动/多选）
 │   ├── garment-actions.tsx       详情页内联编辑/删除
-│   └── garment-status-actions.tsx 详情页登录态补记状态（6 动作）
+│   ├── garment-status-actions.tsx 详情页登录态补记状态（6 动作）
+│   └── scan-success-close.tsx     扫码成功页关闭/返回首页按钮
 └── lib/
     ├── auth/                     密码 scrypt、session HMAC、getCurrentUser
     ├── mail/                     MailAdapter 接口、console/SMTP 实现、工厂
@@ -207,10 +209,14 @@ VerificationCode（独立表，无外键）
   → 6 个原生 form POST /api/g/[token]/action
      → 限流 20/min（IP+token）
      → 查 label/garment
-     → 最近一次事件若同类型且 <30s → 不写，直接 303 done
+     → 最近一次事件若同类型且 <30s → 不写，直接 303 成功页
      → 事务：GarmentEvent + Garment.status
-     → 303 /g/{token}?done=<type>
+     → 303 /g/{token}/done?event=<type>&ts=<ms>
+  → 成功页校验 event/ts/token，读取名称/状态；刷新只读
 ```
+
+- 成功页的 `event/ts` 是普通查询参数，不写数据库；直接访问无参数/缺 `ts` 显示中性提示。
+- 关闭按钮先尝试 `window.close()`；系统相机打开的标签页通常无法关闭，约 300ms 后同按钮改「返回首页」并显示兜底文案。
 
 ### 5.6 首页定位
 
