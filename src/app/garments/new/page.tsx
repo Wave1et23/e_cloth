@@ -6,14 +6,15 @@ import { useEffect, useRef, useState } from "react";
 import type { GarmentSuggestion } from "@/lib/ai/schema";
 import { apiFetch } from "@/lib/client-api";
 import { SiteHeader } from "@/components/site-header";
+import { SeasonPicker } from "@/components/season-picker";
 import {
   CATEGORY_OPTIONS,
   COLOR_OPTIONS,
   FIT_OPTIONS,
   PATTERN_OPTIONS,
-  SEASON_OPTIONS,
   STYLE_OPTIONS,
 } from "@/lib/garment-fields";
+import { parseSeasonValue, serializeSeason } from "@/lib/season";
 
 const MAX_BYTES = 10 * 1024 * 1024;
 const LOW_CONFIDENCE = 0.7;
@@ -24,7 +25,7 @@ type FormState = {
   primaryColor: string;
   pattern: string;
   fit: string;
-  season: string;
+  season: string[];
   style: string;
   material: string;
   price: string;
@@ -38,7 +39,7 @@ const EMPTY_FORM: FormState = {
   primaryColor: "",
   pattern: "",
   fit: "",
-  season: "",
+  season: [],
   style: "",
   material: "",
   price: "",
@@ -125,13 +126,18 @@ export default function NewGarmentPage() {
       "primaryColor",
       "pattern",
       "fit",
-      "season",
       "style",
     ] as const) {
       const value = suggestion[field];
       const confidence = suggestion.confidence[field];
       if (confidence < LOW_CONFIDENCE) low.add(field);
       if (value && confidence >= LOW_CONFIDENCE) next[field] = value;
+    }
+
+    if (suggestion.confidence.season < LOW_CONFIDENCE) {
+      low.add("season");
+    } else if (suggestion.season) {
+      next.season = parseSeasonValue(suggestion.season);
     }
 
     if (suggestion.material) {
@@ -203,6 +209,7 @@ export default function NewGarmentPage() {
       method: "POST",
       json: {
         ...form,
+        season: serializeSeason(form.season) ?? "",
         price: form.price,
         purchaseDate: form.purchaseDate,
         imageToken,
@@ -384,7 +391,6 @@ export default function NewGarmentPage() {
                 ["primaryColor", "颜色", COLOR_OPTIONS],
                 ["pattern", "图案", PATTERN_OPTIONS],
                 ["fit", "版型", FIT_OPTIONS],
-                ["season", "季节", SEASON_OPTIONS],
                 ["style", "风格", STYLE_OPTIONS],
               ] as const
             ).map(([field, label, options]) => (
@@ -412,6 +418,17 @@ export default function NewGarmentPage() {
                 ) : null}
               </div>
             ))}
+
+            <div className={`field ${lowFields.has("season") ? "field-warn" : ""}`}>
+              <label>季节（可多选）</label>
+              <SeasonPicker
+                value={form.season}
+                onChange={(season) => setForm({ ...form, season })}
+              />
+              {lowFields.has("season") ? (
+                <span className="field-hint">AI 不太确定，请自己选</span>
+              ) : null}
+            </div>
 
             <div className={`field ${lowFields.has("material") ? "field-warn" : ""}`}>
               <label htmlFor="material">材质（AI 仅建议）</label>

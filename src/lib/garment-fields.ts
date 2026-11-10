@@ -1,5 +1,11 @@
 /** 衣物字段的共享取值：前端下拉、AI schema、后端校验共用。 */
 
+import {
+  SEASON_AI_OPTIONS,
+  SEASON_OTHER,
+  SEASON_VALUES,
+} from "./season.ts";
+
 export const CATEGORY_OPTIONS = [
   "上衣",
   "裤装",
@@ -39,7 +45,10 @@ export const PATTERN_OPTIONS = [
 
 export const FIT_OPTIONS = ["修身", "常规", "宽松", "oversize"] as const;
 
-export const SEASON_OPTIONS = ["春", "夏", "秋", "冬", "春秋", "四季"] as const;
+export const SEASON_OPTIONS = SEASON_VALUES;
+
+/** 列表筛选栏的 5 个选项：春/夏/秋/冬 + 其他（= 未填写）。 */
+export const SEASON_FILTER_OPTIONS = [...SEASON_VALUES, SEASON_OTHER] as const;
 
 export const STYLE_OPTIONS = [
   "通勤",
@@ -68,7 +77,7 @@ export const FIELD_OPTIONS: Record<AiField, readonly string[]> = {
   primaryColor: COLOR_OPTIONS,
   pattern: PATTERN_OPTIONS,
   fit: FIT_OPTIONS,
-  season: SEASON_OPTIONS,
+  season: SEASON_AI_OPTIONS,
   style: STYLE_OPTIONS,
 };
 

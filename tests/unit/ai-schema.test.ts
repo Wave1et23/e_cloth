@@ -16,7 +16,7 @@ test("合法字段被保留，置信度被夹到 0-1", () => {
     primaryColor: "灰",
     pattern: "纯色",
     fit: "常规",
-    season: "春秋",
+    season: "春,秋",
     style: "休闲",
     material: "  棉  ",
     brand: "Acme",
@@ -53,6 +53,7 @@ test("白名单外的字段置空、置信度归零", () => {
 
   assert.equal(suggestion.category, null);
   assert.equal(suggestion.primaryColor, null);
+  assert.equal(suggestion.season, null);
   assert.equal(suggestion.confidence.category, 0);
   assert.equal(suggestion.confidence.primaryColor, 0);
   assert.equal(suggestion.confidence.pattern, 0.9);

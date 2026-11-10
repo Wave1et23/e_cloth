@@ -25,10 +25,10 @@ type Demo = {
 };
 
 const DEMOS: Demo[] = [
-  { name: "灰色圆领卫衣", category: "上衣", color: "灰", colorHex: "#8D8D8D", pattern: "纯色", fit: "宽松", season: "春秋", style: "休闲", price: 299, daysAgo: 120, worn: 7 },
-  { name: "白色棉质衬衫", category: "上衣", color: "白", colorHex: "#F2EFE7", pattern: "纯色", fit: "常规", season: "四季", style: "通勤", price: 399, daysAgo: 300, worn: 14 },
-  { name: "黑色直筒西裤", category: "裤装", color: "黑", colorHex: "#262626", pattern: "纯色", fit: "常规", season: "四季", style: "通勤", price: 499, daysAgo: 200, worn: 5, final: "WASHED" },
-  { name: "水洗牛仔外套", category: "外套", color: "蓝", colorHex: "#5B7A9D", pattern: "纯色", fit: "宽松", season: "春秋", style: "复古", price: 599, daysAgo: 400, worn: 4 },
+  { name: "灰色圆领卫衣", category: "上衣", color: "灰", colorHex: "#8D8D8D", pattern: "纯色", fit: "宽松", season: "春,秋", style: "休闲", price: 299, daysAgo: 120, worn: 7 },
+  { name: "白色棉质衬衫", category: "上衣", color: "白", colorHex: "#F2EFE7", pattern: "纯色", fit: "常规", season: "春,夏,秋,冬", style: "通勤", price: 399, daysAgo: 300, worn: 14 },
+  { name: "黑色直筒西裤", category: "裤装", color: "黑", colorHex: "#262626", pattern: "纯色", fit: "常规", season: "春,夏,秋,冬", style: "通勤", price: 499, daysAgo: 200, worn: 5, final: "WASHED" },
+  { name: "水洗牛仔外套", category: "外套", color: "蓝", colorHex: "#5B7A9D", pattern: "纯色", fit: "宽松", season: "春,秋", style: "复古", price: 599, daysAgo: 400, worn: 4 },
   { name: "米色长款风衣", category: "外套", color: "米", colorHex: "#C9B99A", pattern: "纯色", fit: "常规", season: "秋", style: "通勤", price: 899, daysAgo: 500, worn: 6, final: "STORED" },
   { name: "黑白条纹T恤", category: "上衣", color: "多色", colorHex: "#E8E2D6", pattern: "条纹", fit: "修身", season: "夏", style: "休闲", price: 129, daysAgo: 90, worn: 21 },
   { name: "亚麻阔腿长裤", category: "裤装", color: "米", colorHex: "#D6C6A8", pattern: "纯色", fit: "宽松", season: "夏", style: "休闲", price: 259, daysAgo: 60, worn: 3 },

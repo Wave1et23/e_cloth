@@ -1,14 +1,19 @@
 import Link from "next/link";
 import { redirect } from "next/navigation";
-import { GarmentCategoryFilter } from "@/components/garment-category-filter";
+import { GarmentFilterBar } from "@/components/garment-filter-bar";
 import { SiteHeader } from "@/components/site-header";
 import { getCurrentUser } from "@/lib/auth/user";
 import { computeCpw, formatCny } from "@/lib/cost";
 import { prisma } from "@/lib/db";
-import { CATEGORY_OPTIONS } from "@/lib/garment-fields";
+import {
+  CATEGORY_OPTIONS,
+  SEASON_FILTER_OPTIONS,
+} from "@/lib/garment-fields";
 import {
   filterByCategories,
+  filterBySeasons,
   parseCategoryParams,
+  parseSeasonParams,
   resolveCategoryFilter,
 } from "@/lib/garment-filter";
 import { sortGarmentsByWorn } from "@/lib/garment-sort";
@@ -17,7 +22,10 @@ import { normalizeStatus, statusLabel } from "@/lib/status";
 export const instant = false;
 
 type Props = {
-  searchParams: Promise<{ category?: string | string[] }>;
+  searchParams: Promise<{
+    category?: string | string[];
+    season?: string | string[];
+  }>;
 };
 
 function badgeClass(status: string): string {
@@ -43,6 +51,7 @@ export default async function GarmentsPage({ searchParams }: Props) {
         name: true,
         category: true,
         status: true,
+        season: true,
         priceCents: true,
         events: {
           where: { type: "WORN" },
@@ -58,7 +67,11 @@ export default async function GarmentsPage({ searchParams }: Props) {
     CATEGORY_OPTIONS,
     parseCategoryParams(params.category),
   );
-  const filtered = filterByCategories(garments, selected);
+  const selectedSeasons = parseSeasonParams(params.season);
+  const filtered = filterBySeasons(
+    filterByCategories(garments, selected),
+    selectedSeasons,
+  );
   const sorted = sortGarmentsByWorn(filtered);
 
   return (
@@ -86,7 +99,20 @@ export default async function GarmentsPage({ searchParams }: Props) {
         </div>
 
         {garments.length > 0 ? (
-          <GarmentCategoryFilter categories={categories} selected={selected} />
+          <>
+            <GarmentFilterBar
+              param="category"
+              label="按类别筛选"
+              options={categories}
+              selected={selected}
+            />
+            <GarmentFilterBar
+              param="season"
+              label="按季节筛选"
+              options={[...SEASON_FILTER_OPTIONS]}
+              selected={selectedSeasons}
+            />
+          </>
         ) : null}
 
         {garments.length === 0 ? (
@@ -110,9 +136,9 @@ export default async function GarmentsPage({ searchParams }: Props) {
           </section>
         ) : filtered.length === 0 ? (
           <section className="card empty">
-            <h2>这个分类下还没有衣物</h2>
+            <h2>没有符合条件的衣物</h2>
             <p className="muted" style={{ fontSize: 15 }}>
-              {selected.join("、")} 暂时是空的，换个分类看看。
+              换个类别或季节看看。
             </p>
             <div
               style={{

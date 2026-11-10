@@ -134,7 +134,7 @@ VerificationCode（独立表，无外键）
 | 表 | 关键字段 | 约束/索引 |
 | --- | --- | --- |
 | `User` | `id`(cuid)、`email`、`passwordHash`、`createdAt` | `email` unique |
-| `Garment` | `id`、`userId`、`seq`、`name`、`category`、`primaryColor`、`pattern`、`fit`、`season`、`style`、`material`、`brand`、`priceCents`、`purchaseDate`、`notes`、`photoPath`、`status`、`createdAt`、`updatedAt` | `@@index([userId, createdAt])`、`@@unique([userId, seq])` |
+| `Garment` | `id`、`userId`、`seq`、`name`、`category`、`primaryColor`、`pattern`、`fit`、`season`、`style`、`material`、`brand`、`priceCents`、`purchaseDate`、`notes`、`photoPath`、`status`、`createdAt`、`updatedAt` | `@@index([userId, createdAt])`、`@@unique([userId, seq])`；`season` 为逗号分隔字符串 |
 | `GarmentEvent` | `id`、`garmentId`、`type`、`createdAt` | `@@index([garmentId, createdAt])` |
 | `Label` | `id`、`garmentId`、`token`、`createdAt` | `garmentId` unique、`token` unique |
 | `VerificationCode` | `id`、`email`、`codeHash`、`purpose`、`expiresAt`、`attempts`、`used`、`createdAt`、`requestIp` | `@@index([email, purpose, used, createdAt])`、`@@index([expiresAt])`、`@@index([requestIp, createdAt])` |
@@ -144,6 +144,7 @@ VerificationCode（独立表，无外键）
 - `seq` 按用户递增，展示为 `G001`；唯一约束 `(userId, seq)` 防止并发重复。
 - 删除 `Garment` 时级联删除 `GarmentEvent` / `Label`；照片文件由接口额外删除。
 - 验证码只存 scrypt 哈希；用途当前固定 `REGISTER`；过期/24 小时前已使用的记录在发送新码时惰性删除。
+- `season` 存逗号分隔的春/夏/秋/冬；空/null 表示「其他」；迁移 `20261110234000_season_multi` 把旧值 `春秋`、`四季` 展开；解析/序列化见 `src/lib/season.ts`。
 - 没有 `Session` 表、没有 `Wardrobe` 表。
 
 ---

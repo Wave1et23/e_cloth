@@ -1,5 +1,11 @@
 /** 衣柜列表的分类筛选：纯函数，方便单测。 */
 
+import {
+  SEASON_OTHER,
+  SEASON_VALUES,
+  seasonMatches,
+} from "./season.ts";
+
 /** 把重复的 ?category= 参数收敛成去重数组；空值忽略。 */
 export function parseCategoryParams(
   value: string | string[] | undefined,
@@ -64,4 +70,31 @@ export function filterByCategories<T extends { category: string }>(
 ): T[] {
   if (selected.length === 0) return garments;
   return garments.filter((garment) => selected.includes(garment.category));
+}
+
+const SEASON_FILTERS = [...SEASON_VALUES, SEASON_OTHER];
+
+/** 解析重复 ?season= 参数；只保留春/夏/秋/冬/其他。 */
+export function parseSeasonParams(
+  value: string | string[] | undefined,
+): string[] {
+  const values = Array.isArray(value) ? value : value === undefined ? [] : [value];
+  const seen = new Set<string>();
+  const result: string[] = [];
+  for (const item of values) {
+    const season = item.trim();
+    if (!SEASON_FILTERS.includes(season) || seen.has(season)) continue;
+    seen.add(season);
+    result.push(season);
+  }
+  return result;
+}
+
+/** 季节多选：选中的季节取并集；「其他」匹配空 season。 */
+export function filterBySeasons<T extends { season: string | null }>(
+  garments: T[],
+  selected: string[],
+): T[] {
+  if (selected.length === 0) return garments;
+  return garments.filter((garment) => seasonMatches(garment.season, selected));
 }

@@ -3,7 +3,9 @@ import test from "node:test";
 import {
   deriveCategories,
   filterByCategories,
+  filterBySeasons,
   parseCategoryParams,
+  parseSeasonParams,
   resolveCategoryFilter,
 } from "../../src/lib/garment-filter.ts";
 
@@ -53,4 +55,35 @@ test("空选择表示全部；单选与多选按并集过滤", () => {
 test("合法但无衣物的分类过滤结果为空", () => {
   const { selected } = resolveCategoryFilter(GARMENTS, OPTIONS, ["裤装"]);
   assert.deepEqual(filterByCategories(GARMENTS, selected), []);
+});
+
+test("季节参数解析：去重、忽略未知值", () => {
+  assert.deepEqual(parseSeasonParams(undefined), []);
+  assert.deepEqual(parseSeasonParams([" 春 ", "秋", "春", "未知"]), [
+    "春",
+    "秋",
+  ]);
+  assert.deepEqual(parseSeasonParams("其他"), ["其他"]);
+});
+
+test("类别与季节先筛选后取交集", () => {
+  const garments = [
+    { id: "1", category: "上衣", season: "春,秋" },
+    { id: "2", category: "上衣", season: "夏" },
+    { id: "3", category: "裤装", season: "春" },
+    { id: "4", category: "上衣", season: null },
+  ];
+  const byCategory = filterByCategories(garments, ["上衣"]);
+  assert.deepEqual(
+    filterBySeasons(byCategory, ["春"]).map((item) => item.id),
+    ["1"],
+  );
+  assert.deepEqual(
+    filterBySeasons(byCategory, ["春", "其他"]).map((item) => item.id),
+    ["1", "4"],
+  );
+  assert.deepEqual(
+    filterBySeasons(byCategory, ["冬"]).map((item) => item.id),
+    [],
+  );
 });

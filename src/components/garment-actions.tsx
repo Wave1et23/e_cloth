@@ -3,12 +3,13 @@
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { apiFetch } from "@/lib/client-api";
+import { SeasonPicker } from "@/components/season-picker";
+import { serializeSeason } from "@/lib/season";
 import {
   CATEGORY_OPTIONS,
   COLOR_OPTIONS,
   FIT_OPTIONS,
   PATTERN_OPTIONS,
-  SEASON_OPTIONS,
   STYLE_OPTIONS,
 } from "@/lib/garment-fields";
 
@@ -19,7 +20,7 @@ export type EditableGarment = {
   primaryColor: string;
   pattern: string;
   fit: string;
-  season: string;
+  season: string[];
   style: string;
   material: string;
   price: string;
@@ -32,7 +33,6 @@ const SELECT_FIELDS = [
   ["primaryColor", "颜色", COLOR_OPTIONS, false],
   ["pattern", "图案", PATTERN_OPTIONS, false],
   ["fit", "版型", FIT_OPTIONS, false],
-  ["season", "季节", SEASON_OPTIONS, false],
   ["style", "风格", STYLE_OPTIONS, false],
 ] as const;
 
@@ -58,7 +58,7 @@ export function GarmentActions({ garment }: { garment: EditableGarment }) {
           primaryColor: form.primaryColor,
           pattern: form.pattern,
           fit: form.fit,
-          season: form.season,
+          season: serializeSeason(form.season) ?? "",
           style: form.style,
           material: form.material,
           price: form.price,
@@ -169,6 +169,13 @@ export function GarmentActions({ garment }: { garment: EditableGarment }) {
             </select>
           </div>
         ))}
+        <div className="field">
+          <label>季节（可多选）</label>
+          <SeasonPicker
+            value={form.season}
+            onChange={(season) => setForm({ ...form, season })}
+          />
+        </div>
         <div className="field">
           <label htmlFor="edit-material">材质</label>
           <input

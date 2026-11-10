@@ -10,6 +10,7 @@
 | 模型 | `doubao-seed-2-1-lite-260915`（火山方舟 Ark，OpenAI 兼容） |
 | 输出模式 | `response_format: json_schema`，关闭深度思考 |
 | 衣物字段 | category / primaryColor / pattern / fit / season / style |
+| 季节格式 | 多选逗号组合（如 `春,秋`）；Ground Truth 已把 `春秋→春,秋`、`四季→春,夏,秋,冬`；AI schema 不再接受旧值 |
 | 门槛（DECISIONS D13） | 类别 ≥ 85%、颜色 ≥ 90%、图案 ≥ 85% |
 | 调用预算 | 开发 + 评测合计 ≤ 300 次视觉调用；adapter 内计数并告警 |
 

@@ -6,6 +6,7 @@ import { SiteHeader } from "@/components/site-header";
 import { getCurrentUser } from "@/lib/auth/user";
 import { computeCpw, formatCny } from "@/lib/cost";
 import { prisma } from "@/lib/db";
+import { parseSeasonValue, formatSeason } from "@/lib/season";
 import { eventLabel, isGarmentEventType, normalizeStatus, statusLabel } from "@/lib/status";
 
 export const instant = false;
@@ -65,7 +66,7 @@ export default async function GarmentDetailPage({ params }: Params) {
     ["颜色", garment.primaryColor ?? "—"],
     ["图案", garment.pattern ?? "—"],
     ["版型", garment.fit ?? "—"],
-    ["季节", garment.season ?? "—"],
+    ["季节", formatSeason(garment.season)],
     ["风格", garment.style ?? "—"],
     ["材质", garment.material ?? "—"],
     ["品牌", "不确定"],
@@ -192,7 +193,7 @@ export default async function GarmentDetailPage({ params }: Params) {
                 primaryColor: garment.primaryColor ?? "",
                 pattern: garment.pattern ?? "",
                 fit: garment.fit ?? "",
-                season: garment.season ?? "",
+                season: parseSeasonValue(garment.season),
                 style: garment.style ?? "",
                 material: garment.material ?? "",
                 price:

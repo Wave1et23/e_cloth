@@ -9,6 +9,10 @@ import {
   type AiField,
 } from "@/lib/garment-fields";
 import { readText } from "@/lib/validation";
+import {
+  isValidSeasonInput,
+  serializeSeason,
+} from "@/lib/season";
 
 export type GarmentWritable = {
   name?: string;
@@ -73,10 +77,21 @@ export function parseGarmentInput(
       "primaryColor",
       "pattern",
       "fit",
-      "season",
       "style",
     ] as const) {
       optionalEnum(body, field, data);
+    }
+
+    if ("season" in body) {
+      const value = body.season;
+      if (value === null || value === "") {
+        data.season = null;
+      } else {
+        if (!isValidSeasonInput(value)) {
+          return { ok: false, msg: "季节取值不对" };
+        }
+        data.season = serializeSeason(value);
+      }
     }
 
     if ("material" in body) {

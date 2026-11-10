@@ -148,7 +148,7 @@ export function mockSuggestion(): GarmentSuggestion {
     primaryColor: "灰",
     pattern: "纯色",
     fit: "常规",
-    season: "春秋",
+    season: "春,秋",
     style: "休闲",
     material: "棉",
     brand: "uncertain",

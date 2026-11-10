@@ -29,7 +29,7 @@ model Garment {
   primaryColor String?
   pattern      String?
   fit          String?
-  season       String?
+  season       String?        // 逗号分隔：春,秋；null/空 = 其他（未填写）
   style        String?
   material     String?
   brand        String?        @default("uncertain")
