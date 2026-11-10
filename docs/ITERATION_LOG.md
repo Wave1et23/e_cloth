@@ -277,6 +277,42 @@
 
 ---
 
+## v0.7 · 首页定位调整（已完成，仅本地）
+
+| 项 | 值 |
+| --- | --- |
+| 版本 | **v0.7** |
+| 类型 | feature |
+| 状态 | 本地完成；未部署 |
+| 时间 | 2026-11-10 |
+| 范围 | 登录后直达 `/garments`；删除首页数据条/最近 4 件与 `/api/stats` |
+
+### 完成范围
+
+- 登录成功跳转 `/garments`（原代码已是此地址，本批复测未改）。
+- 已登录访问 `/`：`proxy.ts` 按 session cookie 返回 `307 /garments`；游客无 cookie 继续看落地页。
+- 首页改为纯游客落地页；删除数据条、最近 4 件、`Suspense`/Dashboard 与服务端聚合查询。
+- 删除 `src/app/api/stats/route.ts`；`/api/stats` 变 `404`。
+- 删除 `globals.css` 中已无引用的 `.stat-*` 样式。
+- 游客首页新文案保持原样，等待用户提供；未自行改写。
+
+### 可追溯锚点
+
+- Git：`1107047`（feature）
+- 任务：`tasks/011-home-redirect.md`
+- 文档：[`PRD.md`](PRD.md) F2/F4、[`DESIGN.md`](DESIGN.md) §1/§2/§3.1/§4/§5/§10、[`ARCHITECTURE.md`](ARCHITECTURE.md) 路由/§5.6、[`DECISIONS.md`](DECISIONS.md) D21
+
+### 验证
+
+- `npm test` → **49 passed / 0 failed**；`npm run build` → **exit 0**；`/` 为静态页，`/api/stats` 已从构建清单消失。
+- 游客无 cookie 访问 `/` → `200`，落地页正常，无数据条字符串。
+- demo 登录 `200`；带有效 session cookie 访问 `/` → `307`，`Location: /garments`；`/garments` → `200`。
+- `/api/stats` → `404`。
+- 登录页源码仍为 `router.push("/garments")`。
+- **未部署**；按规则不自动同步到云服务器。
+
+---
+
 ## 附：Git 历史重写记录（2026-10-20）
 
 **原因**：提交 `751d46f`（重写后为 `ee1bcfa`）的 `.env.example` 含真实 `ARK_API_KEY` / `SESSION_SECRET`；同时赛题 docx 自首个提交起就在仓库里。仓库从未 push、无 remote，因此在首次推送前做了唯一一次干净重写。
