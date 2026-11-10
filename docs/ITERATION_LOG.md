@@ -382,6 +382,42 @@
 
 ---
 
+## v0.10 · 季节多选与季节筛选（已完成，仅本地）
+
+| 项 | 值 |
+| --- | --- |
+| 版本 | **v0.10** |
+| 类型 | feature |
+| 状态 | 本地完成；未部署 |
+| 时间 | 2026-11-10 |
+| 范围 | 季节改多选春/夏/秋/冬 + 其他；`/garments` 增加季节筛选并与类别取交集 |
+
+### 完成范围
+
+- 新增 `src/lib/season.ts`：parse/serialize/format、旧值迁移、`seasonMatches`；SQLite 继续用逗号字符串。
+- 迁移 `20261110234000_season_multi`：`春秋→春,秋`、`四季→春,夏,秋,冬`；其他值保持。
+- AI schema 的 season 改为非空逗号组合 enum；prompts v1/v2、mock、Ground Truth 同步；旧值不再进入 AI 输出。
+- 新增页季节改为多选 chips（春/夏/秋/冬/其他）；编辑表单同步；详情显示 `春、秋`，空值「其他」。
+- `/garments` 类别栏下新增季节栏：多选并集、与类别交集、URL 重复 `season` 参数、保留另一组筛选；两栏样式一致。
+- 增加 parse/serialize、交集、「其他」、旧值迁移单测。
+
+### 可追溯锚点
+
+- Git：`41be271`（feature）；组件清理提交随后
+- 任务：`tasks/014-season-multi.md`
+- 文档：[`PRD.md`](PRD.md) F3/F4、[`DESIGN.md`](DESIGN.md) §3.4/§3.5/§3.6/§10、[`DECISIONS.md`](DECISIONS.md) D23、[`ARCHITECTURE.md`](ARCHITECTURE.md) 数据模型/迁移、[`EVAL-REPORT.md`](EVAL-REPORT.md)、`prompts/`
+
+### 验证
+
+- `npm test` → **60 passed / 0 failed**；`npm run eval:dry` → 20 项清单有效；`npm run build` → **exit 0**。
+- 迁移后 DB 序列为 `春,秋` / `春,夏,秋,冬` / `夏` / `秋`，无「春秋」「四季」。
+- `/garments` 出现两排筛选栏；`?category=上衣&season=春` 返回 G002、G001（交集）。
+- 临时把 G009 season 置空，`?season=其他` 只返回 G009；随后恢复为 `春,秋`。
+- 新页有季节多选控件；详情 G001 显示 `春、秋`。
+- 未部署；按规则不自动同步云服务器。
+
+---
+
 ## 附：Git 历史重写记录（2026-10-20）
 
 **原因**：提交 `751d46f`（重写后为 `ee1bcfa`）的 `.env.example` 含真实 `ARK_API_KEY` / `SESSION_SECRET`；同时赛题 docx 自首个提交起就在仓库里。仓库从未 push、无 remote，因此在首次推送前做了唯一一次干净重写。
