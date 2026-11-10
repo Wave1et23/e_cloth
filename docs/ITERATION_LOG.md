@@ -368,7 +368,7 @@
 
 ### 可追溯锚点
 
-- Git：本次提交（见 `git log`）
+- Git：`ec98ac9`（feature）
 - 任务：`tasks/013-garments-worn-sort.md`
 - 文档：[`PRD.md`](PRD.md) F4、[`DESIGN.md`](DESIGN.md) §3.4、[`DECISIONS.md`](DECISIONS.md) D22
 
