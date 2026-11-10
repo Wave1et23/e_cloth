@@ -11,6 +11,7 @@ import {
   parseCategoryParams,
   resolveCategoryFilter,
 } from "@/lib/garment-filter";
+import { sortGarmentsByWorn } from "@/lib/garment-sort";
 import { normalizeStatus, statusLabel } from "@/lib/status";
 
 export const instant = false;
@@ -58,6 +59,7 @@ export default async function GarmentsPage({ searchParams }: Props) {
     parseCategoryParams(params.category),
   );
   const filtered = filterByCategories(garments, selected);
+  const sorted = sortGarmentsByWorn(filtered);
 
   return (
     <>
@@ -127,7 +129,7 @@ export default async function GarmentsPage({ searchParams }: Props) {
           </section>
         ) : (
           <div className="grid-garments">
-            {filtered.map((garment) => {
+            {sorted.map((garment) => {
               const wornCount = garment.events.length;
               const cpw = computeCpw(garment.priceCents, wornCount);
               return (

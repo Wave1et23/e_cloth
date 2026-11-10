@@ -349,6 +349,39 @@
 
 ---
 
+## v0.9 · 衣柜列表按穿着次数排序（已完成，仅本地）
+
+| 项 | 值 |
+| --- | --- |
+| 版本 | **v0.9** |
+| 类型 | feature |
+| 状态 | 本地完成；未部署 |
+| 时间 | 2026-11-10 |
+| 范围 | `/garments` 列表固定排序：WORN 次数降序，次数相同按 `seq` 降序 |
+
+### 完成范围
+
+- 新增 `src/lib/garment-sort.ts`：纯函数按 WORN 事件数降序，次数相同按 `seq` 降序；0 次自然最后。
+- `/garments` 在类别筛选之后排序（先过滤再排序）；无排序控件、无 URL 参数。
+- `GET /api/garments` 保持 `seq` 倒序，`/labels` 选择列表不受影响。
+- 新增单测覆盖次数降序、并列 seq 降序、0 次最后、不修改入参。
+
+### 可追溯锚点
+
+- Git：本次提交（见 `git log`）
+- 任务：`tasks/013-garments-worn-sort.md`
+- 文档：[`PRD.md`](PRD.md) F4、[`DESIGN.md`](DESIGN.md) §3.4、[`DECISIONS.md`](DECISIONS.md) D22
+
+### 验证
+
+- `npm test` → **53 passed / 0 failed**；`npm run build` → **exit 0**。
+- 页面顺序与数据库 WORN 计数一致；同次数按 `seq` 降序；0 次最后。
+- 类别筛选后仍按同一规则排序；页面无排序控件。
+- `/labels` 使用的 `/api/garments` 返回顺序未改。
+- 未部署；按规则不自动同步云服务器。
+
+---
+
 ## 附：Git 历史重写记录（2026-10-20）
 
 **原因**：提交 `751d46f`（重写后为 `ee1bcfa`）的 `.env.example` 含真实 `ARK_API_KEY` / `SESSION_SECRET`；同时赛题 docx 自首个提交起就在仓库里。仓库从未 push、无 remote，因此在首次推送前做了唯一一次干净重写。
