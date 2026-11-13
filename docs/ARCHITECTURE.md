@@ -327,17 +327,19 @@ VerificationCode（独立表，无外键）
 - Windows 下 dev server 会锁 `query_engine-windows.dll.node`，跑 `prisma generate/migrate` 前需停 dev server。
 - 浏览器验证不引入 Playwright：系统 Chrome/Edge headless + CDP（临时脚本在 `backup/`，不入 Git）。
 
-当前部署状态：**已上线（2026-10-21，v0.6）；域名 2026-11-13 迁移到 `.xyz`**。
+当前部署状态：**已上线（2026-11-13，v0.11；域名迁移到 `.xyz`）**。
 
 - 域名：`https://mirrorwardrobe.xyz`，通过 Cloudflare 代理；源站 A 记录指向香港服务器 `103.133.178.145`。
 - 旧域名：`https://mirrorwardrobe.dpdns.org` 已改为 `410 Gone`，不再提供站点内容。
+- 代码版本：`3f83302`（包含 v0.7–v0.11：首页定位、扫码成功页、穿着次数排序、季节多选、固定搭配）。
+- 数据库迁移：5 个迁移已全部应用（含 `season_multi`、`outfits`）；部署前备份在 `/root/deploy-backups/mirrorwardrobe-pre-v0.11-20261113112641/`（应用源码 + `.env` + `prod.db`）。
 - 应用目录：`/www/wwwroot/mirrorwardrobe`；数据库：`prisma/prod.db`；上传图：应用目录下 `uploads/`。
 - Node：`/opt/node-v24.18.0-linux-x64`（`/usr/local/bin/node` 等软链）。
 - 进程：pm2 `mirrorwardrobe`（`pm2-root` systemd 自启）；Next 只监听 `127.0.0.1:3000`。
 - 反向代理：Nginx `/www/server/panel/vhost/nginx/mirrorwardrobe.xyz.conf`；HTTP 301 到 HTTPS，ACME 路径保留。
 - 证书：Cloudflare Origin Certificate `/www/server/panel/vhost/cert/mirrorwardrobe.xyz/origin-cert.pem` + `origin-key.pem`（私钥 600）；Cloudflare Full (strict)。
 - 旧域名 Nginx 配置保留旧 Let's Encrypt 证书，仅返回 `410`；旧证书不再承载站点内容。
-- 服务器：2 vCPU / 1.9 GiB RAM（可用约 0.8 GiB）/ 39 GiB 磁盘；Next 常驻约 75 MB。
+- 服务器：2 vCPU / 1.9 GiB RAM（可用约 1.0 GiB）/ 39 GiB 磁盘；Next 常驻约 72 MB。
 - 同机原有 Python 项目（Gunicorn/Postgres/Redis/Celery）继续运行，未改动；新站点使用独立目录、端口和数据库。
 
 ---

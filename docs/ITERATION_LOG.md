@@ -490,6 +490,43 @@
 
 ---
 
+## v0.13 · 上线 v0.7–v0.11 到云服务器（已完成）
+
+| 项 | 值 |
+| --- | --- |
+| 版本 | **v0.13（部署）** |
+| 类型 | deploy |
+| 状态 | **已上线** |
+| 时间 | 2026-11-13 |
+| 范围 | 把本地 v0.7–v0.11 功能上线；水洗标识别脚本不进产品 |
+
+### 完成范围
+
+- 部署代码版本 `3f83302`：首页定位、扫码成功页、穿着次数排序、季节多选、固定搭配、旧域名关闭。
+- 停机备份：`/root/deploy-backups/mirrorwardrobe-pre-v0.11-20261113112641/`，含 `.env`、`prod.db`、部署前源码 tar。
+- `prisma generate` + `prisma migrate deploy`：5 个迁移全部应用；`season_multi` 展开旧季节值，新建 `Outfit`/`OutfitItem`。
+- 服务器重新 `npm run build`，pm2 启动 latest `.next`。
+- Nginx 继续代理 `mirrorwardrobe.xyz` 到 `127.0.0.1:3000`；旧域名 410 保持。
+- 水洗标脚本/报告仍在本地 `tests/eval/`，未进入产品运行时代码。
+
+### 可追溯锚点
+
+- Git：`3f83302`（部署来源）
+- 备份：`/root/deploy-backups/mirrorwardrobe-pre-v0.11-20261113112641/`
+- 文档：[`README.md`](README.md)、[`ARCHITECTURE.md`](ARCHITECTURE.md) §8
+
+### 验证
+
+- `https://mirrorwardrobe.xyz/api/health` → `200 {"ok":true,"data":{"db":"up"}}`。
+- 新域名 `/garments`、`/outfits`、`/g/[token]` 均 `200`；登录 `200`；已登录 `/` → `307 /garments`。
+- 生产 DB：39 件衣物；季节已全部为逗号组合或空，无「春秋」「四季」；`Outfit` 当前 0 条。
+- 生产环境创建 2 件搭配成功（201），删除成功；`/outfits` API 200。
+- `/g/[token]` 200；直接访问成功页显示中性「没有可显示的结果」。
+- 旧域名 HTTP/HTTPS 均 `410`。
+- 服务器 pm2 online，内存可用约 1.0 GiB；本地 `npm test` 67 项、`npm run build` 通过。
+
+---
+
 ## 附：Git 历史重写记录（2026-10-20）
 
 **原因**：提交 `751d46f`（重写后为 `ee1bcfa`）的 `.env.example` 含真实 `ARK_API_KEY` / `SESSION_SECRET`；同时赛题 docx 自首个提交起就在仓库里。仓库从未 push、无 remote，因此在首次推送前做了唯一一次干净重写。
