@@ -456,6 +456,40 @@
 
 ---
 
+## v0.12 · 域名迁移到 mirrorwardrobe.xyz（部署基础设施，已完成）
+
+| 项 | 值 |
+| --- | --- |
+| 版本 | **v0.12（域名迁移）** |
+| 类型 | infra |
+| 状态 | 已上线；应用仍是 v0.6，未同步本地新功能 |
+| 时间 | 2026-11-13 |
+| 范围 | `mirrorwardrobe.dpdns.org` → `mirrorwardrobe.xyz`；旧域名关闭 |
+
+### 完成范围
+
+- Cloudflare NS 已接管 `mirrorwardrobe.xyz`，A 记录代理到源站 `103.133.178.145`。
+- 上传 Cloudflare Origin Certificate 到 `/www/server/panel/vhost/cert/mirrorwardrobe.xyz/`，私钥 `600`。
+- 新增 Nginx `mirrorwardrobe.xyz.conf`，反向代理到 `127.0.0.1:3000`。
+- 更新服务器 `.env`：`APP_BASE_URL=https://mirrorwardrobe.xyz`；pm2 重启并加载。
+- 旧域名 HTTP/HTTPS 均返回 `410 Gone`，不再代理到应用。
+- 同步 README / ARCHITECTURE 当前部署信息；应用代码未重新部署。
+
+### 可追溯锚点
+
+- Git：见 `git log`（本轮文档提交）
+- 文档：[`README.md`](README.md)、[`ARCHITECTURE.md`](ARCHITECTURE.md) §8
+
+### 验证
+
+- `https://mirrorwardrobe.xyz/api/health` → `200 {"ok":true,"data":{"db":"up"}}`。
+- `https://mirrorwardrobe.xyz/` 标题为「衣橱镜像 · 给现实衣柜建一份数字档案」。
+- 新域名登录 `200`；标签接口 `baseUrl=https://mirrorwardrobe.xyz`。
+- 旧域名 `https://mirrorwardrobe.dpdns.org/` 与 HTTP 均返回 `410`。
+- 服务器 pm2 `mirrorwardrobe` online；Nginx 配置 `nginx -t` 通过。
+
+---
+
 ## 附：Git 历史重写记录（2026-10-20）
 
 **原因**：提交 `751d46f`（重写后为 `ee1bcfa`）的 `.env.example` 含真实 `ARK_API_KEY` / `SESSION_SECRET`；同时赛题 docx 自首个提交起就在仓库里。仓库从未 push、无 remote，因此在首次推送前做了唯一一次干净重写。
