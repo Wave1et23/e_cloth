@@ -88,14 +88,24 @@ export function GarmentActions({ garment }: { garment: EditableGarment }) {
     }
     setBusy(true);
     setError("");
-    const result = await apiFetch<{ deleted: boolean }>(
-      `/api/garments/${garment.id}`,
-      { method: "DELETE" },
-    );
+    const result = await apiFetch<{
+      deleted: boolean;
+      outfitsAffected?: number;
+      outfitsEmptied?: number;
+    }>(`/api/garments/${garment.id}`, { method: "DELETE" });
     if (!result.ok) {
       setError(result.msg);
       setBusy(false);
       return;
+    }
+    if (result.data.outfitsAffected) {
+      const emptied = result.data.outfitsEmptied ?? 0;
+      const suffix = emptied
+        ? `其中 ${emptied} 套已变空，已保留在「搭配」页。`
+        : "已自动从搭配中移除。";
+      window.alert(
+        `这件衣服已从 ${result.data.outfitsAffected} 套搭配中移除；${suffix}`,
+      );
     }
     router.push("/garments");
     router.refresh();

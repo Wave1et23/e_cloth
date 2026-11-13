@@ -1,5 +1,5 @@
 // 衣橱镜像 · 数据模型
-// 五张表：User / Garment / GarmentEvent / Label / VerificationCode
+// 七张表：User / Garment / GarmentEvent / Label / VerificationCode / Outfit / OutfitItem
 // 约定：状态与事件用 String 存（SQLite 不支持 Prisma enum），取值由 src/lib/status.ts 约束。
 
 generator client {
@@ -17,6 +17,7 @@ model User {
   passwordHash String
   createdAt    DateTime  @default(now())
   garments     Garment[]
+  outfits      Outfit[]
 }
 
 model Garment {
@@ -42,6 +43,7 @@ model Garment {
   updatedAt    DateTime       @updatedAt
   events       GarmentEvent[]
   label        Label?
+  outfitItems  OutfitItem[]
 
   @@index([userId, createdAt])
   @@unique([userId, seq])
@@ -80,4 +82,31 @@ model VerificationCode {
   @@index([email, purpose, used, createdAt])
   @@index([expiresAt])
   @@index([requestIp, createdAt])
+}
+
+// 固定搭配：一套 1–4 件；OutfitItem 保存顺序，删除衣物时级联移除但保留空搭配。
+model Outfit {
+  id        String       @id @default(cuid())
+  userId    String
+  user      User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  name      String
+  notes     String?
+  items     OutfitItem[]
+  createdAt DateTime     @default(now())
+  updatedAt DateTime     @updatedAt
+
+  @@index([userId, updatedAt])
+}
+
+model OutfitItem {
+  id        String @id @default(cuid())
+  outfitId  String
+  outfit    Outfit @relation(fields: [outfitId], references: [id], onDelete: Cascade)
+  garmentId String
+  garment   Garment @relation(fields: [garmentId], references: [id], onDelete: Cascade)
+  position  Int
+
+  @@unique([outfitId, garmentId])
+  @@unique([outfitId, position])
+  @@index([garmentId])
 }

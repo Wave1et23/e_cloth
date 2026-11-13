@@ -4,6 +4,7 @@ import { prisma } from "@/lib/db";
 import { parseGarmentInput } from "@/lib/garments";
 import { jsonError, jsonOk, readJsonObject } from "@/lib/http";
 import { deleteGarmentPhoto } from "@/lib/images";
+import { summarizeOutfitRemoval } from "@/lib/outfits";
 
 type Params = { params: Promise<{ id: string }> };
 
@@ -74,7 +75,20 @@ export async function DELETE(_request: Request, { params }: Params) {
   });
   if (!existing) return jsonError("NOT_FOUND", "这件衣服不在了", 404);
 
+  const affectedOutfits = await prisma.outfit.findMany({
+    where: {
+      userId: user.id,
+      items: { some: { garmentId: existing.id } },
+    },
+    select: { items: { select: { garmentId: true } } },
+  });
+  const outfitEffects = summarizeOutfitRemoval(affectedOutfits);
+
   await prisma.garment.delete({ where: { id: existing.id } });
   await deleteGarmentPhoto(existing.photoPath);
-  return jsonOk({ deleted: true });
+  return jsonOk({
+    deleted: true,
+    outfitsAffected: outfitEffects.affected,
+    outfitsEmptied: outfitEffects.emptied,
+  });
 }

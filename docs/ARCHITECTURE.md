@@ -70,6 +70,8 @@ src/
 │   ├── labels/page.tsx           标签选择 + canvas 生成（client）
 │   ├── g/[token]/page.tsx        免登录扫码页（server，instant=false）
 │   ├── g/[token]/done/page.tsx   扫码动作成功结果页（server，instant=false）
+│   ├── outfits/page.tsx          搭配列表 + 页内新建（server，instant=false）
+│   ├── outfits/[id]/page.tsx     搭配详情/编辑（server，instant=false）
 │   ├── legal/privacy/page.tsx    隐私协议（静态，免登录）
 │   ├── legal/terms/page.tsx      用户协议（静态，免登录）
 │   └── api/
@@ -79,6 +81,8 @@ src/
 │       ├── garments/[id]/route.ts         GET / PATCH / DELETE
 │       ├── garments/[id]/events/route.ts  登录态补记状态（30s 幂等）
 │       ├── garments/[id]/photo/route.ts   登录态照片
+│       ├── outfits/route.ts               搭配 GET 列表 / POST 创建
+│       ├── outfits/[id]/route.ts          搭配 GET / PATCH / DELETE
 │       ├── ai/garment/route.ts            上传 + 压缩 + AI 建议
 │       ├── labels/route.ts                标签 token/baseUrl
 │       ├── g/[token]/action/route.ts       扫码动作（303 + 幂等）
@@ -86,7 +90,10 @@ src/
 │       └── health/route.ts                数据库连通
 ├── components/
 │   ├── site-header.tsx、logout-button.tsx
-│   ├── garment-category-filter.tsx 列表分类标签栏（横向滚动/多选）
+│   ├── garment-filter-bar.tsx    类别/季节筛选栏（横向滚动/多选）
+│   ├── season-picker.tsx         新增/编辑页季节多选
+│   ├── outfit-editor.tsx         搭配新建/编辑表单
+│   ├── outfit-detail.tsx         搭配详情/编辑/删除
 │   ├── garment-actions.tsx       详情页内联编辑/删除
 │   ├── garment-status-actions.tsx 详情页登录态补记状态（6 动作）
 │   └── scan-success-close.tsx     扫码成功页关闭/返回首页按钮
@@ -101,7 +108,11 @@ src/
     ├── images.ts                 魔数、临时区、正式区、读/删/清理
     ├── garments.ts               衣物字段校验
     ├── garment-fields.ts         枚举白名单（前后端/AI 共用）
-    ├── garment-filter.ts         列表分类参数/派生/过滤（纯函数）
+    ├── garment-filter.ts         类别/季节参数/派生/过滤（纯函数）
+    ├── garment-sort.ts           穿着次数排序（纯函数）
+    ├── outfits.ts                搭配校验/删除影响（纯函数）
+    ├── outfits-db.ts             搭配 API select / 返回形状
+    ├── season.ts                 季节 parse/serialize/迁移（纯函数）
     ├── status.ts                 5 状态 / 6 事件映射
     ├── cost.ts                   CPW / 金额格式化 / 价格解析
     ├── token.ts                  12 位 base62
@@ -122,11 +133,13 @@ src/
 
 ## 4. 数据模型
 
-SQLite，五张表；状态/事件用 String 存，取值由 `src/lib/status.ts` 约束。
+SQLite，七张表；状态/事件用 String 存，取值由 `src/lib/status.ts` 约束。
 
 ```text
 User 1 ── n Garment 1 ── n GarmentEvent
-                 └──── 1 Label
+                 ├──── 1 Label
+                 └──── n OutfitItem n ──── 1 Outfit
+User 1 ── n Outfit 1 ── n OutfitItem
 
 VerificationCode（独立表，无外键）
 ```
@@ -138,11 +151,13 @@ VerificationCode（独立表，无外键）
 | `GarmentEvent` | `id`、`garmentId`、`type`、`createdAt` | `@@index([garmentId, createdAt])` |
 | `Label` | `id`、`garmentId`、`token`、`createdAt` | `garmentId` unique、`token` unique |
 | `VerificationCode` | `id`、`email`、`codeHash`、`purpose`、`expiresAt`、`attempts`、`used`、`createdAt`、`requestIp` | `@@index([email, purpose, used, createdAt])`、`@@index([expiresAt])`、`@@index([requestIp, createdAt])` |
+| `Outfit` | `id`、`userId`、`name`、`notes`、`createdAt`、`updatedAt` | `@@index([userId, updatedAt])` |
+| `OutfitItem` | `id`、`outfitId`、`garmentId`、`position` | `@@unique([outfitId, garmentId])`、`@@unique([outfitId, position])`、`@@index([garmentId])` |
 
 - `brand` 默认 `uncertain`，业务代码创建时也强制写 `"uncertain"`。
 - `priceCents` 用整数分，避免浮点误差；展示时除 100。
 - `seq` 按用户递增，展示为 `G001`；唯一约束 `(userId, seq)` 防止并发重复。
-- 删除 `Garment` 时级联删除 `GarmentEvent` / `Label`；照片文件由接口额外删除。
+- 删除 `Garment` 时级联删除 `GarmentEvent` / `Label` / `OutfitItem`；照片文件由接口额外删除；`Outfit` 本身保留，变空时页面提示。
 - 验证码只存 scrypt 哈希；用途当前固定 `REGISTER`；过期/24 小时前已使用的记录在发送新码时惰性删除。
 - `season` 存逗号分隔的春/夏/秋/冬；空/null 表示「其他」；迁移 `20261110234000_season_multi` 把旧值 `春秋`、`四季` 展开；解析/序列化见 `src/lib/season.ts`。
 - 没有 `Session` 表、没有 `Wardrobe` 表。
@@ -224,6 +239,29 @@ VerificationCode（独立表，无外键）
 - `/` 是静态游客落地页，不查询用户数据。
 - `proxy.ts` 匹配 `/`：有 `closet_session` cookie 时 307 到 `/garments`；无 cookie 放行落地页。
 - 真正的 session 签名/过期/用户校验仍由 `/garments` 页面完成；失效 cookie 会再被 `/garments` 送到 `/login`。
+
+### 5.7 固定搭配
+
+```text
+/outfits（server）
+  → 查当前用户 Outfit（items 按 position）和 Garment 选项
+  → 新建表单 POST /api/outfits
+     → 校验名称/备注/1–4 件
+     → 校验所有 garmentId 属于当前用户
+     → 事务创建 Outfit + OutfitItem
+  → 列表直接渲染原图 /api/garments/[id]/photo，最多 4 张
+
+/outfits/[id]（server）
+  → 按 id + userId 查 Outfit；不存在/他人 → 404
+  → PATCH 改名/备注/换件（items 可选；换件事务替换）
+  → DELETE 搭配（级联 OutfitItem）
+
+删除 Garment
+  → 先统计引用它的当前用户 Outfit
+  → 删除 Garment，外键级联删除 OutfitItem
+  → 返回 outfitsAffected / outfitsEmptied
+  → Outfit 保留；空搭配在页面显示补充提示
+```
 - 首页数据条与最近 4 件已移除；`GET /api/stats` 已删除。
 
 ---

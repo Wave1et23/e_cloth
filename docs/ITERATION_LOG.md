@@ -418,6 +418,44 @@
 
 ---
 
+## v0.11 · 固定搭配（Outfits）（已完成，仅本地）
+
+| 项 | 值 |
+| --- | --- |
+| 版本 | **v0.11** |
+| 类型 | feature |
+| 状态 | 本地完成；未部署 |
+| 时间 | 2026-11-13 |
+| 范围 | 新增 Outfit + OutfitItem 两张表；`/outfits`、`/outfits/[id]` 两个页面；搭配 CRUD API |
+
+### 完成范围
+
+- 新增 `Outfit`、`OutfitItem`；`position` 保存顺序，`(outfitId, garmentId)` / `(outfitId, position)` 唯一。
+- 新增 `/outfits`（列表 + 页内新建）与 `/outfits/[id]`（详情/编辑/删除）；站点头部加入「搭配」。
+- 新增 `GET/POST /api/outfits` 与 `GET/PATCH/DELETE /api/outfits/[id]`；全部按 userId 归属校验，越权 404。
+- 名称 1–40 字；备注 0–200 字；衣物 1–4 件；第 5 件客户端阻止，服务端也拒绝。
+- 列表/详情直接渲染最多 4 张衣物原图，不做拼图/分享/AI 推荐/批量记事件。
+- 删除衣物时外键级联删除 `OutfitItem`，保留空搭配；衣物删除 API 返回受影响/变空数量，页面弹窗提示；空搭配页面显示补充提示。
+- 空搭配可只改名/备注，也可补充衣物或删除。
+- 新增 `tests/unit/outfits.test.ts`：件数上下限、重复、备注长度、删除影响、归属校验。
+
+### 可追溯锚点
+
+- Git：见 `git log`（feature + 文档）
+- 任务：`tasks/015-outfits.md`
+- 文档：[`PRD.md`](PRD.md) F8、[`DESIGN.md`](DESIGN.md) §1/§2/§3.11/§3.12、[`ARCHITECTURE.md`](ARCHITECTURE.md) §3/§4/§5.7、[`DECISIONS.md`](DECISIONS.md) D24
+
+### 验证
+
+- `npm test` → **67 passed / 0 failed**；`npm run build` → **exit 0**；构建包含 `/outfits`、`/outfits/[id]` 及两个 API。
+- 本地 HTTP：创建 2 件搭配 201；列表/详情正确；0 件、5 件分别返回 400 中文提示。
+- 更新名称/备注/换 1 件成功；另一账号访问详情返回 404。
+- 临时衣物被搭配引用后删除：`outfitsAffected=1`、`outfitsEmptied=1`；搭配保留且 `itemCount=0`。
+- 页面 HTML 包含「新建搭配」、名称、备注、原图 URL；导航包含 `/outfits`。
+- 未部署；按规则不自动同步云服务器。
+
+---
+
 ## 附：Git 历史重写记录（2026-10-20）
 
 **原因**：提交 `751d46f`（重写后为 `ee1bcfa`）的 `.env.example` 含真实 `ARK_API_KEY` / `SESSION_SECRET`；同时赛题 docx 自首个提交起就在仓库里。仓库从未 push、无 remote，因此在首次推送前做了唯一一次干净重写。
