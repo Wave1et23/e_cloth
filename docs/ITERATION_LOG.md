@@ -477,7 +477,7 @@
 
 ### 可追溯锚点
 
-- Git：见 `git log`（本轮文档提交）
+- Git：`8c539a5`（域名迁移文档）
 - 文档：[`README.md`](README.md)、[`ARCHITECTURE.md`](ARCHITECTURE.md) §8
 
 ### 验证
