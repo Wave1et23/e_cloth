@@ -441,7 +441,7 @@
 
 ### 可追溯锚点
 
-- Git：见 `git log`（feature + 文档）
+- Git：`e10148f`（feature）
 - 任务：`tasks/015-outfits.md`
 - 文档：[`PRD.md`](PRD.md) F8、[`DESIGN.md`](DESIGN.md) §1/§2/§3.11/§3.12、[`ARCHITECTURE.md`](ARCHITECTURE.md) §3/§4/§5.7、[`DECISIONS.md`](DECISIONS.md) D24
 
