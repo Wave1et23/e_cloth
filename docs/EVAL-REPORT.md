@@ -60,7 +60,28 @@
 | dryClean | 待跑 | 待跑 |
 | tumbleDry | 待跑 | 待跑 |
 
-结论（待跑后填）：水洗标只作为答辩材料中的“第二条链路实验”，**不进入产品界面**。
+### 6.1 2026-11-13 · V3 批量可行性（20 张，无 Ground Truth）
+
+- Prompt：`prompts/care-label-v3.md`；模型 `doubao-seed-2-1-lite-260915`；`response_format: json_schema`；`thinking: disabled`。
+- 脚本：`tests/eval/batch-care-label.ts`，命令 `npm run care:batch`。
+- 输入：`水洗标识别测试/照片/` 下 20 张（1–20，jpg/png）。
+- 结果：**20/20 成功，0 失败，总耗时 32193ms，调用 20 次**。
+- 逐图原始结果：`tests/eval/results/care-label-batch-2026-11-13T10-46-13.txt`。
+
+| 字段 | 本次值分布 |
+| --- | --- |
+| washTemp | 30×9、40×5、cold×5、uncertain×1 |
+| bleach | no×19、uncertain×1 |
+| iron | low×14、medium×2、high×1、uncertain×3 |
+| dryClean | yes×6、no×11、uncertain×3 |
+| tumbleDry | yes×2、no×9、uncertain×9 |
+
+观察：
+
+1. 20 张全部返回结构化 JSON，批量脚本无中断；该结果只证明链路可用，**没有人工 Ground Truth，不计算准确率**。
+2. `tumbleDry` 有 9 张为 `uncertain`，是本次最不确定的字段；`iron`/`dryClean` 也有少量无法判断。
+3. `bleach` 19 张为 `no`，需要后续人工核对是否把“没有三角形”误判为“不可漂白”。
+4. 是否进入产品属于后续独立决定；本实验不改变产品界面、数据库或线上功能。
 
 ## 7. 人工核查
 

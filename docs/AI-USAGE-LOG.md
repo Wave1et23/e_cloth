@@ -43,6 +43,7 @@
 - [ ] 真实 Ark 费用记录（待补充）
 - [ ] 20 件衣物 Eval 的 V1/V2 准确率
 - [ ] 8 张水洗标实验结果
+- [x] 20 张水洗标批处理可行性（20/20 成功；未做 Ground Truth，不计算准确率）
 - [ ] 3 位试用者的录屏与反馈
 - [ ] 人工核查后修正的字段清单
 
@@ -52,6 +53,16 @@
 - 7 张衣物照 + 4 张水洗标逐张调用，**共 11 次视觉调用**，单张 1.4–2.7s，全部返回结构化 JSON。
 - 人工抽查 7 张衣物照：类别/颜色基本正确；图案在“星星/字母装饰”上存在 `其他` vs `印花` 分歧；`material` 输出偏长。
 - 结论写进 `docs/EVAL-REPORT.md` 第 8 节；**没有计算准确率**，因为还没有 20 件 Ground Truth。
+
+### 2026-11-13 · 水洗标 20 张批量可行性实验
+
+- 目的：验证水洗标照片批量识别 + 单 txt 报告的离线流程，不进入产品界面。
+- 脚本：`tests/eval/batch-care-label.ts`，命令 `npm run care:batch`（内部为 `node --env-file=.env ...`）；prompt 使用 `prompts/care-label-v3.md`。
+- 输入：`水洗标识别测试/照片/` 下 20 张（1–20，jpg/png）。
+- 结果：**20/20 成功，0 失败，总耗时 32193ms，调用 20 次**；未记录或打印 key。
+- 字段分布（仅成功图）：washTemp `30×9 / 40×5 / cold×5 / uncertain×1`；bleach `no×19 / uncertain×1`；iron `low×14 / medium×2 / high×1 / uncertain×3`；dryClean `yes×6 / no×11 / uncertain×3`；tumbleDry `yes×2 / no×9 / uncertain×9`。
+- 输出：`tests/eval/results/care-label-batch-2026-11-13T10-46-13.txt`（逐图延迟、字段、原始 JSON + 末尾汇总表）。
+- 人工核查：尚未做 Ground Truth；本实验只证明批量链路可用，不计算准确率，不把结果当作产品能力结论。
 
 ## 4. 人工核查清单
 

@@ -16,7 +16,8 @@
     "eval:care:dry": "node tests/eval/run-care-label.ts --dry-run",
     "eval:care": "node tests/eval/run-care-label.ts",
     "try:photos": "node --env-file=.env tests/eval/try-photos.ts",
-    "try:care": "node --env-file=.env tests/eval/try-care.ts"
+    "try:care": "node --env-file=.env tests/eval/try-care.ts",
+    "care:batch": "node --env-file=.env tests/eval/batch-care-label.ts"
   },
   "prisma": {
     "seed": "node prisma/seed.ts"
