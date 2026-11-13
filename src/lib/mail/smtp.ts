@@ -27,7 +27,7 @@ export function createSmtpMailAdapter(config: SmtpConfig): MailAdapter {
 
   return {
     async sendVerificationCode({ to, code, purpose, expiresAt }) {
-      if (purpose !== "REGISTER") {
+      if (purpose !== "REGISTER" && purpose !== "RESET_PASSWORD") {
         throw new MailUnavailableError("不支持的邮件用途");
       }
       const expiresMinutes = Math.max(
@@ -35,14 +35,19 @@ export function createSmtpMailAdapter(config: SmtpConfig): MailAdapter {
         Math.round((expiresAt.getTime() - Date.now()) / 60_000),
       );
       const from = config.from || `衣橱镜像 <${config.user}>`;
+      const isReset = purpose === "RESET_PASSWORD";
+      const subject = isReset
+        ? "衣橱镜像 · 重置密码验证码"
+        : "衣橱镜像 · 注册验证码";
+      const action = isReset ? "重置密码" : "注册";
 
       await transporter.sendMail({
         from,
         to,
-        subject: "衣橱镜像 · 注册验证码",
-        text: `你的验证码是 ${code}，${expiresMinutes} 分钟内有效。请勿转发给他人。`,
+        subject,
+        text: `你的${action}验证码是 ${code}，${expiresMinutes} 分钟内有效。请勿转发给他人。`,
         html: [
-          "<p>你的衣橱镜像注册验证码是：</p>",
+          `<p>你的衣橱镜像${action}验证码是：</p>`,
           `<p style="font-size:22px;font-weight:600;letter-spacing:3px">${code}</p>`,
           `<p>${expiresMinutes} 分钟内有效，请勿转发给他人。</p>`,
         ].join(""),

@@ -7,9 +7,10 @@ import {
   generateVerificationCode,
   isVerificationCodeAttemptsExceeded,
   isVerificationCodeExpired,
+  type VerificationPurpose,
 } from "@/lib/verification";
 
-export type VerificationPurpose = typeof VERIFICATION_PURPOSE_REGISTER;
+export type { VerificationPurpose };
 
 export type IssuedCode = {
   id: string;
@@ -51,14 +52,16 @@ export async function cleanupVerificationCodes(
 export async function issueVerificationCode(input: {
   email: string;
   requestIp: string;
+  purpose?: VerificationPurpose;
   now?: number;
 }): Promise<IssuedCode> {
   const now = input.now ?? Date.now();
+  const purpose = input.purpose ?? VERIFICATION_PURPOSE_REGISTER;
   await cleanupVerificationCodes(now);
   await prisma.verificationCode.updateMany({
     where: {
       email: input.email,
-      purpose: VERIFICATION_PURPOSE_REGISTER,
+      purpose,
       used: false,
     },
     data: { used: true },
@@ -71,7 +74,7 @@ export async function issueVerificationCode(input: {
     data: {
       email: input.email,
       codeHash,
-      purpose: VERIFICATION_PURPOSE_REGISTER,
+      purpose,
       expiresAt,
       requestIp: input.requestIp,
     },
@@ -96,13 +99,15 @@ export async function deleteVerificationCode(id: string): Promise<void> {
 export async function verifyVerificationCode(input: {
   email: string;
   code: string;
+  purpose?: VerificationPurpose;
   now?: number;
 }): Promise<VerifyCodeResult> {
   const now = input.now ?? Date.now();
+  const purpose = input.purpose ?? VERIFICATION_PURPOSE_REGISTER;
   const row = await prisma.verificationCode.findFirst({
     where: {
       email: input.email,
-      purpose: VERIFICATION_PURPOSE_REGISTER,
+      purpose,
     },
     orderBy: { createdAt: "desc" },
     select: {

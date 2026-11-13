@@ -1,6 +1,6 @@
 /** 邮件发送 adapter 的公共类型；真实服务商 key 到位前只有 console 实现。 */
 
-export type MailPurpose = "REGISTER";
+export type MailPurpose = "REGISTER" | "RESET_PASSWORD";
 
 export type VerificationMail = {
   to: string;

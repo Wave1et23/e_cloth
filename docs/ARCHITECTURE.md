@@ -76,7 +76,9 @@ src/
 │   ├── legal/terms/page.tsx      用户协议（静态，免登录）
 │   └── api/
 │       ├── auth/{register,login,logout,me}/route.ts
-│       ├── auth/verification-code/route.ts 发送邮箱验证码
+│       ├── auth/verification-code/route.ts 发送注册验证码
+│       ├── auth/password-reset-code/route.ts 发送重置密码验证码
+│       ├── auth/reset-password/route.ts      校验验证码并更新密码
 │       ├── garments/route.ts              GET 列表 / POST 创建
 │       ├── garments/[id]/route.ts         GET / PATCH / DELETE
 │       ├── garments/[id]/events/route.ts  登录态补记状态（30s 幂等）
@@ -158,7 +160,7 @@ VerificationCode（独立表，无外键）
 - `priceCents` 用整数分，避免浮点误差；展示时除 100。
 - `seq` 按用户递增，展示为 `G001`；唯一约束 `(userId, seq)` 防止并发重复。
 - 删除 `Garment` 时级联删除 `GarmentEvent` / `Label` / `OutfitItem`；照片文件由接口额外删除；`Outfit` 本身保留，变空时页面提示。
-- 验证码只存 scrypt 哈希；用途当前固定 `REGISTER`；过期/24 小时前已使用的记录在发送新码时惰性删除。
+- 验证码只存 scrypt 哈希；用途 `REGISTER` / `RESET_PASSWORD`；过期/24 小时前已使用的记录在发送新码时惰性删除。
 - `season` 存逗号分隔的春/夏/秋/冬；空/null 表示「其他」；迁移 `20261110234000_season_multi` 把旧值 `春秋`、`四季` 展开；解析/序列化见 `src/lib/season.ts`。
 - 没有 `Session` 表、没有 `Wardrobe` 表。
 
@@ -171,8 +173,9 @@ VerificationCode（独立表，无外键）
 1. `POST /api/auth/verification-code` 校验邮箱与限流 → 生成 6 位码 → 作废旧码、写哈希 → 邮件 adapter 发送（console 打日志 / SMTP 真发）。
 2. `POST /api/auth/register` 校验邮箱/密码/限流 → 校验最新验证码（错误/过期/已用/次数）→ scrypt 哈希密码 → 事务：标记验证码已用 + 创建 `User` → 写签名 cookie。
 3. `POST /api/auth/login` 按邮箱与 IP 两个维度检查失败锁定 → 查 `User` → `scrypt` 校验 → 成功后清邮箱维度并写 cookie。
-4. `getCurrentUser()`：`await connection()` → 读 cookie → HMAC/过期校验 → 查 `User`。
-5. `proxy.ts` 只做乐观检查：没有 cookie 就 307；签名/用户有效性仍由页面/接口校验。
+4. 重置密码：`POST /api/auth/password-reset-code`（未知邮箱也返回同样文案，不真正发信）→ 已有用户写 `RESET_PASSWORD` 验证码并发送 → `POST /api/auth/reset-password` 校验验证码 + 新密码 → 事务标记验证码已用并更新 `passwordHash`；不自动登录。
+5. `getCurrentUser()`：`await connection()` → 读 cookie → HMAC/过期校验 → 查 `User`。
+6. `proxy.ts` 只做乐观检查：没有 cookie 就 307；签名/用户有效性仍由页面/接口校验。
 
 ### 5.2 AI 拍照建档
 

@@ -6,6 +6,11 @@ export const VERIFICATION_CODE_LENGTH = 6;
 export const VERIFICATION_CODE_TTL_MS = 10 * 60 * 1000;
 export const VERIFICATION_CODE_MAX_ATTEMPTS = 5;
 export const VERIFICATION_PURPOSE_REGISTER = "REGISTER";
+export const VERIFICATION_PURPOSE_RESET_PASSWORD = "RESET_PASSWORD";
+
+export type VerificationPurpose =
+  | typeof VERIFICATION_PURPOSE_REGISTER
+  | typeof VERIFICATION_PURPOSE_RESET_PASSWORD;
 
 export function generateVerificationCode(): string {
   return String(randomInt(0, 1_000_000)).padStart(
