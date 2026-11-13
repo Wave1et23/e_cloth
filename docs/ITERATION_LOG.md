@@ -511,7 +511,7 @@
 
 ### 可追溯锚点
 
-- Git：`3f83302`（部署来源）
+- Git：`fc71f53`（部署文档）
 - 备份：`/root/deploy-backups/mirrorwardrobe-pre-v0.11-20261113112641/`
 - 文档：[`README.md`](README.md)、[`ARCHITECTURE.md`](ARCHITECTURE.md) §8
 
