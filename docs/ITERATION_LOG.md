@@ -527,6 +527,45 @@
 
 ---
 
+## v0.14 · 邮箱验证码重置密码（已上线）
+
+| 项 | 值 |
+| --- | --- |
+| 版本 | **v0.14** |
+| 类型 | feature |
+| 状态 | 已上线 |
+| 时间 | 2026-11-13 |
+| 范围 | 登录页「忘记密码」内联面板；密码重置验证码与重置接口 |
+
+### 完成范围
+
+- 登录页新增「忘记密码？」内联面板，不新增页面；步骤：邮箱 → 验证码 → 新密码。
+- 新增 `POST /api/auth/password-reset-code`：未注册邮箱也返回相同成功文案，不真正发信，避免邮箱枚举。
+- 新增 `POST /api/auth/reset-password`：验证码校验 + 新密码 scrypt 哈希 + 事务标记验证码已用；成功后不自动登录。
+- 复用 `VerificationCode` 表，purpose=`RESET_PASSWORD`；6 位码、10 分钟、最多 5 次尝试；邮件 adapter 支持重置密码邮件。
+- 发送/提交均有独立限流；重置接口不泄露“邮箱不存在”和“验证码错误”的区别。
+- 无数据库 schema 变更、无新页面。
+
+### 可追溯锚点
+
+- Git：`f1af94a`（feature）
+- 备份：`/root/deploy-backups/mirrorwardrobe-pre-password-reset-20261113114911/`
+- 文档：[`PRD.md`](PRD.md) F1、[`DESIGN.md`](DESIGN.md) §3.2、[`DECISIONS.md`](DECISIONS.md) D25、[`ARCHITECTURE.md`](ARCHITECTURE.md) §3/§5.1
+
+### 验证
+
+- 本地临时用户 + 预置 `RESET_PASSWORD` 验证码：重置 `200`；旧密码失效、新密码登录 `200`。
+- 本地未注册邮箱请求验证码：`200` 统一文案；无邮件发送。
+- 生产部署后：
+  - `POST /api/auth/password-reset-code` 未知邮箱 → `200`
+  - `POST /api/auth/reset-password` 无效验证码 → `400`
+  - 登录页包含「忘记密码？」
+  - `/api/health` → `200`
+- 本地 `npm test` 67 项、`npm run build` 通过；服务器构建成功，pm2 online。
+- 未做旧 session 主动失效（会话无版本字段），见 D25。
+
+---
+
 ## 附：Git 历史重写记录（2026-10-20）
 
 **原因**：提交 `751d46f`（重写后为 `ee1bcfa`）的 `.env.example` 含真实 `ARK_API_KEY` / `SESSION_SECRET`；同时赛题 docx 自首个提交起就在仓库里。仓库从未 push、无 remote，因此在首次推送前做了唯一一次干净重写。

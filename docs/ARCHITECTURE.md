@@ -330,12 +330,12 @@ VerificationCode（独立表，无外键）
 - Windows 下 dev server 会锁 `query_engine-windows.dll.node`，跑 `prisma generate/migrate` 前需停 dev server。
 - 浏览器验证不引入 Playwright：系统 Chrome/Edge headless + CDP（临时脚本在 `backup/`，不入 Git）。
 
-当前部署状态：**已上线（2026-11-13，v0.11；域名迁移到 `.xyz`）**。
+当前部署状态：**已上线（2026-11-13，v0.14；域名迁移到 `.xyz`）**。
 
 - 域名：`https://mirrorwardrobe.xyz`，通过 Cloudflare 代理；源站 A 记录指向香港服务器 `103.133.178.145`。
 - 旧域名：`https://mirrorwardrobe.dpdns.org` 已改为 `410 Gone`，不再提供站点内容。
-- 代码版本：`3f83302`（包含 v0.7–v0.11：首页定位、扫码成功页、穿着次数排序、季节多选、固定搭配）。
-- 数据库迁移：5 个迁移已全部应用（含 `season_multi`、`outfits`）；部署前备份在 `/root/deploy-backups/mirrorwardrobe-pre-v0.11-20261113112641/`（应用源码 + `.env` + `prod.db`）。
+- 代码版本：`f1af94a`（v0.14：v0.7–v0.11 功能 + 邮箱验证码重置密码）。
+- 数据库迁移：5 个迁移已全部应用（含 `season_multi`、`outfits`）；密码重置复用 `VerificationCode`，无新迁移。部署前备份：`/root/deploy-backups/mirrorwardrobe-pre-v0.11-20261113112641/`、`/root/deploy-backups/mirrorwardrobe-pre-password-reset-20261113114911/`。
 - 应用目录：`/www/wwwroot/mirrorwardrobe`；数据库：`prisma/prod.db`；上传图：应用目录下 `uploads/`。
 - Node：`/opt/node-v24.18.0-linux-x64`（`/usr/local/bin/node` 等软链）。
 - 进程：pm2 `mirrorwardrobe`（`pm2-root` systemd 自启）；Next 只监听 `127.0.0.1:3000`。
