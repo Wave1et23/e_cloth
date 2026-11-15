@@ -8,6 +8,8 @@ import {
   saveTempImage,
 } from "@/lib/images";
 import { jsonError, jsonOk } from "@/lib/http";
+import { isSameOrigin } from "@/lib/http";
+import { getRateLimit, recordFailure } from "@/lib/rate-limit";
 
 export const maxDuration = 30;
 
@@ -16,8 +18,32 @@ export const maxDuration = 30;
  * AI 失败仍返回 200（带 imageToken），页面继续手动填写。
  */
 export async function POST(request: Request) {
+  if (!isSameOrigin(request)) {
+    return jsonError("FORBIDDEN", "请求来源不对", 403);
+  }
   const user = await getCurrentUser();
   if (!user) return jsonError("UNAUTHORIZED", "请先登录", 401);
+
+  const minute = getRateLimit(`ai:minute:${user.id}`, 10, 60_000);
+  if (minute.limited) {
+    return jsonError(
+      "RATE_LIMITED",
+      `AI 调用太频繁，请 ${minute.retryAfterSeconds} 秒后再试`,
+      429,
+      minute.retryAfterSeconds,
+    );
+  }
+  const hour = getRateLimit(`ai:hour:${user.id}`, 100, 60 * 60 * 1000);
+  if (hour.limited) {
+    return jsonError(
+      "RATE_LIMITED",
+      "AI 今日调用次数太多，晚点再试",
+      429,
+      hour.retryAfterSeconds,
+    );
+  }
+  recordFailure(`ai:minute:${user.id}`, 60_000);
+  recordFailure(`ai:hour:${user.id}`, 60 * 60 * 1000);
 
   let form: FormData;
   try {

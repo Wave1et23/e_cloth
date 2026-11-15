@@ -56,7 +56,7 @@ export async function POST(request: Request) {
 
   const user = await prisma.user.findUnique({
     where: { email },
-    select: { id: true, email: true, passwordHash: true },
+    select: { id: true, email: true, passwordHash: true, sessionVersion: true },
   });
   const matched = user
     ? await verifyPassword(password, user.passwordHash)
@@ -70,6 +70,6 @@ export async function POST(request: Request) {
 
   // 成功登录只清邮箱维度；IP 维度的攻击记录继续保留。
   resetFailures(emailKey);
-  await setSessionCookie(user.id);
+  await setSessionCookie(user.id, user.sessionVersion);
   return jsonOk({ id: user.id, email: user.email });
 }

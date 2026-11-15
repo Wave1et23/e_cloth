@@ -55,7 +55,7 @@
 - 邮件发送：adapter 抽象；已配置 163 SMTP（`smtp.163.com:465` + 授权码）真实发信；无配置时可用 console 模式（仅非 production）把验证码打到服务端日志。
 - 本地开发开关：`REGISTER_SKIP_EMAIL_VERIFICATION=1` 且非 production 时可跳过验证码；默认 `0`，production 忽略并要求验证码。
 - 登录：邮箱 + 密码；失败返回统一文案「邮箱或密码不对」；同一邮箱 15 分钟内失败 5 次锁定，同一 IP 15 分钟内失败 20 次锁定（单进程内存计数）。
-- 忘记密码：登录页展开重置面板，输入注册邮箱获取 6 位验证码，再设置新密码；`POST /api/auth/password-reset-code` 与 `POST /api/auth/reset-password`；复用 `VerificationCode`（purpose=`RESET_PASSWORD`），验证码同样 10 分钟、最多 5 次尝试；未注册邮箱也返回相同成功文案，避免枚举；重置成功不自动登录，回登录页用新密码登录。
+- 忘记密码：登录页展开重置面板，输入注册邮箱获取 6 位验证码，再设置新密码；`POST /api/auth/password-reset-code` 与 `POST /api/auth/reset-password`；复用 `VerificationCode`（purpose=`RESET_PASSWORD`），验证码同样 10 分钟、最多 5 次尝试；未注册邮箱也返回相同成功文案，避免枚举；重置成功不自动登录，回登录页用新密码登录；重置后旧 session cookie 立即失效。
 - 验证码/注册限流：发送冷却 60 秒、同一邮箱每小时 5 次、同一 IP 每小时 10 次；注册同一邮箱每小时 5 次、同一 IP 每小时 10 次；重置密码发送与提交分别有独立限流。
 - 会话：HMAC-SHA256 签名 cookie，HttpOnly、SameSite=Lax、生产环境 Secure、30 天；不建 Session 表。
 - 退出：清 cookie。
@@ -73,6 +73,7 @@
 - [ ] 同一邮箱 15 分钟内连续失败 5 次后第 6 次登录返回 `429` + 剩余秒数；IP 维度达到 20 次同样锁定。
 - [ ] 登录页可展开「忘记密码」；未注册邮箱请求验证码也返回相同成功文案；真实用户可收到重置密码验证码。
 - [ ] 用正确验证码 + 新密码重置返回 `200`，旧密码失效、新密码可登录；错误/过期/已用验证码分别返回中文提示。
+- [ ] 重置密码后，重置前签发的旧 session cookie 访问 `/api/auth/me` 返回 `401`，新登录成功。
 - [ ] 重置密码验证码不进入注册用途；注册验证码也不能用于重置密码。
 - [ ] demo 账号正确密码登录返回 `200`。
 - [ ] `REGISTER_SKIP_EMAIL_VERIFICATION=1` 在 development 可无验证码注册；production 不生效。

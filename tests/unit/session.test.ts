@@ -4,6 +4,7 @@ import {
   SESSION_MAX_AGE_SECONDS,
   signSession,
   verifySession,
+  verifySessionPayload,
 } from "../../src/lib/auth/session-codec.ts";
 
 process.env.SESSION_SECRET = "test-secret-".repeat(6);
@@ -12,6 +13,15 @@ test("签名 cookie 可以解出同一个 userId", () => {
   const now = 1_700_000_000_000;
   const raw = signSession("user_123", now);
   assert.equal(verifySession(raw, now), "user_123");
+});
+
+test("session 携带版本号，供密码重置后失效旧 cookie", () => {
+  const now = 1_700_000_000_000;
+  const raw = signSession("user_123", now, 7);
+  assert.deepEqual(verifySessionPayload(raw, now), {
+    uid: "user_123",
+    ver: 7,
+  });
 });
 
 test("篡改 payload 或签名会被拒绝", () => {

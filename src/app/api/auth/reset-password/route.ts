@@ -108,7 +108,10 @@ export async function POST(request: Request) {
       if (consumed.count !== 1) throw new CodeConsumedError();
       await tx.user.update({
         where: { id: user.id },
-        data: { passwordHash },
+        data: {
+          passwordHash,
+          sessionVersion: { increment: 1 },
+        },
       });
     });
     return jsonOk({ reset: true });

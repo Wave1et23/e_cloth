@@ -132,12 +132,12 @@ export async function POST(request: Request) {
       }
       return tx.user.create({
         data: { email, passwordHash },
-        select: { id: true, email: true },
+        select: { id: true, email: true, sessionVersion: true },
       });
     });
 
-    await setSessionCookie(user.id);
-    return jsonOk(user, 201);
+    await setSessionCookie(user.id, user.sessionVersion);
+    return jsonOk({ id: user.id, email: user.email }, 201);
   } catch (error) {
     if (
       error instanceof Prisma.PrismaClientKnownRequestError &&

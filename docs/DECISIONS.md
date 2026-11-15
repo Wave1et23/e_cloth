@@ -33,7 +33,8 @@
 | D22 | 列表默认排序 | `/garments` 按 WORN 事件数降序，次数相同按 `seq` 降序；0 次最后；固定顺序、无排序控件；先筛选后排序 | `GET /api/garments` 保持 `seq` 倒序供标签页复用，不改返回顺序 |
 | D23 | 季节多选 | 季节逻辑上是 春/夏/秋/冬 多选；SQLite 存逗号字符串（如 `春,秋`）；空/未填归「其他」；旧值 `春秋→春,秋`、`四季→春,夏,秋,冬`；类别与季节筛选取交集 | AI 输出逗号组合；纯函数 parse/serialize；不做「当季优先」排序 |
 | D24 | 固定搭配与页面上限 | 页面上限经确认上调到 12，新增 `/outfits`（列表 + 页内新建）与 `/outfits/[id]`（详情/编辑）；用 `Outfit` + `OutfitItem` 显式关联表保存 1–4 件及顺序；删除衣物级联移除 `OutfitItem`、保留空搭配；不做拼图/分享/批量记事件 | 不新增 `/outfits/new`；空搭配允许只改名/备注；删除衣物返回受影响/变空数量并在页面提示 |
-| D25 | 忘记密码 | 登录页内展开重置面板，不新增页面；复用 `VerificationCode` 的 `RESET_PASSWORD` 用途；未注册邮箱返回相同成功文案；成功后不自动登录 | 沿用 6 位码/10 分钟/5 次尝试/邮件 adapter；修改需验证码；未做旧 session 主动失效（会话 cookie 无版本字段） |
+| D25 | 忘记密码 | 登录页内展开重置面板，不新增页面；复用 `VerificationCode` 的 `RESET_PASSWORD` 用途；未注册邮箱返回相同成功文案；成功后不自动登录 | 沿用 6 位码/10 分钟/5 次尝试/邮件 adapter；修改需验证码 |
+| D26 | 安全加固 | 统一安全响应头（CSP 先 Report-Only）；所有登录态写接口补同源检查；Cloudflare 优先取真实 IP；AI 每用户分钟/小时配额；重置密码递增 `User.sessionVersion` 使旧 cookie 失效；限流 Map 设上限 | 不改 SSH；管理端口只保留本机/SSH 隧道访问、Cloudflare Origin Pulls/边缘限流属于服务器/Cloudflare 配置，另行执行 |
 
 ---
 

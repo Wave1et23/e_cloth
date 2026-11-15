@@ -566,6 +566,43 @@
 
 ---
 
+## v0.15 · 本地安全加固（已完成，仅本地）
+
+| 项 | 值 |
+| --- | --- |
+| 版本 | **v0.15** |
+| 类型 | security |
+| 状态 | 本地完成；未部署 |
+| 时间 | 2026-11-15 |
+| 范围 | 应用层安全头、CSRF、真实 IP、AI 限流、session 失效 |
+
+### 完成范围
+
+- `next.config.ts`：关闭 `x-powered-by`；增加 HSTS、nosniff、X-Frame-Options、Referrer-Policy、Permissions-Policy、CSP Report-Only。
+- 所有登录态写接口补 `isSameOrigin`：garments/events/outfits/AI/logout。
+- `getClientIp` 优先 `CF-Connecting-IP`，其次 `X-Real-IP`，最后才退化到 XFF。
+- AI 接口按用户限流：10 次/分钟、100 次/小时。
+- 内存限流 Map 设 10000 上限并清理过期项，避免唯一 key 膨胀。
+- 新增 `User.sessionVersion` + 迁移；session cookie 带版本；重置密码递增版本，旧 cookie 立即失效。
+- 新 session cookie 兼容旧 cookie（无 ver 按 0）。
+
+### 可追溯锚点
+
+- Git：本次提交
+- 任务：`tasks/017-security-hardening.md`
+- 文档：[`DECISIONS.md`](DECISIONS.md) D26、[`PRD.md`](PRD.md) F1、[`DESIGN.md`](DESIGN.md) §3.2、[`ARCHITECTURE.md`](ARCHITECTURE.md) 数据模型/§5.1
+
+### 验证
+
+- `npm test` → **68 passed / 0 failed**；`npm run build` → **exit 0**。
+- 本地响应头：HSTS、X-Content-Type-Options、X-Frame-Options、Referrer-Policy、Permissions-Policy、CSP Report-Only 均存在；无 `x-powered-by`。
+- `Origin: https://evil.example` 调 `POST /api/outfits` → `403`。
+- 登录用户调用 AI 接口：前 10 次进入校验，第 11 次 `429`。
+- 临时用户重置密码后：旧 cookie `/api/auth/me` → `401`，新密码登录 → `200`。
+- **未执行**：SSH 调整、管理端口限制、Cloudflare Origin Pulls、Nginx 边缘限流；这些属于服务器/Cloudflare 阶段。
+
+---
+
 ## 附：Git 历史重写记录（2026-10-20）
 
 **原因**：提交 `751d46f`（重写后为 `ee1bcfa`）的 `.env.example` 含真实 `ARK_API_KEY` / `SESSION_SECRET`；同时赛题 docx 自首个提交起就在仓库里。仓库从未 push、无 remote，因此在首次推送前做了唯一一次干净重写。

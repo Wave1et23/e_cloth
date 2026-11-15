@@ -1,6 +1,7 @@
 import { getCurrentUser } from "@/lib/auth/user";
 import { prisma } from "@/lib/db";
 import { jsonError, jsonOk, readJsonObject } from "@/lib/http";
+import { isSameOrigin } from "@/lib/http";
 import {
   isOutfitOwner,
   validateOutfitItems,
@@ -39,6 +40,9 @@ export async function GET(_request: Request, { params }: Params) {
 }
 
 export async function PATCH(request: Request, { params }: Params) {
+  if (!isSameOrigin(request)) {
+    return jsonError("FORBIDDEN", "请求来源不对", 403);
+  }
   const user = await getCurrentUser();
   if (!user) return jsonError("UNAUTHORIZED", "请先登录", 401);
 
@@ -99,7 +103,10 @@ export async function PATCH(request: Request, { params }: Params) {
   return jsonOk(toOutfitPayload(updated));
 }
 
-export async function DELETE(_request: Request, { params }: Params) {
+export async function DELETE(request: Request, { params }: Params) {
+  if (!isSameOrigin(request)) {
+    return jsonError("FORBIDDEN", "请求来源不对", 403);
+  }
   const user = await getCurrentUser();
   if (!user) return jsonError("UNAUTHORIZED", "请先登录", 401);
 

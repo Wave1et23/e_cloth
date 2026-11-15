@@ -4,6 +4,7 @@ import { computeCpw } from "@/lib/cost";
 import { prisma } from "@/lib/db";
 import { parseGarmentInput } from "@/lib/garments";
 import { jsonError, jsonOk, readJsonObject } from "@/lib/http";
+import { isSameOrigin } from "@/lib/http";
 import { deleteGarmentPhoto, moveTempToGarment } from "@/lib/images";
 import { generateToken } from "@/lib/token";
 
@@ -41,6 +42,9 @@ export async function GET() {
 }
 
 export async function POST(request: Request) {
+  if (!isSameOrigin(request)) {
+    return jsonError("FORBIDDEN", "请求来源不对", 403);
+  }
   const user = await getCurrentUser();
   if (!user) return jsonError("UNAUTHORIZED", "请先登录", 401);
 

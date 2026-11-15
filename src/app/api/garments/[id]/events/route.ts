@@ -1,6 +1,7 @@
 import { getCurrentUser } from "@/lib/auth/user";
 import { prisma } from "@/lib/db";
 import { jsonError, jsonOk, readJsonObject } from "@/lib/http";
+import { isSameOrigin } from "@/lib/http";
 import { isRateLimited, recordFailure } from "@/lib/rate-limit";
 import { isDuplicateScan } from "@/lib/scan";
 import { isGarmentEventType, nextStatus } from "@/lib/status";
@@ -13,6 +14,9 @@ type Params = { params: Promise<{ id: string }> };
  * 不修改扫码接口本身。
  */
 export async function POST(request: Request, { params }: Params) {
+  if (!isSameOrigin(request)) {
+    return jsonError("FORBIDDEN", "请求来源不对", 403);
+  }
   const user = await getCurrentUser();
   if (!user) return jsonError("UNAUTHORIZED", "请先登录", 401);
 

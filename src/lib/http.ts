@@ -57,11 +57,20 @@ export async function readJsonObject(
   }
 }
 
-/** 反向代理下取真实 IP；本地开发固定返回 loopback。 */
+/**
+ * 反向代理下取真实 IP。
+ * Cloudflare 会覆盖 `CF-Connecting-IP`；源站只允许 Cloudflare 回源时可信。
+ * 本地/未经过代理的请求退化为 loopback。
+ */
 export function getClientIp(request: Request): string {
+  const cf = request.headers.get("cf-connecting-ip");
+  if (cf?.trim()) return cf.trim();
+  const real = request.headers.get("x-real-ip");
+  if (real?.trim()) return real.trim();
+  // 仅作为本地开发/非 Cloudflare 部署的兜底；生产源站需只允许 Cloudflare 回源。
   const forwarded = request.headers.get("x-forwarded-for");
   if (forwarded) return forwarded.split(",")[0]?.trim() || "unknown";
-  return request.headers.get("x-real-ip") ?? "127.0.0.1";
+  return "127.0.0.1";
 }
 
 /**

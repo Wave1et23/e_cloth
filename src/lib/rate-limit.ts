@@ -11,11 +11,18 @@ export type RateLimitStatus = {
 };
 
 const buckets = new Map<string, Entry>();
+const MAX_BUCKETS = 10_000;
 
 function prune(now: number): void {
-  if (buckets.size < 1000) return;
+  // 攻击者可用大量唯一 key 撑大 Map；先清过期项，仍超限时按插入顺序淘汰。
+  if (buckets.size < MAX_BUCKETS) return;
   for (const [key, entry] of buckets) {
     if (entry.resetAt <= now) buckets.delete(key);
+  }
+  while (buckets.size >= MAX_BUCKETS) {
+    const first = buckets.keys().next();
+    if (first.done) break;
+    buckets.delete(first.value);
   }
 }
 
