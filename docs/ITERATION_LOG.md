@@ -641,13 +641,13 @@
 
 ---
 
-## v0.17 · 已退出衣物 3 天后删除（本地完成，待部署）
+## v0.17 · 已退出衣物 3 天后删除（已上线）
 
 | 项 | 值 |
 | --- | --- |
 | 版本 | **v0.17** |
 | 类型 | feature |
-| 状态 | 本地完成；待部署 |
+| 状态 | **已上线** |
 | 时间 | 2026-11-15 |
 | 范围 | 已退出保留 72 小时 + 每小时清理 |
 
@@ -658,6 +658,7 @@
 - `scripts/purge-retired.mjs`：删除 `status=RETIRED` 且 `retiredAt<=now-72h` 的衣物；级联删除事件/标签/搭配项，并删除照片文件。
 - `npm run cleanup:retired` 手动命令；支持 `--dry-run`。
 - 已退出衣物仍在列表底部，满 72 小时后由每小时定时任务清理。
+- 部署 systemd timer `mirrorwardrobe-purge-retired.timer`：每小时运行一次，首次手动运行 0 条候选；历史 RETIRED 从迁移时起算 3 天。
 
 ### 可追溯锚点
 
@@ -669,7 +670,8 @@
 
 - `npm test` → **72 passed / 0 failed**；`npm run build` → **exit 0**。
 - 本地创建一条 `retiredAt` 为 4 天前的测试衣物，执行 `npm run cleanup:retired`：删除 1 条、照片文件删除、无失败。
-- 定时任务部署后每小时运行一次；不依赖用户访问触发。
+- 生产迁移后 70 件衣物、11 件 RETIRED 均有 `retiredAt`；timer active，下次触发为整点后随机延迟。
+- 生产 `https://mirrorwardrobe.xyz/api/health` 200；pm2 online；7 个迁移最新。
 
 ---
 

@@ -331,13 +331,14 @@ VerificationCode（独立表，无外键）
 - Windows 下 dev server 会锁 `query_engine-windows.dll.node`，跑 `prisma generate/migrate` 前需停 dev server。
 - 浏览器验证不引入 Playwright：系统 Chrome/Edge headless + CDP（临时脚本在 `backup/`，不入 Git）。
 
-当前部署状态：**已上线（2026-11-15，v0.16；域名迁移到 `.xyz`）**。
+当前部署状态：**已上线（2026-11-15，v0.17；域名迁移到 `.xyz`）**。
 
 - 域名：`https://mirrorwardrobe.xyz`，通过 Cloudflare 代理；源站 A 记录指向香港服务器 `103.133.178.145`。
 - 旧域名：`https://mirrorwardrobe.dpdns.org` 已改为 `410 Gone`，不再提供站点内容。
-- 代码版本：`b2c1731`（v0.16：v0.15 安全加固 + 已退出衣物置底）。
-- 数据库迁移：6 个迁移已全部应用（含 `season_multi`、`outfits`、`session_version`）。备份：`/root/deploy-backups/mirrorwardrobe-pre-v0.16-20261115061905/`。
+- 代码版本：`8d431e5`（v0.17：安全加固、已退出置底、72 小时清理）。
+- 数据库迁移：7 个迁移已全部应用（含 `season_multi`、`outfits`、`session_version`、`retired_at`）。备份：`/root/deploy-backups/mirrorwardrobe-pre-v0.17-20261115064036/`。
 - 应用目录：`/www/wwwroot/mirrorwardrobe`；数据库：`prisma/prod.db`；上传图：应用目录下 `uploads/`。
+- 清理任务：systemd timer `mirrorwardrobe-purge-retired.timer` 每小时运行 `scripts/purge-retired.mjs`；删除满 72 小时的 RETIRED 衣物、事件、标签、搭配项和照片。
 - 安全：Next 安全响应头已生效；所有登录态写接口有同源检查；AI 用户限流；重置密码后旧 session 失效；UFW 只放行 22/80/443；DB 600、备份目录 700。
 - 未执行：Cloudflare Origin Pulls/边缘限流（按要求不做 CF 限制）；SSH 依用户要求不改。
 - 进程：pm2 `mirrorwardrobe`（`pm2-root` systemd 自启）；Next 只监听 `127.0.0.1:3000`。
