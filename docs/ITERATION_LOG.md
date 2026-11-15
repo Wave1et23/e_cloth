@@ -641,6 +641,38 @@
 
 ---
 
+## v0.17 · 已退出衣物 3 天后删除（本地完成，待部署）
+
+| 项 | 值 |
+| --- | --- |
+| 版本 | **v0.17** |
+| 类型 | feature |
+| 状态 | 本地完成；待部署 |
+| 时间 | 2026-11-15 |
+| 范围 | 已退出保留 72 小时 + 每小时清理 |
+
+### 完成范围
+
+- `Garment.retiredAt` 字段与迁移；历史 RETIRED 从迁移时刻开始给 3 天保留期。
+- SOLD/进入 RETIRED 时写入 `retiredAt`，其他状态动作清空。
+- `scripts/purge-retired.mjs`：删除 `status=RETIRED` 且 `retiredAt<=now-72h` 的衣物；级联删除事件/标签/搭配项，并删除照片文件。
+- `npm run cleanup:retired` 手动命令；支持 `--dry-run`。
+- 已退出衣物仍在列表底部，满 72 小时后由每小时定时任务清理。
+
+### 可追溯锚点
+
+- Git：本次提交
+- 任务：`tasks/019-retired-retention.md`
+- 文档：[`PRD.md`](PRD.md) F4/F6、[`DESIGN.md`](DESIGN.md) §3.4、[`ARCHITECTURE.md`](ARCHITECTURE.md) 数据模型/清理、[`DECISIONS.md`](DECISIONS.md) D27
+
+### 验证
+
+- `npm test` → **72 passed / 0 failed**；`npm run build` → **exit 0**。
+- 本地创建一条 `retiredAt` 为 4 天前的测试衣物，执行 `npm run cleanup:retired`：删除 1 条、照片文件删除、无失败。
+- 定时任务部署后每小时运行一次；不依赖用户访问触发。
+
+---
+
 ## 附：Git 历史重写记录（2026-10-20）
 
 **原因**：提交 `751d46f`（重写后为 `ee1bcfa`）的 `.env.example` 含真实 `ARK_API_KEY` / `SESSION_SECRET`；同时赛题 docx 自首个提交起就在仓库里。仓库从未 push、无 remote，因此在首次推送前做了唯一一次干净重写。

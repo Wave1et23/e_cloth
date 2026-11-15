@@ -149,7 +149,7 @@ VerificationCode（独立表，无外键）
 | 表 | 关键字段 | 约束/索引 |
 | --- | --- | --- |
 | `User` | `id`(cuid)、`email`、`passwordHash`、`sessionVersion`、`createdAt` | `email` unique；`sessionVersion` 在重置密码时递增，旧 cookie 失效 |
-| `Garment` | `id`、`userId`、`seq`、`name`、`category`、`primaryColor`、`pattern`、`fit`、`season`、`style`、`material`、`brand`、`priceCents`、`purchaseDate`、`notes`、`photoPath`、`status`、`createdAt`、`updatedAt` | `@@index([userId, createdAt])`、`@@unique([userId, seq])`；`season` 为逗号分隔字符串 |
+| `Garment` | `id`、`userId`、`seq`、`name`、`category`、`primaryColor`、`pattern`、`fit`、`season`、`style`、`material`、`brand`、`priceCents`、`purchaseDate`、`notes`、`photoPath`、`status`、`retiredAt`、`createdAt`、`updatedAt` | `@@index([userId, createdAt])`、`@@unique([userId, seq])`；`season` 为逗号分隔字符串；`retiredAt` 用于 72 小时保留 |
 | `GarmentEvent` | `id`、`garmentId`、`type`、`createdAt` | `@@index([garmentId, createdAt])` |
 | `Label` | `id`、`garmentId`、`token`、`createdAt` | `garmentId` unique、`token` unique |
 | `VerificationCode` | `id`、`email`、`codeHash`、`purpose`、`expiresAt`、`attempts`、`used`、`createdAt`、`requestIp` | `@@index([email, purpose, used, createdAt])`、`@@index([expiresAt])`、`@@index([requestIp, createdAt])` |
@@ -160,6 +160,7 @@ VerificationCode（独立表，无外键）
 - `priceCents` 用整数分，避免浮点误差；展示时除 100。
 - `seq` 按用户递增，展示为 `G001`；唯一约束 `(userId, seq)` 防止并发重复。
 - 删除 `Garment` 时级联删除 `GarmentEvent` / `Label` / `OutfitItem`；照片文件由接口额外删除；`Outfit` 本身保留，变空时页面提示。
+- `retiredAt`：状态进入 `RETIRED` 时写入当前时间，其他状态动作清空；`scripts/purge-retired.mjs` 每小时的 systemd timer 删除 `retiredAt <= now-72h` 的衣物，并删除照片文件。历史 RETIRED 数据在迁移 `20261115063915_retired_at` 时从迁移时刻开始计时。
 - 验证码只存 scrypt 哈希；用途 `REGISTER` / `RESET_PASSWORD`；过期/24 小时前已使用的记录在发送新码时惰性删除。
 - `season` 存逗号分隔的春/夏/秋/冬；空/null 表示「其他」；迁移 `20261110234000_season_multi` 把旧值 `春秋`、`四季` 展开；解析/序列化见 `src/lib/season.ts`。
 - 没有 `Session` 表、没有 `Wardrobe` 表。

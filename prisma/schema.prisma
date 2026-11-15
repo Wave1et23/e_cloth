@@ -40,6 +40,7 @@ model Garment {
   notes        String?
   photoPath    String
   status       String         @default("IN_CLOSET")
+  retiredAt    DateTime?      // SOLD/RETIRED 的时间；3 天后清理任务删除
   createdAt    DateTime       @default(now())
   updatedAt    DateTime       @updatedAt
   events       GarmentEvent[]

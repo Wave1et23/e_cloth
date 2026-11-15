@@ -35,6 +35,7 @@
 | D24 | 固定搭配与页面上限 | 页面上限经确认上调到 12，新增 `/outfits`（列表 + 页内新建）与 `/outfits/[id]`（详情/编辑）；用 `Outfit` + `OutfitItem` 显式关联表保存 1–4 件及顺序；删除衣物级联移除 `OutfitItem`、保留空搭配；不做拼图/分享/批量记事件 | 不新增 `/outfits/new`；空搭配允许只改名/备注；删除衣物返回受影响/变空数量并在页面提示 |
 | D25 | 忘记密码 | 登录页内展开重置面板，不新增页面；复用 `VerificationCode` 的 `RESET_PASSWORD` 用途；未注册邮箱返回相同成功文案；成功后不自动登录 | 沿用 6 位码/10 分钟/5 次尝试/邮件 adapter；修改需验证码 |
 | D26 | 安全加固 | 统一安全响应头（CSP 先 Report-Only）；所有登录态写接口补同源检查；Cloudflare 优先取真实 IP；AI 每用户分钟/小时配额；重置密码递增 `User.sessionVersion` 使旧 cookie 失效；限流 Map 设上限 | 不改 SSH；管理端口已收紧为 22/80/443（面板走本机/SSH 隧道）；Cloudflare Origin Pulls/边缘限流、应用上线另行执行 |
+| D27 | 已退出保留期 | 进入 RETIRED 时写 `retiredAt`；底部保留 72 小时；每小时 systemd timer 运行 `scripts/purge-retired.mjs`，硬删除衣物/事件/标签/搭配项/照片；历史 RETIRED 从迁移时刻起算 | 不做软删除/回收站；不复制事件；不依赖用户访问触发清理 |
 
 ---
 

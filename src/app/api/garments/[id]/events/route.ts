@@ -49,6 +49,7 @@ export async function POST(request: Request, { params }: Params) {
     return jsonOk({ status: garment.status, duplicate: true });
   }
 
+  const status = nextStatus(type);
   try {
     const updated = await prisma.$transaction(async (tx) => {
       await tx.garmentEvent.create({
@@ -56,7 +57,10 @@ export async function POST(request: Request, { params }: Params) {
       });
       return tx.garment.update({
         where: { id: garment.id },
-        data: { status: nextStatus(type) },
+        data: {
+          status,
+          retiredAt: status === "RETIRED" ? new Date() : null,
+        },
         select: { status: true },
       });
     });
