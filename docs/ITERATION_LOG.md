@@ -606,6 +606,41 @@
 
 ---
 
+## v0.16 · 安全加固与已退出置底上线（已完成）
+
+| 项 | 值 |
+| --- | --- |
+| 版本 | **v0.16** |
+| 类型 | security + feature |
+| 状态 | **已上线** |
+| 时间 | 2026-11-15 |
+| 范围 | v0.15 安全加固 + 已退出衣物置底 |
+
+### 完成范围
+
+- 部署 v0.15 应用安全改动：安全响应头、CSRF 同源检查、Cloudflare 真实 IP、AI 用户限流、sessionVersion。
+- `/garments` 排序改为：**已退出（RETIRED）置底；其余按 WORN 次数降序、次数相同按 seq 降序**。
+- 数据库第 6 个迁移 `session_version` 已应用；旧 cookie 无 ver 按 0 兼容。
+- UFW 仍只放行 22/80/443；DB 600、备份目录 700。
+- Cloudflare Origin Pulls/边缘限流按用户要求不做；SSH 不改。
+
+### 可追溯锚点
+
+- Git：`b2c1731`（部署来源）
+- 备份：`/root/deploy-backups/mirrorwardrobe-pre-v0.16-20261115061905/`
+- 文档：[`README.md`](README.md)、[`ARCHITECTURE.md`](ARCHITECTURE.md) §8、[`PRD.md`](PRD.md) F4、[`DESIGN.md`](DESIGN.md) §3.4
+
+### 验证
+
+- `https://mirrorwardrobe.xyz/api/health` → `200`；登录 `200`；旧域名 `410`。
+- 安全响应头已生效（HSTS/nosniff/X-Frame/Referrer/Permissions/CSP Report-Only）；无 `x-powered-by`。
+- `Origin: https://evil.example` 调 `POST /api/outfits` → `403`。
+- 生产 `/garments` 顺序以 `G008` 已退出结尾（最后一张），非退出衣物在前。
+- 6 个迁移全部应用；pm2 online；构建成功。
+- 本地 `npm test` 70 项、`npm run build` 通过。
+
+---
+
 ## 附：Git 历史重写记录（2026-10-20）
 
 **原因**：提交 `751d46f`（重写后为 `ee1bcfa`）的 `.env.example` 含真实 `ARK_API_KEY` / `SESSION_SECRET`；同时赛题 docx 自首个提交起就在仓库里。仓库从未 push、无 remote，因此在首次推送前做了唯一一次干净重写。
