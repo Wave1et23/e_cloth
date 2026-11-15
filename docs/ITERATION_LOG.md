@@ -588,7 +588,7 @@
 
 ### 可追溯锚点
 
-- Git：本次提交
+- Git：`03f98b0`（安全加固）
 - 任务：`tasks/017-security-hardening.md`
 - 文档：[`DECISIONS.md`](DECISIONS.md) D26、[`PRD.md`](PRD.md) F1、[`DESIGN.md`](DESIGN.md) §3.2、[`ARCHITECTURE.md`](ARCHITECTURE.md) 数据模型/§5.1
 
