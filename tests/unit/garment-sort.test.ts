@@ -5,10 +5,11 @@ import {
   sortGarmentsByWorn,
 } from "../../src/lib/garment-sort.ts";
 
-function garment(seq: number, worn: number) {
+function garment(seq: number, worn: number, status = "IN_CLOSET") {
   return {
     id: `G${seq}`,
     seq,
+    status,
     events: Array.from({ length: worn }, (_, index) => ({ id: String(index) })),
   };
 }
@@ -49,6 +50,32 @@ test("0 次穿着的衣物排在最后，即使 seq 更大", () => {
     [2, 1, 9, 8],
   );
   assert.equal(sorted.at(-1)?.events.length, 0);
+});
+
+test("已退出的衣物置底，即使穿着次数更多", () => {
+  const sorted = sortGarmentsByWorn([
+    garment(1, 0),
+    garment(2, 20, "RETIRED"),
+    garment(3, 3),
+    garment(4, 10, "RETIRED"),
+  ]);
+  assert.deepEqual(
+    sorted.map((item) => item.seq),
+    [3, 1, 2, 4],
+  );
+  assert.equal(sorted.at(-1)?.status, "RETIRED");
+});
+
+test("已退出衣物内部仍按次数和 seq 排序", () => {
+  const sorted = sortGarmentsByWorn([
+    garment(1, 2, "RETIRED"),
+    garment(3, 0, "RETIRED"),
+    garment(2, 2, "RETIRED"),
+  ]);
+  assert.deepEqual(
+    sorted.map((item) => item.seq),
+    [2, 1, 3],
+  );
 });
 
 test("不修改入参数组，比较函数可单独使用", () => {
