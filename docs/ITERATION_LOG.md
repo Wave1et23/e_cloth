@@ -572,7 +572,7 @@
 | --- | --- |
 | 版本 | **v0.15** |
 | 类型 | security |
-| 状态 | 本地完成；未部署 |
+| 状态 | 本地代码完成；服务器管理端口/权限已执行；应用加固未部署 |
 | 时间 | 2026-11-15 |
 | 范围 | 应用层安全头、CSRF、真实 IP、AI 限流、session 失效 |
 
@@ -585,6 +585,8 @@
 - 内存限流 Map 设 10000 上限并清理过期项，避免唯一 key 膨胀。
 - 新增 `User.sessionVersion` + 迁移；session cookie 带版本；重置密码递增版本，旧 cookie 立即失效。
 - 新 session cookie 兼容旧 cookie（无 ver 按 0）。
+- 服务器 UFW 收紧：只保留 22/80/443；删除 20/21/888/8888/13443/39000-40000/5432 的公网放行；`prisma/prod.db` 改 600，备份目录改 700。
+- **应用安全改动尚未部署**；SSH 按用户要求不做。
 
 ### 可追溯锚点
 
@@ -599,7 +601,8 @@
 - `Origin: https://evil.example` 调 `POST /api/outfits` → `403`。
 - 登录用户调用 AI 接口：前 10 次进入校验，第 11 次 `429`。
 - 临时用户重置密码后：旧 cookie `/api/auth/me` → `401`，新密码登录 → `200`。
-- **未执行**：SSH 调整、管理端口限制、Cloudflare Origin Pulls、Nginx 边缘限流；这些属于服务器/Cloudflare 阶段。
+- 服务器 UFW：外部 888/13443/5432 均不可达；22/80/443 正常；公网健康检查 200。
+- **未执行**：SSH 调整、Cloudflare Origin Pulls、Nginx 边缘限流、应用安全改动上线；这些属于后续服务器/Cloudflare 阶段。
 
 ---
 
